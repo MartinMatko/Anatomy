@@ -3,7 +3,9 @@ package martinmatko.anatomy;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Region;
 import android.util.DisplayMetrics;
@@ -31,8 +33,8 @@ public class DrawView extends View {
     List<PartOfBody> parts = new ArrayList<>();
 
     //These two constants specify the minimum and maximum zoom
-    private static float MIN_ZOOM = -3f;
-    private static float MAX_ZOOM = 10f;
+    private static float MIN_ZOOM = 1f;
+    private static float MAX_ZOOM = 5f;
 
     private float scaleFactor = 1.f;
     private ScaleGestureDetector detector;
@@ -41,6 +43,8 @@ public class DrawView extends View {
     //touches the screen
     private float startX = 0f;
     private float startY = 0f;
+    private float canvasTranslateX = 0f;
+    private float canvasTranslateY = 0f;
 
     //These two variables keep track of the amount we need to translate the canvas along the X
     //and the Y coordinate
@@ -53,6 +57,7 @@ public class DrawView extends View {
     private float previousTranslateY = 0f;
 
     private boolean dragged = false;
+    private boolean touched = false;
 
     // Used for set first translate to a quarter of screen
     private float displayWidth;
@@ -74,11 +79,11 @@ public class DrawView extends View {
         displayWidth = metrics.widthPixels;
         displayHeight = metrics.heightPixels;
 
-        translateX = displayWidth/2;
-        translateY = displayHeight/2;
+        translateX = displayWidth/4;
+        translateY = displayHeight/4;
 
-        previousTranslateX = displayWidth/2;
-        previousTranslateY = displayHeight/2;
+        previousTranslateX = displayWidth/4;
+        previousTranslateY = displayHeight/4;
 
         detector = new ScaleGestureDetector(context, new ScaleListener());
 
@@ -104,46 +109,48 @@ public class DrawView extends View {
         canvas.save();
 
         //We're going to scale the X and Y coordinates by the same amount
-        canvas.scale(scaleFactor, scaleFactor, 0, 0);
+        //canvas.scale(scaleFactor, scaleFactor, 0, 0);
 
         //We need to divide by the scale factor here, otherwise we end up with excessive panning based on our zoom level
         //because the translation amount also gets scaled according to how much we've zoomed into the canvas.
-        canvas.translate((translateX - previousTranslateX) / scaleFactor, (translateY - previousTranslateY) / scaleFactor);
+
+        //1920 1080
+        float x = (canvas.getWidth() * scaleFactor - canvas.getWidth()) / 2;
+        float y = (canvas.getHeight() * scaleFactor - canvas.getHeight()) / 2;
+        //canvas.translate(canvas.getWidth() + x, canvas.getHeight() + y);
+        if (!touched){
+            canvasTranslateX += Math.abs(translateX - previousTranslateX) / scaleFactor;
+            canvasTranslateY += Math.abs(translateY - previousTranslateY) / scaleFactor;
+        }
+        //canvas.translate(Math.abs(translateX - previousTranslateX) / scaleFactor, Math.abs(translateY - previousTranslateY) / scaleFactor);
 
 
         for (PartOfBody partOfBody: parts){
             Paint p = new Paint();
             p.setStyle(Paint.Style.STROKE);
             p.setStrokeWidth(1);
-            setBounds(partOfBody.getBoundaries());
-            canvas.drawRect(partOfBody.getBoundaries(), p);
-            canvas.drawPath(partOfBody.getPath(), partOfBody.getPaint());
+            //setBounds(partOfBody.getBoundaries());
+            //canvas.drawRect(partOfBody.getBoundaries(), p);
+            Matrix matrix = new Matrix();
+            //matrix.setTranslate(100, 100);
+            //matrix.setRotate(90, 100, 100);
+            matrix.setTranslate(canvasTranslateX, canvasTranslateY);
+            matrix.setScale(scaleFactor, scaleFactor);
+            touched = false;
+            Path path = new Path();
+            partOfBody.getPath().transform(matrix, path);
+            //partOfBody.setPath(path);
+            canvas.drawPath(path, partOfBody.getPaint());
+            RectF boundaries = new RectF();
+            path.computeBounds(boundaries, true);
+            partOfBody.setBoundaries(boundaries);
+            canvas.drawRect(boundaries, p);
         }
-        //canvas.drawRect(0,0,100,100, paint);
         canvas.restore();
-
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-            if (event.getAction() == MotionEvent.ACTION_UP){
-                final int MAX_DURATION = 200;
-                float x = event.getX();
-                float y = event.getY();
-                RectF rectF2 = new RectF();
-                for (PartOfBody partOfBody : parts){
-                    Region region = new Region();
-                    RectF rectF = partOfBody.getBoundaries();
-                    region.setPath(partOfBody.getPath(), new Region((int) rectF.left, (int) rectF.top, (int) rectF.right, (int) rectF.bottom));
-                    if (rectF.contains(x+translateX, y+translateY))
-                    {
-                        if(partOfBody == parts.get(0))
-                            partOfBody.getPaint().setColor(Color.GREEN);
-                        else
-                            partOfBody.getPaint().setColor(Color.RED);
-                    }
-                }
-            }
 
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
 
@@ -154,6 +161,7 @@ public class DrawView extends View {
                 //We assign the current X and Y coordinate of the finger to startX and startY minus the previously translated
                 //amount for each coordinates This works even when we are translating the first time because the initial
                 //values for these two variables is zero.
+                dragged = false;
                 startX = event.getX() - previousTranslateX;
                 startY = event.getY() - previousTranslateY;
                 break;
@@ -168,7 +176,7 @@ public class DrawView extends View {
 
                 break;
 
-            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_POINTER_UP:
 
 // No more fingers on screen
 
@@ -176,12 +184,37 @@ public class DrawView extends View {
                 //previousTranslate
                 previousTranslateX = translateX;
                 previousTranslateY = translateY;
-                break;
+                dragged = true;
+                return true;
 
 // All touch events are sended to ScaleListener
         }
         detector.onTouchEvent(event);
 
+        if (event.getAction() == MotionEvent.ACTION_UP && !dragged){
+            final int MAX_DURATION = 200;
+            float x = event.getX();
+            float y = event.getY();
+            RectF rectF2 = new RectF();
+            scaleFactor = 4;
+            canvasTranslateX = -x;
+            canvasTranslateY = -y;
+//            for (PartOfBody partOfBody : parts){
+//                Region region = new Region();
+//                RectF rectF = partOfBody.getBoundaries();
+//                region.setPath(partOfBody.getPath(), new Region((int) rectF.left, (int) rectF.top, (int) rectF.right, (int) rectF.bottom));
+//                if (rectF.contains(Math.abs(x ), Math.abs(y )))
+//                {
+//                    if(partOfBody == parts.get(0))
+//                        partOfBody.getPaint().setColor(Color.GREEN);
+//                    else
+//                        partOfBody.getPaint().setColor(Color.RED);
+//                }
+//            }
+            dragged = false;
+            touched = true;
+            invalidate();
+        }
         return true;
     }
 
