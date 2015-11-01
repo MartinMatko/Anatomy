@@ -667,8 +667,10 @@ public class SVGParser {
             }
             line = line.substring(line.indexOf('M'), line.indexOf('z')+1);
             if (line.startsWith("M")){
-
-                parts.add(new PartOfBody(parser.doPath(line), paint) );
+                if (line == parsed.get(0))
+                    parts.add(new PartOfBody(parser.doPath(line), paint, true));
+                else
+                    parts.add(new PartOfBody(parser.doPath(line), paint) );
             }
         }
         return parts;

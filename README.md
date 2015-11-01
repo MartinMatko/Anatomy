@@ -5,7 +5,9 @@ Výber programovacieho jazyka:
 Natívnym jazykom pre tvorbu Android aplikacii je Java, v ktorej je naprogramovaná aj táto aplikácia.
 Ďalšou možnosťou, ktorá stojí za zváženie, je C# , u ktorého je ale problém s nedostatočnou podporou 
 (ešte zďaleka nie je takrozšírený ako Java). Ďalším problémom je Xamarin framework, ktorý slúži na 
-cross=platform development, avšak na tento nástroj sa nám nepodarilo získať študentskú licenciu.
+cross-platform development, avšak na tento nástroj sa nám nepodarilo získať študentskú licenciu.
+IDE: Android Studio
+Verzovací systém: GitHub
 
 Spracovanie vektorovej grafiky:
 S vektorovou grafikou pracujeme za pomoci tried Canvas a Path z Android API.
@@ -14,5 +16,8 @@ https://code.google.com/p/svg-android/wiki/Tutorial
 
 Ovládanie:
 Približovanie je implementované dvomi spôsobmi: 1. Pinch to zoom (vzďalovanie dvoch prstov od seba)
+http://vivin.net/2011/12/04/implementing-pinch-zoom-and-pandrag-in-an-android-view-on-the-canvas/
+https://androidcookbook.com/Recipe.seam?recipeId=2273
+http://www.zdnet.com/article/how-to-use-multi-touch-in-android-2-part-3-understanding-touch-events/?tag=content;siu-container
 																								2. Tap (pri kliknutí na určité miesto sa obraz automaticky 5x priblíži.
 Zvolenie určitej časti tela: prebieha vývoj

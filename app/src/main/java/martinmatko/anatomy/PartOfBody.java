@@ -11,6 +11,39 @@ public class PartOfBody {
     private Paint paint;
     private Path path;
     private RectF boundaries;
+    private boolean selected;
+    private boolean right;
+
+    public PartOfBody(Path path, Paint paint) {
+        this.paint = paint;
+        this.path = path;
+        boundaries = new RectF();
+        path.computeBounds(boundaries, true);
+    }
+
+    public PartOfBody(Path path, Paint paint, boolean selected) {
+        this.paint = paint;
+        this.path = path;
+        this.selected = selected;
+        boundaries = new RectF();
+        path.computeBounds(boundaries, true);
+    }
+
+    public boolean isRight() {
+        return right;
+    }
+
+    public void setRight(boolean right) {
+        this.right = right;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
 
     public Paint getPaint() {
         return paint;
@@ -26,23 +59,6 @@ public class PartOfBody {
 
     public void setPath(Path path) {
         this.path = path;
-    }
-
-    public boolean isRightAnswer() {
-        return isRightAnswer;
-    }
-
-    public void setRightAnswer(boolean isRightAnswer) {
-        this.isRightAnswer = isRightAnswer;
-    }
-
-    private boolean isRightAnswer;
-
-    public PartOfBody(Path path, Paint paint) {
-        this.paint = paint;
-        this.path = path;
-        boundaries = new RectF();
-        path.computeBounds(boundaries, true);
     }
 
     public RectF getBoundaries() {
