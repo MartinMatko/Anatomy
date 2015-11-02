@@ -31,6 +31,7 @@ public class DrawView extends View {
     public float bottom = 0;
     public float pointOfZoomX = 0f;
     public float pointOfZoomY = 0f;
+
     private Canvas canvas = new Canvas();
     Paint paint = new Paint();
     List<PartOfBody> parts = new ArrayList<>();
@@ -56,6 +57,8 @@ public class DrawView extends View {
     //panned.
     private float previousTranslateX = 0f;
     private float previousTranslateY = 0f;
+    private float x = 0f;
+    private float y = 0f;
 
     private boolean dragged = false;
     private boolean touched = false;
@@ -131,9 +134,6 @@ public class DrawView extends View {
             partOfBody.getPath().transform(matrix, path);
             RectF boundaries = new RectF();
             path.computeBounds(boundaries, true);
-//            if (boundaries.width() > displayWidth/2){
-//                break;
-//            }
 
             partOfBody.setPath(path);
             //matrix.setTranslate(-canvasTranslateX/scaleFactor, -canvasTranslateY/scaleFactor);
@@ -142,24 +142,24 @@ public class DrawView extends View {
             canvas.drawPath(path, partOfBody.getPaint());
             partOfBody.setBoundaries(boundaries);
             canvas.drawRect(boundaries, p);
-
-            if (partOfBody.isSelected()){
-                RectF button = partOfBody.getBoundaries();
-                button.left += 200;
+        }
+        float angle = 0f;
+        for (PartOfBody partOfBody: selectedParts){
+                Paint p = new Paint();
+                RectF button = new RectF();
+                button.left += 200 * Math.cos(angle) + x;
                 button.right = button.left + 300;
-                button.top += button.height()/3;
-                button.bottom -= button.height()/3;;
+                button.top += 200 * Math.sin(angle) + y;
+                button.bottom = button.top + 200;
+                p.setStyle(Paint.Style.STROKE);
                 p.setStrokeWidth(10);
-                canvas.drawRect(boundaries, p);
+                canvas.drawRect(button, p);
                 p = partOfBody.getPaint();
                 p.setStyle(Paint.Style.FILL);
-                canvas.drawRect(boundaries, p);
-            }
+                canvas.drawRect(button, p);
+            angle += (2 * Math.PI)/selectedParts.size();
         }
         //canvas.translate(Math.abs(translateX - previousTranslateX) / scaleFactor, Math.abs(translateY - previousTranslateY) / scaleFactor);
-
-
-
         canvas.restore();
     }
 
@@ -179,6 +179,8 @@ public class DrawView extends View {
                 dragged = false;
                 startX = event.getX() - previousTranslateX;
                 startY = event.getY() - previousTranslateY;
+                x = event.getX();
+                y = event.getY();
                 break;
 
             case MotionEvent.ACTION_MOVE:
@@ -189,6 +191,11 @@ public class DrawView extends View {
                 translateX = event.getX() - startX;
                 translateY = event.getY() - startY;
 
+                break;
+
+            case MotionEvent.ACTION_POINTER_DOWN:
+                pointOfZoomX = (x + event.getX(1))/2;
+                pointOfZoomY = (y + event.getY(1))/2;
                 break;
 
             case MotionEvent.ACTION_POINTER_UP:
@@ -207,9 +214,10 @@ public class DrawView extends View {
         detector.onTouchEvent(event);
 
         if (event.getAction() == MotionEvent.ACTION_UP && !dragged && touched){
-            float x = event.getX();
-            float y = event.getY();
+            x = event.getX();
+            y = event.getY();
             selectedMode = true;
+            selectedParts.clear();
             for (PartOfBody partOfBody : parts){
                 Region region = new Region();
                 RectF rectF = partOfBody.getBoundaries();
