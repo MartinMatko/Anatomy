@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 
 import android.app.Activity;
+import android.os.StrictMode;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -24,7 +25,12 @@ public class MainActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        StrictMode.ThreadPolicy policy =
+                new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
+        RESTService restService = new RESTService();
+        restService.doInBackground("nothing");
         try {
             drawView = new DrawView(MainActivity.this);
         } catch (IOException e) {

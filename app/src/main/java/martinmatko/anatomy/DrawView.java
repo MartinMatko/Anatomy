@@ -71,7 +71,7 @@ public class DrawView extends View {
 
     public DrawView(Context context) throws IOException {
         super(context);
-        parts = new SVGParser().getBodyParts();
+        parts = new JSONParser().getBodyParts();
 
         ctx = context;
 

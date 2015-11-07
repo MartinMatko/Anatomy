@@ -2,20 +2,6 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\jars\libs\internal_impl-21.0.3.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
-        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.3-45b8a8f5445e68133603632da1913dd3d296a4c1.jar" />
-    </item>
-    <item
-        jar="C:\Users\Martin\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\21.0.3\support-annotations-21.0.3.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
-        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.3-915b63819f694276d71a837e0b424d3db730cd1b.jar" />
-    </item>
-    <item
         jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\jars\classes.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -23,11 +9,25 @@
         <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\classes-95089f939eab181b899a41445a564c33a76c4ab0.jar" />
     </item>
     <item
+        jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\jars\libs\internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.3-45b8a8f5445e68133603632da1913dd3d296a4c1.jar" />
+    </item>
+    <item
         jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\21.0.3\jars\classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
         <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\classes-cfd676e739f5faca637b19b750186bbf88a6e21d.jar" />
+    </item>
+    <item
+        jar="C:\Users\Martin\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\21.0.3\support-annotations-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
+        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.3-915b63819f694276d71a837e0b424d3db730cd1b.jar" />
     </item>
 
 </items>

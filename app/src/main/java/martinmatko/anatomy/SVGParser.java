@@ -651,7 +651,6 @@ public class SVGParser {
         String body = readFully(is, "UTF-8");
 
         List<PartOfBody> parts = new ArrayList<>();
-        SVGParser parser = new SVGParser();
         List<String> parsed;
         parsed = new ArrayList<>(Arrays.asList(body.split("path ")));
         parsed.remove(0);
@@ -668,9 +667,9 @@ public class SVGParser {
             line = line.substring(line.indexOf('M'), line.indexOf('z')+1);
             if (line.startsWith("M")){
                 if (line == parsed.get(0))
-                    parts.add(new PartOfBody(parser.doPath(line), paint, true));
+                    parts.add(new PartOfBody(doPath(line), paint, true));
                 else
-                    parts.add(new PartOfBody(parser.doPath(line), paint) );
+                    parts.add(new PartOfBody(doPath(line), paint) );
             }
         }
         return parts;
@@ -687,14 +686,12 @@ public class SVGParser {
             while ((l = br.readLine())!=null)
                 sb.append(l);
             sb.append("\n");
-            SVGParser parser = new SVGParser();
             parsed = new ArrayList<>(Arrays.asList(sb.toString().split("path ")));
             parsed.remove(0);
             for (String line : parsed){
                 Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
                 paint.setStyle(Paint.Style.FILL_AND_STROKE);
                 paint.setColor(Color.BLACK);
-                //paint.setStrokeWidth(2);
                 if (line.startsWith("fill")){
                     String color = line.substring(line.indexOf('#'), line.indexOf("\" d="));
                     paint.setColor(Color.parseColor(color   ));
@@ -703,7 +700,7 @@ public class SVGParser {
                 line = line.substring(line.indexOf('M'), line.indexOf('z')+1);
                 if (line.startsWith("M")){
 
-                    parts.add(new PartOfBody(parser.doPath(line), paint) );
+                    parts.add(new PartOfBody(doPath(line), paint) );
                 }
             }
 
