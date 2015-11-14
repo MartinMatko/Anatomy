@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1>Anatomy teaching app</h1>
+
+<section>
+<h3>Vıber programovacieho jazyka:</h3>
+<p>Natívnym jazykom pre tvorbu Android aplikacii je Java, v ktorej je naprogramovaná aj táto aplikácia.
+Ïalšou monosou, ktorá stojí za zváenie, je C# , u ktorého je ale problém s nedostatoènou podporou 
+(ešte zïaleka nie je takrozšírenı ako Java). Ïalším problémom je Xamarin framework, ktorı slúi na 
+cross-platform development, avšak na tento nástroj sa nám nepodarilo získa študentskú licenciu.
+<caption>IDE:</caption> Android Studio
+<caption>Verzovací systém:</caption> GitHub
+</p>
+</section>
+<section>
+<h3>Spracovanie vektorovej grafiky:</h3>
+S vektorovou grafikou pracujeme za pomoci tried Canvas a Path z Android API.
+Pre prácu s svg a jeho konverziu na android path pouívame túto kninicu:
+<a href="https://code.google.com/p/svg-android/wiki/Tutorial">svg android</a>
+</section>
+<section>
+<h3>Ovládanie:</h3>
+Pribliovanie je implementované dvomi spôsobmi: <br>
+1. Pinch to zoom (vzïalovanie dvoch prstov od seba)<br>
+<a href="http://vivin.net/2011/12/04/implementing-pinch-zoom-and-pandrag-in-an-android-view-on-the-canvas/">zooming on canvas</a><br>
+<a href="https://androidcookbook.com/Recipe.seam?recipeId=2273">implemeting pich zoom</a><br>
+<a href="http://www.zdnet.com/article/how-to-use-multi-touch-in-android-2-part-3-understanding-touch-events/?tag=content;siu-container">touch events</a><br>
+2. Tap (pri kliknutí na urèité miesto sa obraz automaticky 5x priblíi.<br>
+Zvolenie urèitej èasti tela: okolo zvolenej èasti sa zobrazia tlaèítka, ktorımi sa bude da spresni vıber.
+</section>
+
+<section>
+<h3>Naèítanie obrázkov z internetu:</h3>
+<a href="http://rest.elkstein.org/2008/02/using-rest-in-java.html">Na získanie dát vyuívame prácu s HTTP requests.<a><br>
+<a href="http://stackoverflow.com/questions/6343166/android-os-networkonmainthreadexception">Zaujímavosou je, e android zakazuje prácu s Internetom v hlavnom vlákne.</a><br>
+Na prácu s Internetom tie bolo nutné prida oprávnenie pre danú aplikaciu do AndroidManiest.xml.
+<uses-permission android:name="android.permission.INTERNET"/>
+</section>
+
+</body>
+</html>
