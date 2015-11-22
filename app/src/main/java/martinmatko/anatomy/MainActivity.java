@@ -1,6 +1,7 @@
 package martinmatko.anatomy;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 
@@ -10,6 +11,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import java.io.IOException;
+import java.net.URL;
 
 public class MainActivity extends Activity {
 
@@ -18,6 +20,8 @@ public class MainActivity extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         context = getApplicationContext();
         super.onCreate(savedInstanceState);
 
@@ -25,12 +29,9 @@ public class MainActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        StrictMode.ThreadPolicy policy =
-                new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
 
-        RESTService restService = new RESTService();
-        restService.doInBackground("nothing");
+      //  RESTService restService = new RESTService();
+     //   restService.doInBackground("nothing");
         try {
             drawView = new DrawView(MainActivity.this);
         } catch (IOException e) {
@@ -44,5 +45,9 @@ public class MainActivity extends Activity {
         return context;
     }
 
+
+
 }
+
+
 
