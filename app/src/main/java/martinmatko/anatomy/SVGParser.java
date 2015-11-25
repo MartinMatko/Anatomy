@@ -81,7 +81,7 @@ public class SVGParser {
      * @return the parsed SVG.
      * @throws SVGParseException if there is an error while parsing.
      */
-    public static SVG getSVGFromString(String svgData) throws SVGParseException {
+    public static SVG getSVGFromString(String svgData)  {
         return SVGParser.parse(new ByteArrayInputStream(svgData.getBytes()), 0, 0, false);
     }
 
@@ -642,74 +642,6 @@ public class SVGParser {
             baos.write(buffer, 0, length);
         }
         return baos.toByteArray();
-    }
-
-    public List<PartOfBody> getBodyParts() throws IOException {
-        Context ctx = MainActivity.getAppContext();
-        InputStream is;
-        is = ctx.getResources().openRawResource(R.raw.body);
-        String body = readFully(is, "UTF-8");
-
-        List<PartOfBody> parts = new ArrayList<>();
-        List<String> parsed;
-        parsed = new ArrayList<>(Arrays.asList(body.split("path ")));
-        parsed.remove(0);
-        for (String line : parsed){
-            Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            paint.setStyle(Paint.Style.FILL_AND_STROKE);
-            paint.setColor(Color.BLACK);
-            //paint.setStrokeWidth(2);
-            if (line.startsWith("fill")){
-                String color = line.substring(line.indexOf('#'), line.indexOf("\" d="));
-                paint.setColor(Color.parseColor(color   ));
-                //paint.setColor(Integer.parseInt(color, 32));
-            }
-            line = line.substring(line.indexOf('M'), line.indexOf('z')+1);
-            if (line.startsWith("M")){
-                if (line == parsed.get(0))
-                    parts.add(new PartOfBody(doPath(line), paint, true));
-                else
-                    parts.add(new PartOfBody(doPath(line), paint) );
-            }
-        }
-        return parts;
-    }
-
-    public List<PartOfBody> getBodyParts(String  path) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(path));
-        List<String> parsed;
-        List<PartOfBody> parts = new ArrayList<>();
-
-        try {
-            StringBuilder sb = new StringBuilder();
-            String l;
-            while ((l = br.readLine())!=null)
-                sb.append(l);
-            sb.append("\n");
-            parsed = new ArrayList<>(Arrays.asList(sb.toString().split("path ")));
-            parsed.remove(0);
-            for (String line : parsed){
-                Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                paint.setStyle(Paint.Style.FILL_AND_STROKE);
-                paint.setColor(Color.BLACK);
-                if (line.startsWith("fill")){
-                    String color = line.substring(line.indexOf('#'), line.indexOf("\" d="));
-                    paint.setColor(Color.parseColor(color   ));
-                    //paint.setColor(Integer.parseInt(color, 32));
-                }
-                line = line.substring(line.indexOf('M'), line.indexOf('z')+1);
-                if (line.startsWith("M")){
-
-                    parts.add(new PartOfBody(doPath(line), paint) );
-                }
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            br.close();
-        }
-        return parts;
     }
 
     private static class NumberParse {

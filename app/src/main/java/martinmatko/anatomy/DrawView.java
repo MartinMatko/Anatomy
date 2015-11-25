@@ -8,12 +8,16 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Region;
+import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
+
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,7 +28,6 @@ public class DrawView extends View {
     Context ctx;
 
     static final String TAG = "DrawView";
-
     public float left = Float.MAX_VALUE;
     public float top = Float.MAX_VALUE;
     public float right = 0;
@@ -34,8 +37,7 @@ public class DrawView extends View {
 
     private Canvas canvas = new Canvas();
     Paint paint = new Paint();
-    List<PartOfBody> parts = new ArrayList<>();
-
+    Question question;
     //These two constants specify the minimum and maximum zoom
     private static float MIN_ZOOM = -1f;
     private static float MAX_ZOOM = 5f;
@@ -69,9 +71,21 @@ public class DrawView extends View {
     private float displayWidth;
     private float displayHeight;
 
-    public DrawView(Context context) throws IOException {
+    public DrawView(Context context) {
         super(context);
-        parts = new JSONParser().getBodyParts();
+        init(context);
+    }
+    public DrawView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init(context);
+    }
+
+    public DrawView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        init(context);
+    }
+
+    private void init(Context context) {
 
         ctx = context;
 
@@ -112,7 +126,11 @@ public class DrawView extends View {
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         this.canvas  = canvas;
-
+        try {
+            question = new JSONParser().getQuestion();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         if (!touched && dragged){
             pointOfZoomX = translateX ;
             pointOfZoomY = translateY ;
@@ -121,7 +139,7 @@ public class DrawView extends View {
         if (selectedMode){
             scaleFactor = 1f;
         }
-        for (PartOfBody partOfBody: parts){
+        for (PartOfBody partOfBody: question.getBodyParts()){
             Paint p = new Paint();
             p.setStyle(Paint.Style.STROKE);
             p.setStrokeWidth(1);
@@ -218,7 +236,7 @@ public class DrawView extends View {
             y = event.getY();
             selectedMode = true;
             selectedParts.clear();
-            for (PartOfBody partOfBody : parts){
+            for (PartOfBody partOfBody : question.getBodyParts()){
                 Region region = new Region();
                 RectF rectF = partOfBody.getBoundaries();
                 region.setPath(partOfBody.getPath(), new Region((int) rectF.left, (int) rectF.top, (int) rectF.right, (int) rectF.bottom));

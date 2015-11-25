@@ -19,7 +19,8 @@ import java.util.List;
  * Created by Martin on 7.11.2015.
  */
 public class JSONParser {
-    public List<PartOfBody> getBodyParts() throws IOException {
+    public Question getQuestion() throws IOException {
+        Question question = new Question();
         Context ctx = MainActivity.getAppContext();
         InputStream is;
         //is = new DownloadFilesTask().doInBackground(new URL("http://anatom.cz/flashcards/context/280"));//
@@ -31,10 +32,13 @@ public class JSONParser {
             body = new JSONObject(json);
             JSONObject data = body.getJSONObject("data");
             caption = data.getString("name");
+            question.setCaption(caption);
             content = data.getString("content");
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+
         SVGParser parser = new SVGParser();
         List<PartOfBody> parts = new ArrayList<>();
         List<String> parsed;
@@ -55,7 +59,8 @@ public class JSONParser {
                 parts.add(new PartOfBody(parser.doPath(line), paint) );
             }
         }
-        return parts;
+        question.setBodyParts(parts);
+        return question;
     }
     public String readFully(InputStream inputStream, String encoding)
             throws IOException {

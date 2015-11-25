@@ -20,6 +20,10 @@ $RECYCLE.BIN/
 # svg images
 *.svg
 
+#unnecessary folders
+.gradle/*
+.idea/*
+
 # =========================
 # Operating System Files
 # =========================
@@ -44,3 +48,6 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+*.bin
+*.bin
+*.bin
