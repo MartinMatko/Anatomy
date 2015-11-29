@@ -15,6 +15,8 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -88,16 +90,17 @@ public class DrawView extends View {
     private void init(Context context) {
 
         ctx = context;
-
+        try {
+            this.question = new JSONParser().getQuestion();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
 
         DisplayMetrics metrics = new DisplayMetrics();
 
         display.getMetrics(metrics);
-
-        displayWidth = metrics.widthPixels;
-        displayHeight = metrics.heightPixels;
 
         translateX = displayWidth/4;
         translateY = displayHeight/4;
@@ -125,12 +128,11 @@ public class DrawView extends View {
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        displayWidth = this.getWidth();
+        displayHeight = this.getHeight();
+
         this.canvas  = canvas;
-        try {
-            question = new JSONParser().getQuestion();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
         if (!touched && dragged){
             pointOfZoomX = translateX ;
             pointOfZoomY = translateY ;
@@ -139,27 +141,31 @@ public class DrawView extends View {
         if (selectedMode){
             scaleFactor = 1f;
         }
-        for (PartOfBody partOfBody: question.getBodyParts()){
-            Paint p = new Paint();
-            p.setStyle(Paint.Style.STROKE);
-            p.setStrokeWidth(1);
-            //setBounds(partOfBody.getBoundaries());
-            //canvas.drawRect(partOfBody.getBoundaries(), p);
-            Matrix matrix = new Matrix();
-            matrix.setScale(scaleFactor, scaleFactor, pointOfZoomX, pointOfZoomY);
+        try {
+            for (PartOfBody partOfBody: question.getBodyParts()){
+                Paint p = new Paint();
+                p.setStyle(Paint.Style.STROKE);
+                p.setStrokeWidth(1);
+                //setBounds(partOfBody.getBoundaries());
+                //canvas.drawRect(partOfBody.getBoundaries(), p);
+                Matrix matrix = new Matrix();
+                matrix.setScale(scaleFactor, scaleFactor, pointOfZoomX, pointOfZoomY);
 
-            Path path = new Path();
-            partOfBody.getPath().transform(matrix, path);
-            RectF boundaries = new RectF();
-            path.computeBounds(boundaries, true);
+                Path path = new Path();
+                partOfBody.getPath().transform(matrix, path);
+                RectF boundaries = new RectF();
+                path.computeBounds(boundaries, true);
 
-            partOfBody.setPath(path);
-            //matrix.setTranslate(-canvasTranslateX/scaleFactor, -canvasTranslateY/scaleFactor);
-            //touched = false;
+                partOfBody.setPath(path);
+                //matrix.setTranslate(-canvasTranslateX/scaleFactor, -canvasTranslateY/scaleFactor);
+                //touched = false;
 
-            canvas.drawPath(path, partOfBody.getPaint());
-            partOfBody.setBoundaries(boundaries);
-            canvas.drawRect(boundaries, p);
+                canvas.drawPath(path, partOfBody.getPaint());
+                partOfBody.setBoundaries(boundaries);
+                canvas.drawRect(boundaries, p);
+            }
+        }catch (NullPointerException ex){
+            ex.printStackTrace();
         }
         float angle = 0f;
         for (PartOfBody partOfBody: selectedParts){
@@ -176,6 +182,22 @@ public class DrawView extends View {
                 p.setStyle(Paint.Style.FILL);
                 canvas.drawRect(button, p);
             angle += (2 * Math.PI)/selectedParts.size();
+        }
+        if (question != null && findViewById(R.id.captionView) != null){
+            TextView captionView = (TextView) findViewById(R.id.captionView);
+            captionView.setText(question.getCaption());
+            captionView.invalidate();
+            TextView textView = (TextView) findViewById(R.id.textOfQuestionView);
+            textView.setText("Zvolte nos");
+            textView.invalidate();
+            RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
+            RadioButton button;
+            for(int i = 0; i < 5; i++) {
+                button = new RadioButton(ctx);
+                button.setText(question.getOptions().get(i));
+                options.addView(button);
+            }
+            options.invalidate();
         }
         //canvas.translate(Math.abs(translateX - previousTranslateX) / scaleFactor, Math.abs(translateY - previousTranslateY) / scaleFactor);
         canvas.restore();

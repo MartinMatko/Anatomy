@@ -15,12 +15,14 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 public class MainActivity extends Activity {
@@ -34,6 +36,7 @@ public class MainActivity extends Activity {
     public void settextView(TextView t) {
         this.textView = t;
     }
+    public Question question;
 
     TextView textView;
 
@@ -54,10 +57,23 @@ public class MainActivity extends Activity {
         //drawView = new DrawView(MainActivity.this);
 
         setContentView(R.layout.activity_main);
+        DrawView drawView = (DrawView) findViewById(R.id.drawView);
+        question = drawView.question;
+        if (question != null){
+            TextView captionView = (TextView) findViewById(R.id.captionView);
+            captionView.setText(question.getCaption());
+            TextView textView = (TextView) findViewById(R.id.textOfQuestionView);
+            textView.setText("Zvolte nos");
+            RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
+            RadioButton button;
+            for(int i = 0; i < 5; i++) {
+                button = new RadioButton(this);
+                button.setText(question.getOptions().get(i));
+                options.addView(button);
+            }
+        }
+        drawView.invalidate();
 
-        TextView captionView = (TextView) findViewById(R.id.captionView);
-        captionView.setText("Přehled znalostí");
-        TextView textView = (TextView) findViewById(R.id.textOfQuestionView);
         //View view = findViewById(R.id.textView);
 
         //textView = (TextView) findViewById(R.id.textView);

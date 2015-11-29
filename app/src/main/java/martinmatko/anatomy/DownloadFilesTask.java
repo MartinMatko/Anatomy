@@ -2,21 +2,42 @@ package martinmatko.anatomy;
 
 import android.os.AsyncTask;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-class DownloadFilesTask extends AsyncTask<URL, Integer, DataInputStream> {
-    protected DataInputStream doInBackground(URL... urls) {
+class DownloadFilesTask extends AsyncTask<URL, Integer, InputStream> {
+    protected InputStream doInBackground(URL... urls) {
         int count = urls.length;
-        URL u = urls[0];
+        String u = urls[0].toString();
+        DefaultHttpClient client = new DefaultHttpClient();
+        HttpGet get = new HttpGet(u);
+        HttpResponse res = null;
+        InputStream is;
         try {
-            DataInputStream stream = new DataInputStream(u.openStream());
-            return stream;
+            res = client.execute(get);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        try {
+            is = res.getEntity().getContent();
+            return is;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//        try {
+//            DataInputStream stream = new DataInputStream(u.openStream());
+//            return stream;
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
 //        long totalSize = 0;
 //        for (int i = 0; i < count; i++) {
