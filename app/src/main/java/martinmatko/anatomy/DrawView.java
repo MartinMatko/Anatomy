@@ -88,13 +88,13 @@ public class DrawView extends View {
     }
 
     private void init(Context context) {
-
-        ctx = context;
         try {
             this.question = new JSONParser().getQuestion();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        ctx = context;
+
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
 
@@ -127,6 +127,7 @@ public class DrawView extends View {
 
     @Override
     public void onDraw(Canvas canvas) {
+
         super.onDraw(canvas);
         displayWidth = this.getWidth();
         displayHeight = this.getHeight();
@@ -188,7 +189,7 @@ public class DrawView extends View {
             captionView.setText(question.getCaption());
             captionView.invalidate();
             TextView textView = (TextView) findViewById(R.id.textOfQuestionView);
-            textView.setText("Zvolte nos");
+            textView.setText(question.correctAnswer);
             textView.invalidate();
             RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
             RadioButton button;
@@ -197,10 +198,10 @@ public class DrawView extends View {
                 button.setText(question.getOptions().get(i));
                 options.addView(button);
             }
-            options.invalidate();
+            //options.invalidate();
         }
         //canvas.translate(Math.abs(translateX - previousTranslateX) / scaleFactor, Math.abs(translateY - previousTranslateY) / scaleFactor);
-        canvas.restore();
+        //canvas.restore();
     }
 
 

@@ -44,8 +44,9 @@ public class RESTService {
     List <Cookie> cookies;
     CookieStore cookieStore;
 
-    public String get (String url){
+    public JSONObject get (String url){
         String contextID = null;
+        JSONObject data = null;
         try {
             DefaultHttpClient client = new DefaultHttpClient();
             HttpGet get = new HttpGet(url);
@@ -62,15 +63,23 @@ public class RESTService {
                 String json = new JSONParser().readFully(is, "UTF-8");
                 JSONObject question = new JSONObject(json);
                 JSONArray array = question.getJSONObject("data").getJSONArray("flashcards");
-                contextID = array.getJSONObject(0).getString("context_id");
-
+                JSONObject termToDescription = null;
+                for (int i = 0; i < array.length(); i++) {
+                    if (array.getJSONObject(i).getString("direction").equals("t2d")){
+                        termToDescription = array.getJSONObject(i);
+                    }
+                }
+                contextID = termToDescription.getString("context_id");
+                data = new JSONObject();
+                data.put("context_id", contextID);
+                data.put("name", termToDescription.getJSONObject("term").getString("name"));
 
                 post();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return contextID;
+        return data;
     }
     public void post(){
         try {
@@ -82,7 +91,7 @@ public class RESTService {
             String postURL = "http://anatom.cz/user/session/";
             HttpPost post = new HttpPost(postURL);
             List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("user", "Martin"));
+            params.add(new BasicNameValuePair("X-CSRF-TOKEN", cookies.get(0).toString()));
 
             UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params, HTTP.UTF_8);
             post.setEntity(ent);

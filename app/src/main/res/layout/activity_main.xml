@@ -43,7 +43,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/textOfQuestionView"
-        android:background="#ffd2e6ff"></RadioGroup>
+        android:background="#ffd2e6ff"
+        />
 
     <martinmatko.anatomy.DrawView
         android:id="@+id/drawView"

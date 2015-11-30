@@ -9,6 +9,16 @@ public class Question {
     List<PartOfBody> bodyParts;
     String caption;
     String text;
+
+    public String getCorrectAnswer() {
+        return correctAnswer;
+    }
+
+    public void setCorrectAnswer(String correctAnswer) {
+        this.correctAnswer = correctAnswer;
+    }
+
+    String correctAnswer;
     List<String> options;
 
     public Question() {

@@ -45,8 +45,8 @@ public class JSONParser {
         Context ctx = MainActivity.getAppContext();
         InputStream is;
         RESTService service = new RESTService();
-        String contextID = service.get("http://anatom.cz/flashcards/practice/?avoid=[]&categories=[]&contexts=[]&limit=2&types=[]&without_contexts=1");
-        is = new DownloadFilesTask().doInBackground(new URL("http://anatom.cz/flashcards/context/"+contextID));
+        JSONObject dataFromREST = service.get("http://anatom.cz/flashcards/practice/?avoid=[]&categories=[]&contexts=[]&limit=2&types=[]&without_contexts=1");
+        is = new DownloadFilesTask().doInBackground(new URL("http://anatom.cz/flashcards/context/"+dataFromREST.getString("context_id")));
         //is = ctx.getResources().openRawResource(R.raw.krajinyhlavy);
         JSONObject body = new JSONObject();
         String json = readFully(is, "UTF-8");
@@ -56,6 +56,7 @@ public class JSONParser {
 
             caption = data.getString("name");
             question.setCaption(caption);
+            question.setCorrectAnswer(dataFromREST.getString("name"));
             content = data.getString("content");
 
 

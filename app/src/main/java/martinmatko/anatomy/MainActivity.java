@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements RadioGroup.OnCheckedChangeListener {
 
     private static Context context;
 
@@ -66,32 +66,42 @@ public class MainActivity extends Activity {
             textView.setText("Zvolte nos");
             RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
             RadioButton button;
-            for(int i = 0; i < 5; i++) {
+            for(int i = 0; i < 2; i++) {
                 button = new RadioButton(this);
                 button.setText(question.getOptions().get(i));
                 options.addView(button);
             }
+            button = new RadioButton(this);
+            button.setText(question.correctAnswer);
+            options.addView(button);
         }
-        drawView.invalidate();
+        //drawView.invalidate();
 
-        //View view = findViewById(R.id.textView);
+        RadioGroup rg = (RadioGroup) findViewById(R.id.optionsView);
+        rg.setOnCheckedChangeListener(this);
 
-        //textView = (TextView) findViewById(R.id.textView);
-
-//        RelativeLayout ll = (RelativeLayout)findViewById(R.id.textView);
-//
-//        Button btn = new Button(this);
-//        btn.setText("Manual Add");
-//        btn.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
-//        ll.addView(btn);
     }
 
     public static Context getAppContext() {
         return context;
     }
 
-
-
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        RadioButton checked = (RadioButton) findViewById(checkedId);
+        DrawView drawView = (DrawView) findViewById(R.id.drawView);
+        if (checked.getText().equals(question.getCorrectAnswer())){
+            checked.setBackgroundColor(Color.GREEN);
+        }
+        else
+            checked.setBackgroundColor(Color.RED);
+        try {
+            drawView.question = new JSONParser().getQuestion();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        setContentView(R.layout.activity_main);
+    }
 }
 
 
