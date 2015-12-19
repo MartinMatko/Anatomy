@@ -51,35 +51,31 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getNextQuestion();
+    }
 
-      //  RESTService restService = new RESTService();
-     //   restService.doInBackground("nothing");
-        //drawView = new DrawView(MainActivity.this);
-
+    public void getNextQuestion(){
         setContentView(R.layout.activity_main);
+        RadioGroup rg = (RadioGroup) findViewById(R.id.optionsView);
+        rg.setOnCheckedChangeListener(this);
         DrawView drawView = (DrawView) findViewById(R.id.drawView);
         question = drawView.question;
         if (question != null){
             TextView captionView = (TextView) findViewById(R.id.captionView);
             captionView.setText(question.getCaption());
             TextView textView = (TextView) findViewById(R.id.textOfQuestionView);
-            textView.setText("Zvolte nos");
+            textView.setText("Co je zvýrazněno?");
             RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
             RadioButton button;
             for(int i = 0; i < 2; i++) {
                 button = new RadioButton(this);
-                button.setText(question.getOptions().get(i));
+                button.setText(question.getOptions().get(i).getName());
                 options.addView(button);
             }
             button = new RadioButton(this);
             button.setText(question.correctAnswer);
             options.addView(button);
         }
-        //drawView.invalidate();
-
-        RadioGroup rg = (RadioGroup) findViewById(R.id.optionsView);
-        rg.setOnCheckedChangeListener(this);
-
     }
 
     public static Context getAppContext() {
@@ -95,12 +91,10 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         }
         else
             checked.setBackgroundColor(Color.RED);
-        try {
-            drawView.question = new JSONParser().getQuestion();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        setContentView(R.layout.activity_main);
+    }
+
+    public void onNextClick(View v) {
+        getNextQuestion();
     }
 }
 

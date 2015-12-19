@@ -19,12 +19,12 @@ public class Question {
     }
 
     String correctAnswer;
-    List<String> options;
+    List<Term> options;
 
     public Question() {
     }
 
-    public Question(List<PartOfBody> bodyParts, String caption, String text, List<String> options) {
+    public Question(List<PartOfBody> bodyParts, String caption, String text, List<Term> options) {
         this.bodyParts = bodyParts;
         this.caption = caption;
         this.text = text;
@@ -55,11 +55,11 @@ public class Question {
         this.text = text;
     }
 
-    public List<String> getOptions() {
+    public List<Term> getOptions() {
         return options;
     }
 
-    public void setOptions(List<String> options) {
+    public void setOptions(List<Term> options) {
         this.options = options;
     }
 

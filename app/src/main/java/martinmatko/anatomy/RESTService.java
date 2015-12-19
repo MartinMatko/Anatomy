@@ -44,7 +44,7 @@ public class RESTService {
     List <Cookie> cookies;
     CookieStore cookieStore;
 
-    public JSONObject get (String url){
+    public JSONObject getTest (String url){
         String contextID = null;
         JSONObject data = null;
         try {
@@ -73,14 +73,43 @@ public class RESTService {
                 data = new JSONObject();
                 data.put("context_id", contextID);
                 data.put("name", termToDescription.getJSONObject("term").getString("name"));
-
-                post();
+                data.put("description", termToDescription.getString("description"));
+                data.put("identifier", termToDescription.getString("identifier"));
+                //post();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return data;
     }
+    public JSONObject getFlashcard (String url){
+        String contextID = null;
+        JSONObject data = null;
+        JSONObject flashcard = null;
+        try {
+            DefaultHttpClient client = new DefaultHttpClient();
+            HttpGet get = new HttpGet(url);
+            HttpResponse responseGet = client.execute(get);
+            HttpEntity resEntityGet = responseGet.getEntity();
+            cookieStore = client.getCookieStore();
+            cookies =  cookieStore.getCookies();
+
+            if (resEntityGet != null) {
+                //do something with the response
+                InputStream is;
+                is = resEntityGet.getContent();
+                resEntityGet.toString();
+                String json = new JSONParser().readFully(is, "UTF-8");
+                flashcard = new JSONObject(json);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return flashcard;
+    }
+
+
+
     public void post(){
         try {
             HttpClient client = new DefaultHttpClient();
@@ -91,7 +120,8 @@ public class RESTService {
             String postURL = "http://anatom.cz/user/session/";
             HttpPost post = new HttpPost(postURL);
             List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("X-CSRF-TOKEN", cookies.get(0).toString()));
+            //params.add(new BasicNameValuePair("X-CSRF-TOKEN", cookies.get(0).getValue()));
+            params.add(new BasicNameValuePair("X-CSRFTOKEN", cookies.get(0).getValue()));
 
             UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params, HTTP.UTF_8);
             post.setEntity(ent);

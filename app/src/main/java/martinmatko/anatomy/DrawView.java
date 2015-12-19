@@ -44,7 +44,7 @@ public class DrawView extends View {
     private static float MIN_ZOOM = -1f;
     private static float MAX_ZOOM = 5f;
 
-    private float scaleFactor = 2.f;
+    private float scaleFactor = 1.f;
     private ScaleGestureDetector detector;
 
     //These two variables keep track of the X and Y coordinate of the finger when it first
@@ -129,8 +129,8 @@ public class DrawView extends View {
     public void onDraw(Canvas canvas) {
 
         super.onDraw(canvas);
-        displayWidth = this.getWidth();
-        displayHeight = this.getHeight();
+        displayWidth = 0;//this.getWidth();
+        displayHeight = 0;//this.getHeight();
 
         this.canvas  = canvas;
 
@@ -147,8 +147,8 @@ public class DrawView extends View {
                 Paint p = new Paint();
                 p.setStyle(Paint.Style.STROKE);
                 p.setStrokeWidth(1);
-                //setBounds(partOfBody.getBoundaries());
-                //canvas.drawRect(partOfBody.getBoundaries(), p);
+                setBounds(partOfBody.getBoundaries());
+                canvas.drawRect(partOfBody.getBoundaries(), p);
                 Matrix matrix = new Matrix();
                 matrix.setScale(scaleFactor, scaleFactor, pointOfZoomX, pointOfZoomY);
 
@@ -163,7 +163,7 @@ public class DrawView extends View {
 
                 canvas.drawPath(path, partOfBody.getPaint());
                 partOfBody.setBoundaries(boundaries);
-                canvas.drawRect(boundaries, p);
+                //canvas.drawRect(boundaries, p);
             }
         }catch (NullPointerException ex){
             ex.printStackTrace();
@@ -183,22 +183,6 @@ public class DrawView extends View {
                 p.setStyle(Paint.Style.FILL);
                 canvas.drawRect(button, p);
             angle += (2 * Math.PI)/selectedParts.size();
-        }
-        if (question != null && findViewById(R.id.captionView) != null){
-            TextView captionView = (TextView) findViewById(R.id.captionView);
-            captionView.setText(question.getCaption());
-            captionView.invalidate();
-            TextView textView = (TextView) findViewById(R.id.textOfQuestionView);
-            textView.setText(question.correctAnswer);
-            textView.invalidate();
-            RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
-            RadioButton button;
-            for(int i = 0; i < 5; i++) {
-                button = new RadioButton(ctx);
-                button.setText(question.getOptions().get(i));
-                options.addView(button);
-            }
-            //options.invalidate();
         }
         //canvas.translate(Math.abs(translateX - previousTranslateX) / scaleFactor, Math.abs(translateY - previousTranslateY) / scaleFactor);
         //canvas.restore();
