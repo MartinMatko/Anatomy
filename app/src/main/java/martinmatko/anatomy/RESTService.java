@@ -117,11 +117,12 @@ public class RESTService {
 
             localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
 
-            String postURL = "http://anatom.cz/user/session/";
+            String postURL = "https://staging.anatom.cz/user/session/";
             HttpPost post = new HttpPost(postURL);
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             //params.add(new BasicNameValuePair("X-CSRF-TOKEN", cookies.get(0).getValue()));
             params.add(new BasicNameValuePair("X-CSRFTOKEN", cookies.get(0).getValue()));
+            params.add(new BasicNameValuePair("X-sessionid", cookies.get(0).getValue()));
 
             UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params, HTTP.UTF_8);
             post.setEntity(ent);

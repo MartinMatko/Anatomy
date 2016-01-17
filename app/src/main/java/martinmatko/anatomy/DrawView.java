@@ -23,19 +23,32 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DrawView extends View {
 
     Context ctx;
 
     static final String TAG = "DrawView";
-    public float left = Float.MAX_VALUE;
-    public float top = Float.MAX_VALUE;
-    public float right = 0;
-    public float bottom = 0;
-    public float pointOfZoomX = 0f;
-    public float pointOfZoomY = 0f;
+    private float left = Float.MAX_VALUE;
+    private float top = Float.MAX_VALUE;
+    private float right = 0;
+    private float bottom = 0;
+    private float pointOfZoomX = 0f;
+    private float pointOfZoomY = 0f;
+    private boolean isReadyToAnswer = false;
+
+    public boolean isD2T() {
+        return isD2T;
+    }
+
+    public void setD2T(boolean isD2T) {
+        this.isD2T = isD2T;
+    }
+
+    private boolean isD2T = true;
 
     private Canvas canvas = new Canvas();
     Paint paint = new Paint();
@@ -68,6 +81,7 @@ public class DrawView extends View {
     private boolean touched = false;
     private boolean selectedMode = false;
     private List<PartOfBody> selectedParts = new ArrayList<>();
+    private Map<String, RectF> buttons = new HashMap<>();
 
     // Used for set first translate to a quarter of screen
     private float displayWidth;
@@ -89,7 +103,7 @@ public class DrawView extends View {
 
     private void init(Context context) {
         try {
-            this.question = new JSONParser().getQuestion();
+            this.question = new JSONParser().getQuestion(isD2T);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -142,48 +156,8 @@ public class DrawView extends View {
         if (selectedMode){
             scaleFactor = 1f;
         }
-        try {
-            for (PartOfBody partOfBody: question.getBodyParts()){
-                Paint p = new Paint();
-                p.setStyle(Paint.Style.STROKE);
-                p.setStrokeWidth(1);
-                setBounds(partOfBody.getBoundaries());
-                canvas.drawRect(partOfBody.getBoundaries(), p);
-                Matrix matrix = new Matrix();
-                matrix.setScale(scaleFactor, scaleFactor, pointOfZoomX, pointOfZoomY);
-
-                Path path = new Path();
-                partOfBody.getPath().transform(matrix, path);
-                RectF boundaries = new RectF();
-                path.computeBounds(boundaries, true);
-
-                partOfBody.setPath(path);
-                //matrix.setTranslate(-canvasTranslateX/scaleFactor, -canvasTranslateY/scaleFactor);
-                //touched = false;
-
-                canvas.drawPath(path, partOfBody.getPaint());
-                partOfBody.setBoundaries(boundaries);
-                //canvas.drawRect(boundaries, p);
-            }
-        }catch (NullPointerException ex){
-            ex.printStackTrace();
-        }
-        float angle = 0f;
-        for (PartOfBody partOfBody: selectedParts){
-                Paint p = new Paint();
-                RectF button = new RectF();
-                button.left += 200 * Math.cos(angle) + x;
-                button.right = button.left + 300;
-                button.top += 200 * Math.sin(angle) + y;
-                button.bottom = button.top + 200;
-                p.setStyle(Paint.Style.STROKE);
-                p.setStrokeWidth(10);
-                canvas.drawRect(button, p);
-                p = partOfBody.getPaint();
-                p.setStyle(Paint.Style.FILL);
-                canvas.drawRect(button, p);
-            angle += (2 * Math.PI)/selectedParts.size();
-        }
+        drawBodyParts();
+        drawButtons();
         //canvas.translate(Math.abs(translateX - previousTranslateX) / scaleFactor, Math.abs(translateY - previousTranslateY) / scaleFactor);
         //canvas.restore();
     }
@@ -238,21 +212,11 @@ public class DrawView extends View {
         }
         detector.onTouchEvent(event);
 
-        if (event.getAction() == MotionEvent.ACTION_UP && !dragged && touched){
+        if (event.getAction() == MotionEvent.ACTION_UP && !dragged && touched && !isReadyToAnswer){
             x = event.getX();
             y = event.getY();
-            selectedMode = true;
-            selectedParts.clear();
-            for (PartOfBody partOfBody : question.getBodyParts()){
-                Region region = new Region();
-                RectF rectF = partOfBody.getBoundaries();
-                region.setPath(partOfBody.getPath(), new Region((int) rectF.left, (int) rectF.top, (int) rectF.right, (int) rectF.bottom));
-                if (rectF.contains(Math.abs(x ), Math.abs(y )))
-                {
-                    selectedParts.add(partOfBody);
-                    partOfBody.setSelected(true);
-                }
-            }
+            showButtons();
+            isReadyToAnswer = true;
             invalidate();
             return true;
         }
@@ -270,7 +234,126 @@ public class DrawView extends View {
             invalidate();
         }
 
+        if (event.getAction() == MotionEvent.ACTION_UP && isReadyToAnswer){
+            x = event.getX();
+            y = event.getY();
+            for (Term option : question.getOptions()) {
+                //oznacena odpoved
+                RectF button = option.getButton();
+                if (button!= null && button.contains(x, y)){
+                    if (option.getIdentifier().equals(question.getCorrectAnswerIdentifier())){
+                        for (PartOfBody partOfBody : question.getBodyParts()){
+                            if (partOfBody.getIdentifier().equals(option.getIdentifier())){
+                                Paint paint = partOfBody.getPaint();
+                                paint.setColor(Color.GREEN);
+                            }
+                        }
+                    }
+                    else{
+                        for (PartOfBody partOfBody : question.getBodyParts()){
+
+                            if (option.getIdentifier().equals(partOfBody.getIdentifier())){
+                                Paint paint = partOfBody.getPaint();
+                                paint.setColor(Color.RED);
+                            }
+                        }
+                    }
+                }
+            }
+            invalidate();
+            return true;
+        }
         return true;
+    }
+
+    public void showButtons(){
+        selectedMode = true;
+        selectedParts.clear();
+        for (PartOfBody partOfBody : question.getBodyParts()){
+            Region region = new Region();
+            if (partOfBody.getBoundaries()!=null){
+                RectF rectF = partOfBody.getBoundaries();
+                region.setPath(partOfBody.getPath(), new Region((int) rectF.left, (int) rectF.top, (int) rectF.right, (int) rectF.bottom));
+                boolean isTerm = (question.containsIdentifier(partOfBody.getIdentifier()));
+                boolean isNotInButtons = true;
+                for (int i = 0; i < selectedParts.size(); i++) {
+                    if (selectedParts.get(i).getIdentifier().equals(partOfBody.getIdentifier())){
+                        isNotInButtons = false;
+                    }
+                }
+                if (rectF.contains(Math.abs(x ), Math.abs(y )) && isTerm && isNotInButtons)
+                {
+                    selectedParts.add(partOfBody);
+                    partOfBody.setSelected(true);
+                }
+            }
+
+        }
+    }
+
+    public void drawButtons(){
+
+        float angle = 0f;
+        for (PartOfBody partOfBody: selectedParts){
+            Paint p = new Paint();
+            RectF button = new RectF();
+            button.left += 200 * Math.cos(angle) + x;
+            button.right = button.left + 300;
+            button.top += 200 * Math.sin(angle) + y;
+            button.bottom = button.top + 200;
+            p.setStyle(Paint.Style.STROKE);
+            p.setStrokeWidth(10);
+            canvas.drawRect(button, p);
+            p = partOfBody.getPaint();
+            p.setStyle(Paint.Style.FILL);
+            canvas.drawRect(button, p);
+            List<Term> options = question.getOptions();
+            for ( Term term : options){
+                if (term.getIdentifier().equals(partOfBody.getIdentifier())){
+                    term.setButton(button);
+                }
+            }
+            angle += (2 * Math.PI)/selectedParts.size();
+        }
+    }
+
+    public void drawBodyParts(){
+        try {
+            for (PartOfBody partOfBody: question.getBodyParts()){
+
+                Matrix matrix = new Matrix();
+                matrix.setScale(scaleFactor, scaleFactor, pointOfZoomX, pointOfZoomY);
+
+                Path path = new Path();
+                partOfBody.getPath().transform(matrix, path);
+                RectF boundaries = new RectF();
+                path.computeBounds(boundaries, true);
+                partOfBody.setBoundaries(boundaries);
+
+                partOfBody.setPath(path);
+                //matrix.setTranslate(-canvasTranslateX/scaleFactor, -canvasTranslateY/scaleFactor);
+                //touched = false;
+
+                canvas.drawPath(path, partOfBody.getPaint());
+                //canvas.drawRect(boundaries, p);
+            }
+            for (PartOfBody partOfBody: question.getBodyParts()){
+                if (partOfBody.getIdentifier()!= null)
+                {
+                    if (partOfBody.getIdentifier().equals(question.getCorrectAnswerIdentifier()) || isD2T){
+                        Paint p = new Paint();
+                        p.setStyle(Paint.Style.STROKE);
+                        p.setStrokeWidth(3);
+//                setBounds(partOfBody.getBoundaries());
+                        canvas.drawRect(partOfBody.getBoundaries(), p);
+                    }
+
+                    canvas.drawPath(partOfBody.getPath(), partOfBody.getPaint());
+                }
+            }
+        }catch (NullPointerException ex){
+            ex.printStackTrace();
+        }
     }
 
         class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {

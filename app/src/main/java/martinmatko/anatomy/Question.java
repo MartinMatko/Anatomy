@@ -6,9 +6,21 @@ import java.util.List;
  * Created by Martin on 22.11.2015.
  */
 public class Question {
-    List<PartOfBody> bodyParts;
-    String caption;
-    String text;
+    private List<PartOfBody> bodyParts;
+    private String caption;
+    private String text;
+    private String correctAnswer;
+
+    public String getCorrectAnswerIdentifier() {
+        return correctAnswerIdentifier;
+    }
+
+    public void setCorrectAnswerIdentifier(String correctAnswerIdentifier) {
+        this.correctAnswerIdentifier = correctAnswerIdentifier;
+    }
+
+    private String correctAnswerIdentifier;
+    private List<Term> options;
 
     public String getCorrectAnswer() {
         return correctAnswer;
@@ -18,8 +30,6 @@ public class Question {
         this.correctAnswer = correctAnswer;
     }
 
-    String correctAnswer;
-    List<Term> options;
 
     public Question() {
     }
@@ -63,4 +73,12 @@ public class Question {
         this.options = options;
     }
 
+    public boolean containsIdentifier(String identifier){
+        for (int i = 0; i < options.size(); i++) {
+            if (options.get(i).getIdentifier().equals(identifier)){
+                return true;
+            }
+        }
+        return false;
+    }
 }

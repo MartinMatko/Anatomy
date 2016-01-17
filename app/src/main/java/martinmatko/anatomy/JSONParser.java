@@ -34,7 +34,7 @@ import java.util.List;
 public class JSONParser {
 
     private List<Term> terms = new ArrayList<>();
-    public Question getQuestion() throws IOException, JSONException {
+    public Question getQuestion(boolean isD2T) throws IOException, JSONException {
         Question question = new Question();
         String content;
         JSONArray paths;
@@ -42,14 +42,17 @@ public class JSONParser {
         Context ctx = MainActivity.getAppContext();
         JSONObject flashcardContext;
         RESTService service = new RESTService();
-        JSONObject dataFromREST = service.getTest("http://staging.anatom.cz/flashcards/practice/?avoid=[]&categories=[]&contexts=[]&limit=2&types=[]&without_contexts=1");
-        flashcardContext = service.getFlashcard("http://staging.anatom.cz/flashcards/context/" + dataFromREST.getString("context_id"));
+        JSONObject dataFromREST = service.getTest("https://staging.anatom.cz/flashcards/practice/?avoid=[]&categories=[]&contexts=[]&limit=2&types=[]&without_contexts=1");
+        flashcardContext = service.getFlashcard("https://staging.anatom.cz/flashcards/context/" + dataFromREST.getString("context_id"));
 
         JSONObject data = flashcardContext.getJSONObject("data");
 
             caption = data.getString("name");
             question.setCaption(caption);
-            question.setCorrectAnswer(dataFromREST.getString("identifier"));
+            String nameOfCorrectAnswer = dataFromREST.getString("name");
+            String identifierOfCorrectAnswer = dataFromREST.getString("description");
+            question.setCorrectAnswer(nameOfCorrectAnswer);
+            question.setCorrectAnswerIdentifier(identifierOfCorrectAnswer);
             content = data.getString("content");
         JSONObject JSONContent = new JSONObject(content);
 
@@ -73,12 +76,27 @@ public class JSONParser {
                 }
                 catch (org.json.JSONException ex){
                 }
-                if (identifier != null)
-                    parts.add(new PartOfBody(parser.doPath(line), paint, path.getString("term")) );
+                if (identifier != null){
+                    if (identifier.equals(identifierOfCorrectAnswer) || isD2T){
+                        paint.setColor(Color.parseColor(color));
+                        parts.add(new PartOfBody(parser.doPath(line), paint, path.getString("term")) );
+                    }
+                    else{
+                        color = toGrayScale(color);
+                        paint.setColor(Color.parseColor(color));
+                        parts.add(new PartOfBody(parser.doPath(line), paint, path.getString("term")) );
+                    }
+                }
 
                 else
                     color = toGrayScale(color);
-                    paint.setColor(Color.parseColor(color));
+                    try{
+                        paint.setColor(Color.parseColor(color));
+                    }
+                    catch (IllegalArgumentException ex)
+                    {
+                        ex.printStackTrace();
+                    }
                     parts.add(new PartOfBody(parser.doPath(line), paint) );
             }
 
@@ -121,9 +139,20 @@ public class JSONParser {
         return ret;
     }
     public Integer[] HexTorgb (String colorStr){
-        int r = Integer.valueOf( colorStr.substring( 1, 3 ), 16);
-        int g = Integer.valueOf( colorStr.substring( 3, 5 ), 16);
-        int b = Integer.valueOf( colorStr.substring( 5, 7 ), 16);
+        int r=0, g=0, b=0;
+        try{
+            r = Integer.valueOf( colorStr.substring( 1, 3 ), 16);
+            g = Integer.valueOf( colorStr.substring( 3, 5 ), 16);
+            b = Integer.valueOf( colorStr.substring( 5, 7 ), 16);
+        }
+        catch (NumberFormatException ex){
+            System.out.println(colorStr);
+            ex.printStackTrace();
+        }
+        catch (StringIndexOutOfBoundsException ex){
+            System.out.println(colorStr);
+            ex.printStackTrace();
+        }
         Integer[] rgb = new Integer[]{r, g, b};
         return rgb;
     }
@@ -134,6 +163,9 @@ public class JSONParser {
     }
 
     public String toGrayScale(String colorStr){
+        if (colorStr == "none" || colorStr.length() < 5){
+            return "#000000";
+        }
         if (isGray( colorStr)){
             return colorStr;
         }

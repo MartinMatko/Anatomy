@@ -1,10 +1,23 @@
 package martinmatko.anatomy;
 
+import android.graphics.RectF;
+
 /**
  * Created by Martin on 19.12.2015.
  */
 public class Term {
-    public String name;
+    private String name;
+    private String identifier;
+    private RectF button;
+
+    public RectF getButton() {
+        return button;
+    }
+
+    public void setButton(RectF button) {
+        this.button = button;
+    }
+
 
     public String getName() {
         return name;
@@ -28,5 +41,4 @@ public class Term {
         this.identifier = identifier;
     }
 
-    public String identifier;
 }
