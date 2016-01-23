@@ -3,6 +3,7 @@ package martinmatko.anatomy;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.net.http.AndroidHttpClient;
 
 import org.apache.http.HttpResponse;
@@ -78,7 +79,13 @@ public class JSONParser {
                 }
                 if (identifier != null){
                     if (identifier.equals(identifierOfCorrectAnswer) || isD2T){
-                        paint.setColor(Color.parseColor(color));
+                        try{
+                            paint.setColor(Color.parseColor(color));
+                        }
+                        catch (IllegalArgumentException ex){
+                            System.out.println("Unknown color" + color);
+                            ex.printStackTrace();
+                        }
                         parts.add(new PartOfBody(parser.doPath(line), paint, path.getString("term")) );
                     }
                     else{
@@ -89,6 +96,7 @@ public class JSONParser {
                 }
 
                 else
+                {
                     color = toGrayScale(color);
                     try{
                         paint.setColor(Color.parseColor(color));
@@ -98,6 +106,11 @@ public class JSONParser {
                         ex.printStackTrace();
                     }
                     parts.add(new PartOfBody(parser.doPath(line), paint) );
+                }
+                RectF boundaries = new RectF();
+                parts.get(i).getPath().computeBounds(boundaries, true);
+                parts.get(i).setBoundaries(boundaries);
+                question.setBounds(boundaries);
             }
 
             JSONArray flashcards = data.getJSONArray("flashcards");
@@ -148,6 +161,7 @@ public class JSONParser {
         catch (NumberFormatException ex){
             System.out.println(colorStr);
             ex.printStackTrace();
+            return new Integer[]{0, 0, 0};
         }
         catch (StringIndexOutOfBoundsException ex){
             System.out.println(colorStr);

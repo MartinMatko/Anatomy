@@ -117,12 +117,12 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     }
 
     public void onNextClick(View v) {
-        if (numberOfQuestion < 2){
+        if (numberOfQuestion < 5){
             numberOfQuestion++;
             getNextD2TdQuestion();
         }
         else{
-            if (numberOfQuestion < 4){
+            if (numberOfQuestion < 5){
                 numberOfQuestion++;
                 getNextD2TdQuestion();
             }
