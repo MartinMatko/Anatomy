@@ -3,8 +3,10 @@ package martinmatko.anatomy;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.preference.PreferenceActivity;
 import android.util.Log;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -15,7 +17,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.cookie.Cookie;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HTTP;
@@ -40,21 +45,23 @@ import java.util.List;
 /**
  * Created by Martin on 7.11.2015.
  */
-public class RESTService {
+public class HTTPService {
     List <Cookie> cookies;
     CookieStore cookieStore;
+    Header[] setCookies;
 
     public JSONObject getTest (String url){
         String contextID = null;
         JSONObject data = null;
+        DefaultHttpClient client = new DefaultHttpClient();
         try {
-            DefaultHttpClient client = new DefaultHttpClient();
             HttpGet get = new HttpGet(url);
             HttpResponse responseGet = client.execute(get);
             HttpEntity resEntityGet = responseGet.getEntity();
+
             cookieStore = client.getCookieStore();
             cookies =  cookieStore.getCookies();
-
+            setCookies = responseGet.getHeaders("Set-Cookie");
             if (resEntityGet != null) {
                 //do something with the response
                 InputStream is;
@@ -75,7 +82,7 @@ public class RESTService {
                 data.put("name", termToDescription.getJSONObject("term").getString("name"));
                 data.put("description", termToDescription.getString("description"));
                 data.put("identifier", termToDescription.getString("identifier"));
-                //post();
+                post(client);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,26 +117,42 @@ public class RESTService {
 
 
 
-    public void post(){
+    public void post( HttpClient client){
         try {
-            HttpClient client = new DefaultHttpClient();
-            HttpContext localContext = new BasicHttpContext();
-
-            localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
-
-            String postURL = "https://staging.anatom.cz/user/session/";
+            String body = "{\"answers\":[{\"flashcard_id\":370,\"flashcard_answered_id\":734,\"response_time\":59203,\"direction\":\"t2d\",\"option_ids\":[734],\"time\":1453658532305}]}";
+            String postURL = "https://staging.anatom.cz/flashcards/practice/";
             HttpPost post = new HttpPost(postURL);
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
-            //params.add(new BasicNameValuePair("X-CSRF-TOKEN", cookies.get(0).getValue()));
-            params.add(new BasicNameValuePair("X-CSRFTOKEN", cookies.get(0).getValue()));
-            params.add(new BasicNameValuePair("X-sessionid", cookies.get(0).getValue()));
+            post.addHeader("X-CSRFTOKEN", cookies.get(0).getValue());
+            post.addHeader("X-sessionid", cookies.get(1).getValue());
+            StringEntity entity = new StringEntity(body);
+            entity.setContentType(new BasicHeader("Content-Type",
+                    "raw"));
+            post.setEntity(entity);
 
-            UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params, HTTP.UTF_8);
-            post.setEntity(ent);
-            HttpResponse responsePOST = client.execute(post, localContext);
+//            HttpContext localContext = new BasicHttpContext();
+//            localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+//            List<NameValuePair> params = new ArrayList<NameValuePair>();
+//             //   PASSING THE TOKEN GOTTEN FROM THE CODE ABOVE
+//            post.addHeader("x-sessionid", cookies.get(1).getValue()); //   PASSING THE SESSIONID
+//            StringEntity entity = new StringEntity(body);
+//            entity.setContentType(new BasicHeader("Content-Type",
+//                    "application/atom+xml"));
+//            post.setEntity(entity);
+//
+//            post.addHeader("Cookie", "_ga=GA1.2.977886069.1448194905; __utmx=125757914.UerhSQbmRoi890TNRKcmtg$0:1; __utmxx=125757914.UerhSQbmRoi890TNRKcmtg$0:1448804348:8035200; csrftoken=XUItNU1gPFNWbXDcOpVedqxZrFdjhABF; sessionid=707natnhs8cei2dvd4scfbu2d89x8ajr");
+//            params.add(new BasicNameValuePair("X-CSRFTOKEN", cookies.get(0).getValue()));
+//            params.add(new BasicNameValuePair("X-sessionid", cookies.get(1).getValue()));
+//            UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params, HTTP.UTF_8);
+//            post.setEntity(ent);
+            HttpResponse responsePOST = client.execute(post);
+            StringBuilder sb = new StringBuilder();
+            for (Header header : post.getAllHeaders()){
+                sb.append(header.getName() + ": " + header.getValue());
+            }
+            Log.i("Cookies: ", sb.toString());
             HttpEntity resEntity = responsePOST.getEntity();
             if (resEntity != null) {
-                Log.i("RESPONSE",EntityUtils.toString(resEntity));
+                Log.i("RESPONSE ",EntityUtils.toString(resEntity));
             }
         } catch (Exception e) {
             e.printStackTrace();

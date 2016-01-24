@@ -158,7 +158,7 @@ public class DrawView extends View {
                     case NOACTION:
                         //centering picture
                         matrix.setScale(1/totalScaleFactor, 1/totalScaleFactor, this.getWidth()/2, this.getHeight()/2);
-                        matrix.postTranslate(this.getWidth()/2 - x1, this.getHeight()/2 - y1);
+                        //matrix.postTranslate(this.getWidth()/2 - x1, this.getHeight()/2 - y1);
                         scaleFactor = 1.f;
                         break;
                     case CONFIRM:
@@ -170,16 +170,7 @@ public class DrawView extends View {
                     default:
                         matrix.setScale(scaleFactor, scaleFactor, pointOfZoomX, pointOfZoomY);
                 }
-//                //centering picture
-//                if (mode == INITIAL || mode == NOACTION){
-//                    scaleFactor = question.computeScaleFactorOfPicture(this.getWidth(), this.getHeight());
-//                    matrix.setTranslate(this.getWidth()/2 - x1, this.getHeight()/2 - y1);
-//                    matrix.postScale(scaleFactor, scaleFactor, this.getWidth()/2, this.getHeight()/2);
-//                    scaleFactor = 1.f;
-//                }
-//                else {
-//                    matrix.setScale(scaleFactor, scaleFactor, pointOfZoomX, pointOfZoomY);
-//                }
+
                 Path path = new Path();
                 partOfBody.getPath().transform(matrix, path);
                 RectF boundaries = new RectF();
@@ -198,7 +189,7 @@ public class DrawView extends View {
                         p.setStyle(Paint.Style.STROKE);
                         p.setStrokeWidth(3);
 //                setBounds(partOfBody.getBoundaries());
-                        canvas.drawRect(partOfBody.getBoundaries(), p);
+                        //canvas.drawRect(partOfBody.getBoundaries(), p);
                     }
 
                     canvas.drawPath(partOfBody.getPath(), partOfBody.getPaint());
@@ -360,17 +351,24 @@ public class DrawView extends View {
         float angle = 0f;
         for (PartOfBody partOfBody: selectedParts){
             Paint p = new Paint();
-            RectF button = new RectF();
-            button.left += 200 * Math.cos(angle) + x;
-            button.right = button.left + 300;
-            button.top += 200 * Math.sin(angle) + y;
-            button.bottom = button.top + 200;
+            p.setColor(Color.BLACK);
+            float radiusOfButtons = Math.min(this.getHeight(), this.getWidth());
+            float radius = radiusOfButtons/10;
+            float xCenter = radiusOfButtons/2;
+            float yCenter = radiusOfButtons/2;
+            xCenter += Math.cos(angle) * xCenter/1.5;
+            yCenter += Math.sin(angle) * yCenter/1.5;
             p.setStyle(Paint.Style.STROKE);
-            p.setStrokeWidth(10);
-            canvas.drawRect(button, p);
+            p.setStrokeWidth(3);
+            canvas.drawCircle(xCenter, yCenter, radius, p);
             p = partOfBody.getPaint();
             p.setStyle(Paint.Style.FILL);
-            canvas.drawRect(button, p);
+            RectF button = new RectF();
+            button.bottom = yCenter + radius;
+            button.top = yCenter - radius;
+            button.left = xCenter - radius;
+            button.right = xCenter + radius;
+            canvas.drawCircle(xCenter, yCenter, radius, p);
             List<Term> options = question.getOptions();
             for ( Term term : options){
                 if (term.getIdentifier().equals(partOfBody.getIdentifier())){
