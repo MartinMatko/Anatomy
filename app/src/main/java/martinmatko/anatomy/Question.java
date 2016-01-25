@@ -8,44 +8,15 @@ import java.util.List;
  * Created by Martin on 22.11.2015.
  */
 public class Question {
+
+    RectF borders = new RectF(Float.MAX_VALUE, Float.MAX_VALUE, 0, 0);;
     private List<PartOfBody> bodyParts;
     private String caption;
     private String text;
     private String correctAnswer;
-     float left = Float.MAX_VALUE;
-     float top = Float.MAX_VALUE;
-     float right = 0;
-     float bottom = 0;
-
-    public float getScaleFactorOfPicture() {
-        return scaleFactorOfPicture;
-    }
-
-    public void setScaleFactorOfPicture(float scaleFactorOfPicture) {
-        this.scaleFactorOfPicture = scaleFactorOfPicture;
-    }
-
     private float scaleFactorOfPicture;
-
-    public String getCorrectAnswerIdentifier() {
-        return correctAnswerIdentifier;
-    }
-
-    public void setCorrectAnswerIdentifier(String correctAnswerIdentifier) {
-        this.correctAnswerIdentifier = correctAnswerIdentifier;
-    }
-
     private String correctAnswerIdentifier;
     private List<Term> options;
-
-    public String getCorrectAnswer() {
-        return correctAnswer;
-    }
-
-    public void setCorrectAnswer(String correctAnswer) {
-        this.correctAnswer = correctAnswer;
-    }
-
 
     public Question() {
     }
@@ -55,6 +26,30 @@ public class Question {
         this.caption = caption;
         this.text = text;
         this.options = options;
+    }
+
+    public float getScaleFactorOfPicture() {
+        return scaleFactorOfPicture;
+    }
+
+    public void setScaleFactorOfPicture(float scaleFactorOfPicture) {
+        this.scaleFactorOfPicture = scaleFactorOfPicture;
+    }
+
+    public String getCorrectAnswerIdentifier() {
+        return correctAnswerIdentifier;
+    }
+
+    public void setCorrectAnswerIdentifier(String correctAnswerIdentifier) {
+        this.correctAnswerIdentifier = correctAnswerIdentifier;
+    }
+
+    public String getCorrectAnswer() {
+        return correctAnswer;
+    }
+
+    public void setCorrectAnswer(String correctAnswer) {
+        this.correctAnswer = correctAnswer;
     }
 
     public List<PartOfBody> getBodyParts() {
@@ -89,29 +84,30 @@ public class Question {
         this.options = options;
     }
 
-    public void setBounds(RectF rectF){
-        if(rectF.right > right)
-            right = rectF.right;
-        if(rectF.left < left)
-            left = rectF.left;
-        if(rectF.bottom > bottom)
-            bottom = rectF.bottom;
-        if(rectF.top < top)
-            top = rectF.top;
+    public void setBounds(RectF rectF) {
+
+        if (rectF.right > borders.right)
+            borders.right = rectF.right;
+        if (rectF.left < borders.left)
+            borders.left = rectF.left;
+        if (rectF.bottom > borders.bottom)
+            borders.bottom = rectF.bottom;
+        if (rectF.top < borders.top)
+            borders.top = rectF.top;
     }
 
-    public float computeScaleFactorOfPicture(float width,float height){
-        float xFactor = width/(right - left);
-        float yFactor = height/(bottom - top);
+    public float computeScaleFactorOfPicture(float width, float height) {
+        float xFactor = width / (borders.right - borders.left);
+        float yFactor = height / (borders.bottom - borders.top);
         if (xFactor < yFactor)
             return xFactor;
         else
             return yFactor;
     }
 
-    public boolean containsIdentifier(String identifier){
+    public boolean containsIdentifier(String identifier) {
         for (int i = 0; i < options.size(); i++) {
-            if (options.get(i).getIdentifier().equals(identifier)){
+            if (options.get(i).getIdentifier().equals(identifier)) {
                 return true;
             }
         }

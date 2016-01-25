@@ -10,6 +10,12 @@ public class Term {
     private String identifier;
     private RectF button;
 
+    public Term(String name, String identifier) {
+
+        this.name = name;
+        this.identifier = identifier;
+    }
+
     public RectF getButton() {
         return button;
     }
@@ -17,7 +23,6 @@ public class Term {
     public void setButton(RectF button) {
         this.button = button;
     }
-
 
     public String getName() {
         return name;
@@ -32,12 +37,6 @@ public class Term {
     }
 
     public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
-
-    public Term(String name, String identifier) {
-
-        this.name = name;
         this.identifier = identifier;
     }
 

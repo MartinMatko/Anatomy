@@ -1,56 +1,34 @@
 package martinmatko.anatomy;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.preference.PreferenceActivity;
 import android.util.Log;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.cookie.Cookie;
-import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Martin on 7.11.2015.
  */
 public class HTTPService {
-    List <Cookie> cookies;
+    List<Cookie> cookies;
     CookieStore cookieStore;
     Header[] setCookies;
 
-    public JSONObject getTest (String url){
+    public JSONObject getTest(String url) {
         String contextID = null;
         JSONObject data = null;
         DefaultHttpClient client = new DefaultHttpClient();
@@ -60,7 +38,7 @@ public class HTTPService {
             HttpEntity resEntityGet = responseGet.getEntity();
 
             cookieStore = client.getCookieStore();
-            cookies =  cookieStore.getCookies();
+            cookies = cookieStore.getCookies();
             setCookies = responseGet.getHeaders("Set-Cookie");
             if (resEntityGet != null) {
                 //do something with the response
@@ -72,7 +50,7 @@ public class HTTPService {
                 JSONArray array = question.getJSONObject("data").getJSONArray("flashcards");
                 JSONObject termToDescription = null;
                 for (int i = 0; i < array.length(); i++) {
-                    if (array.getJSONObject(i).getString("direction").equals("t2d")){
+                    if (array.getJSONObject(i).getString("direction").equals("t2d")) {
                         termToDescription = array.getJSONObject(i);
                     }
                 }
@@ -82,14 +60,15 @@ public class HTTPService {
                 data.put("name", termToDescription.getJSONObject("term").getString("name"));
                 data.put("description", termToDescription.getString("description"));
                 data.put("identifier", termToDescription.getString("identifier"));
-                post(client);
+                //post(client);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return data;
     }
-    public JSONObject getFlashcard (String url){
+
+    public JSONObject getFlashcard(String url) {
         String contextID = null;
         JSONObject data = null;
         JSONObject flashcard = null;
@@ -99,7 +78,7 @@ public class HTTPService {
             HttpResponse responseGet = client.execute(get);
             HttpEntity resEntityGet = responseGet.getEntity();
             cookieStore = client.getCookieStore();
-            cookies =  cookieStore.getCookies();
+            cookies = cookieStore.getCookies();
 
             if (resEntityGet != null) {
                 //do something with the response
@@ -116,8 +95,7 @@ public class HTTPService {
     }
 
 
-
-    public void post( HttpClient client){
+    public void post(HttpClient client) {
         try {
             String body = "{\"answers\":[{\"flashcard_id\":370,\"flashcard_answered_id\":734,\"response_time\":59203,\"direction\":\"t2d\",\"option_ids\":[734],\"time\":1453658532305}]}";
             String postURL = "https://staging.anatom.cz/flashcards/practice/";
@@ -146,13 +124,13 @@ public class HTTPService {
 //            post.setEntity(ent);
             HttpResponse responsePOST = client.execute(post);
             StringBuilder sb = new StringBuilder();
-            for (Header header : post.getAllHeaders()){
+            for (Header header : post.getAllHeaders()) {
                 sb.append(header.getName() + ": " + header.getValue());
             }
             Log.i("Cookies: ", sb.toString());
             HttpEntity resEntity = responsePOST.getEntity();
             if (resEntity != null) {
-                Log.i("RESPONSE ",EntityUtils.toString(resEntity));
+                Log.i("RESPONSE ", EntityUtils.toString(resEntity));
             }
         } catch (Exception e) {
             e.printStackTrace();

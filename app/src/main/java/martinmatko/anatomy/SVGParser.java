@@ -2,30 +2,33 @@ package martinmatko.anatomy;
 
 import android.content.res.AssetManager;
 import android.content.res.Resources;
-import android.graphics.*;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Picture;
+import android.graphics.RadialGradient;
+import android.graphics.RectF;
+import android.graphics.Shader;
 import android.util.Log;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
-import android.content.Context;
 
-import martinmatko.anatomy.R;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 /*
 
@@ -81,7 +84,7 @@ public class SVGParser {
      * @return the parsed SVG.
      * @throws SVGParseException if there is an error while parsing.
      */
-    public static SVG getSVGFromString(String svgData)  {
+    public static SVG getSVGFromString(String svgData) {
         return SVGParser.parse(new ByteArrayInputStream(svgData.getBytes()), 0, 0, false);
     }
 
@@ -628,6 +631,7 @@ public class SVGParser {
             }
         }
     }
+
     public String readFully(InputStream inputStream, String encoding)
             throws IOException {
         return new String(readFully(inputStream), encoding);
@@ -803,6 +807,9 @@ public class SVGParser {
         HashMap<String, Shader> gradientMap = new HashMap<String, Shader>();
         HashMap<String, Gradient> gradientRefMap = new HashMap<String, Gradient>();
         Gradient gradient = null;
+        private boolean hidden = false;
+        private int hiddenLevel = 0;
+        private boolean boundsMode = false;
 
         private SVGHandler(Picture picture) {
             this.picture = picture;
@@ -953,10 +960,6 @@ public class SVGParser {
                 paint.setAlpha((int) (255 * opacity));
             }
         }
-
-        private boolean hidden = false;
-        private int hiddenLevel = 0;
-        private boolean boundsMode = false;
 
         private void doLimits(float x, float y) {
             if (x < limits.left) {

@@ -15,27 +15,25 @@ public class PartOfBody {
     private boolean right;
     private String identifier;
 
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
-
     public PartOfBody(Path path, Paint paint, String identifier) {
         this.paint = paint;
         this.identifier = identifier;
         this.path = path;
     }
 
-
-
     public PartOfBody(Path path, Paint paint) {
         this.paint = paint;
         this.path = path;
         boundaries = new RectF();
         path.computeBounds(boundaries, true);
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
     public boolean isRight() {

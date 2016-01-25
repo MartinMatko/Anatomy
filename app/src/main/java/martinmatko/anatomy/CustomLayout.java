@@ -3,8 +3,8 @@ package martinmatko.anatomy;
 /**
  * Created by Martin on 25.11.2015.
  */
+
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -20,15 +20,19 @@ import android.widget.RemoteViews;
  */
 @RemoteViews.RemoteView
 public class CustomLayout extends RelativeLayout {
-    /** The amount of space used by children in the left gutter. */
-    private int mLeftWidth;
-
-    /** The amount of space used by children in the right gutter. */
-    private int mRightWidth;
-
-    /** These are used for computing child frames based on their gravity. */
+    /**
+     * These are used for computing child frames based on their gravity.
+     */
     private final Rect mTmpContainerRect = new Rect();
     private final Rect mTmpChildRect = new Rect();
+    /**
+     * The amount of space used by children in the left gutter.
+     */
+    private int mLeftWidth;
+    /**
+     * The amount of space used by children in the right gutter.
+     */
+    private int mRightWidth;
 
     public CustomLayout(Context context) {
         super(context);
@@ -192,16 +196,14 @@ public class CustomLayout extends RelativeLayout {
      * Custom per-child layout information.
      */
     public static class LayoutParams extends MarginLayoutParams {
+        public static int POSITION_MIDDLE = 0;
+        public static int POSITION_LEFT = 1;
+        public static int POSITION_RIGHT = 2;
         /**
          * The gravity to apply with the View to which these layout parameters
          * are associated.
          */
         public int gravity = Gravity.TOP | Gravity.START;
-
-        public static int POSITION_MIDDLE = 0;
-        public static int POSITION_LEFT = 1;
-        public static int POSITION_RIGHT = 2;
-
         public int position = POSITION_MIDDLE;
 
         public LayoutParams(Context c, AttributeSet attrs) {

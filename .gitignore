@@ -2,6 +2,11 @@
 Thumbs.db
 ehthumbs.db
 
+#binary files
+*.bin
+
+workspace.xml
+
 # Folder config file
 Desktop.ini
 
