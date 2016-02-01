@@ -12,6 +12,10 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import org.json.JSONException;
+
+import java.io.IOException;
+
 public class MainActivity extends Activity implements RadioGroup.OnCheckedChangeListener {
 
     private static Context context;
@@ -43,14 +47,20 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getNextD2TdQuestion();
+
+        setContentView(R.layout.activity_main);
+        DrawView drawView = (DrawView) findViewById(R.id.drawView);
+        question = drawView.question;
+        if (question.isD2T()){
+            getNextD2TdQuestion();
+        }
+        else
+            getNextt2dQuestion();
     }
 
     //Vyber
     public void getNextD2TdQuestion() {
-        setContentView(R.layout.activity_main);
         DrawView drawView = (DrawView) findViewById(R.id.drawView);
-        drawView.setD2T(true);
         question = drawView.question;
         if (question != null) {
             TextView captionView = (TextView) findViewById(R.id.captionView);
@@ -58,16 +68,17 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             TextView textView = (TextView) findViewById(R.id.textOfQuestionView);
             textView.setText("Vyber");
             RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
+            options.clearCheck();
+            options.removeAllViews();
             RadioButton button;
             button = new RadioButton(this);
-            button.setText(question.getCorrectAnswer());
+            button.setText(question.getCorrectAnswer().getName());
             options.addView(button);
         }
     }
 
     //Co je zvýrazněno?
     public void getNextt2dQuestion() {
-        setContentView(R.layout.activity_main);
         RadioGroup rg = (RadioGroup) findViewById(R.id.optionsView);
         rg.setOnCheckedChangeListener(this);
         DrawView drawView = (DrawView) findViewById(R.id.drawView);
@@ -78,6 +89,8 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             TextView textView = (TextView) findViewById(R.id.textOfQuestionView);
             textView.setText("Co je zvýrazněno?");
             RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
+            options.clearCheck();
+            options.removeAllViews();
             RadioButton button;
             for (int i = 0; i < question.getOptions().size(); i++) {
                 button = new RadioButton(this);
@@ -85,7 +98,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                 options.addView(button);
             }
             button = new RadioButton(this);
-            button.setText(question.getCorrectAnswer());
+            button.setText(question.getCorrectAnswer().getName());
             options.addView(button);
         }
     }
@@ -96,20 +109,32 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             group.getChildAt(i).setEnabled(false);
         }
         RadioButton checked = (RadioButton) findViewById(checkedId);
-        DrawView drawView = (DrawView) findViewById(R.id.drawView);
         if (checked.getText().equals(question.getCorrectAnswer())) {
             checked.setBackgroundColor(Color.GREEN);
+            question.setAnswer(question.getCorrectAnswer());
             goodAnswers++;
-        } else
+        } else{
             checked.setBackgroundColor(Color.RED);
+            for (Term option : question.getOptions()){
+                if (option.getName().equals(checked.getText())){
+                    question.setAnswer(option);
+                }
+            }
+        }
+
     }
 
     public void onNextClick(View v) {
-        if (numberOfQuestion < 5) {
+        HTTPService service = new HTTPService();
+        Test test = new Test();
+        setContentView(R.layout.activity_main);
+//        String answer = test.postAnswer(question.getCorrectAnswer().getId(), question.getAnswer().getId(), question.isD2T());
+//        service.post(answer, question.getCookies());
+        if (numberOfQuestion < 10) {
             numberOfQuestion++;
             getNextD2TdQuestion();
         } else {
-            if (numberOfQuestion < 5) {
+            if (numberOfQuestion < 10) {
                 numberOfQuestion++;
                 getNextD2TdQuestion();
             }

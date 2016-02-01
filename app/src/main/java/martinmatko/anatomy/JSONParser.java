@@ -22,28 +22,32 @@ public class JSONParser {
 
     private List<Term> terms = new ArrayList<>();
 
-    public Question getQuestion(boolean isD2T) throws IOException, JSONException {
+    public Question getQuestion() throws IOException, JSONException {
         Question question = new Question();
+        HTTPService service = new HTTPService();
         String content;
         JSONArray paths;
         String caption;
         Context ctx = MainActivity.getAppContext();
         JSONObject flashcardContext;
-        HTTPService service = new HTTPService();
-        JSONObject dataFromREST = service.getTest("https://staging.anatom.cz/flashcards/practice/?avoid=[]&categories=[]&contexts=[]&limit=2&types=[]&without_contexts=1");
-        flashcardContext = service.getFlashcard("https://staging.anatom.cz/flashcards/context/" + dataFromREST.getString("context_id"));
+        JSONObject questionData = service.getTest("https://staging.anatom.cz/flashcards/practice/?avoid=[]&categories=[]&contexts=[]&limit=2&types=[]&without_contexts=1");
 
+
+        questionData = questionData.getJSONArray("flashcards").getJSONObject(1);
+        String directionOfQuestion = questionData.getString("direction");
+        String nameOfCorrectAnswer = questionData.getJSONObject("term").getString("name");
+        String identifierOfCorrectAnswer = questionData.getString("description");
+        String idOfCorrectAnswer = questionData.getString("id");
+        Term correctAnswer = new Term(nameOfCorrectAnswer, identifierOfCorrectAnswer, idOfCorrectAnswer);
+        question.setCorrectAnswer(correctAnswer);
+        question.setD2T(directionOfQuestion.equals("d2t"));
+        flashcardContext = service.getFlashcard("https://staging.anatom.cz/flashcards/context/" + questionData.getString("context_id"));
+        question.setCookies(service.cookies);
         JSONObject data = flashcardContext.getJSONObject("data");
-
-        caption = data.getString("name");
-        question.setCaption(caption);
-        String nameOfCorrectAnswer = dataFromREST.getString("name");
-        String identifierOfCorrectAnswer = dataFromREST.getString("description");
-        question.setCorrectAnswer(nameOfCorrectAnswer);
-        question.setCorrectAnswerIdentifier(identifierOfCorrectAnswer);
         content = data.getString("content");
         JSONObject JSONContent = new JSONObject(content);
-
+        caption = data.getString("name");
+        question.setCaption(caption);
         paths = JSONContent.getJSONArray("paths");
         SVGParser parser = new SVGParser();
         List<PartOfBody> parts = new ArrayList<>();
@@ -64,7 +68,7 @@ public class JSONParser {
             } catch (org.json.JSONException ex) {
             }
             if (identifier != null) {
-                if (identifier.equals(identifierOfCorrectAnswer) || isD2T) {
+                if (identifier.equals(identifierOfCorrectAnswer) || question.isD2T()) {
                     try {
                         paint.setColor(Color.parseColor(color));
                     } catch (IllegalArgumentException ex) {
@@ -91,13 +95,12 @@ public class JSONParser {
             parts.get(i).setBoundaries(boundaries);
             question.setBounds(boundaries);
         }
-
-        JSONArray flashcards = data.getJSONArray("flashcards");
-        for (int i = 0; i < flashcards.length(); i++) {
-            JSONObject flashcard = flashcards.getJSONObject(i);
-            JSONObject term = flashcard.getJSONObject("term");
+        JSONArray options = questionData.getJSONArray("options");
+        for (int i = 0; i < options.length(); i++) {
+            JSONObject option = options.getJSONObject(i);
+            JSONObject term = option.getJSONObject("term");
             String name = term.getString("name").split(",")[0];
-            terms.add(new Term(name, term.getString("identifier")));
+            terms.add(new Term(name, term.getString("identifier"), term.getString("id")));
         }
         question.setOptions(terms);
         question.setBodyParts(parts);
@@ -137,8 +140,6 @@ public class JSONParser {
             g = Integer.valueOf(colorStr.substring(3, 5), 16);
             b = Integer.valueOf(colorStr.substring(5, 7), 16);
         } catch (NumberFormatException ex) {
-            System.out.println(colorStr);
-            ex.printStackTrace();
             return new Integer[]{0, 0, 0};
         } catch (StringIndexOutOfBoundsException ex) {
             System.out.println(colorStr);

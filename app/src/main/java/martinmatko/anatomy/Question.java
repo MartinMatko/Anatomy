@@ -2,6 +2,8 @@ package martinmatko.anatomy;
 
 import android.graphics.RectF;
 
+import org.apache.http.cookie.Cookie;
+
 import java.util.List;
 
 /**
@@ -13,10 +15,22 @@ public class Question {
     private List<PartOfBody> bodyParts;
     private String caption;
     private String text;
-    private String correctAnswer;
     private float scaleFactorOfPicture;
-    private String correctAnswerIdentifier;
+    private Term correctAnswer;
+    private Term answer;
     private List<Term> options;
+    private boolean isD2T;
+
+    public List<Cookie> getCookies() {
+        return cookies;
+    }
+
+    public void setCookies(List<Cookie> cookies) {
+        this.cookies = cookies;
+    }
+
+    List<Cookie> cookies;
+
 
     public Question() {
     }
@@ -27,29 +41,35 @@ public class Question {
         this.text = text;
         this.options = options;
     }
+    public Term getAnswer() {
+        return answer;
+    }
 
+    public void setAnswer(Term answer) {
+        this.answer = answer;
+    }
+
+    public Term getCorrectAnswer() {
+        return correctAnswer;
+    }
+
+    public void setCorrectAnswer(Term correctAnswer) {
+        this.correctAnswer = correctAnswer;
+    }
+
+    public boolean isD2T() {
+        return isD2T;
+    }
+
+    public void setD2T(boolean isD2T) {
+        this.isD2T = isD2T;
+    }
     public float getScaleFactorOfPicture() {
         return scaleFactorOfPicture;
     }
 
     public void setScaleFactorOfPicture(float scaleFactorOfPicture) {
         this.scaleFactorOfPicture = scaleFactorOfPicture;
-    }
-
-    public String getCorrectAnswerIdentifier() {
-        return correctAnswerIdentifier;
-    }
-
-    public void setCorrectAnswerIdentifier(String correctAnswerIdentifier) {
-        this.correctAnswerIdentifier = correctAnswerIdentifier;
-    }
-
-    public String getCorrectAnswer() {
-        return correctAnswer;
-    }
-
-    public void setCorrectAnswer(String correctAnswer) {
-        this.correctAnswer = correctAnswer;
     }
 
     public List<PartOfBody> getBodyParts() {

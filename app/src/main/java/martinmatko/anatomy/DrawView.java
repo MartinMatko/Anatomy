@@ -26,12 +26,10 @@ public class DrawView extends View {
     private static float MIN_ZOOM = -5f;
     private static float MAX_ZOOM = 5f;
     Context ctx;
-    Paint paint = new Paint();
     Question question;
     Matrix matrix = new Matrix();
     private float pointOfZoomX = 0;
     private float pointOfZoomY = 0;
-    private boolean isReadyToAnswer = false;
     private boolean isD2T = true;
     private Canvas canvas = new Canvas();
     private float scaleFactor = 1.f;
@@ -51,9 +49,6 @@ public class DrawView extends View {
     private float previousTranslateY = 0f;
     private float x = 0f;
     private float y = 0f;
-    private boolean dragged = false;
-    private boolean touched = false;
-    private boolean selectedMode = false;
     private List<PartOfBody> selectedParts = new ArrayList<>();
     private Mode mode = Mode.INITIAL;
     public DrawView(Context context) {
@@ -71,17 +66,11 @@ public class DrawView extends View {
         init(context);
     }
 
-    public boolean isD2T() {
-        return isD2T;
-    }
-
-    public void setD2T(boolean isD2T) {
-        this.isD2T = isD2T;
-    }
 
     private void init(Context context) {
         try {
-            this.question = new JSONParser().getQuestion(isD2T);
+            this.question = new JSONParser().getQuestion();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -136,10 +125,9 @@ public class DrawView extends View {
                 case CONFIRM:
                     //centering area of elected items
                     matrix.setTranslate(this.getWidth() / 2 - pointOfZoomX, this.getHeight() / 2 - pointOfZoomY);
-                    //matrix.postScale(scaleFactor, scaleFactor, this.getWidth()/2, this.getHeight()/2);
                     break;
                 case DRAG:
-                    matrix.setTranslate(translateX/10, translateY/10);
+                    matrix.setTranslate(translateX/5, translateY/5);
                     mode = Mode.SELECT;
                     break;
                 case SELECT:
@@ -149,10 +137,8 @@ public class DrawView extends View {
                     mode = Mode.SELECT;
                     break;
                 case FINISH:
-                    setColorOfRightAnswer();
                     setColorOfWrongAnswer();
-                    float x2 = this.getWidth()/2 - x1;
-                    float y2 = this.getHeight()/2 - y1;
+                    setColorOfRightAnswer();
                     matrix.setTranslate(this.getWidth()/2 - x1, this.getHeight()/2 - y1);
                     matrix.postScale(1/totalScaleFactor, 1/totalScaleFactor, this.getWidth()/2, this.getHeight()/2);
                     mode = Mode.NOACTION;
@@ -170,7 +156,7 @@ public class DrawView extends View {
             }
             for (PartOfBody partOfBody : question.getBodyParts()) {
                 if (partOfBody.getIdentifier() != null) {
-                    if (partOfBody.getIdentifier().equals(question.getCorrectAnswerIdentifier()) || isD2T) {
+                    if (partOfBody.getIdentifier().equals(question.getCorrectAnswer().getIdentifier()) || isD2T) {
                         Paint p = new Paint();
                         p.setStyle(Paint.Style.STROKE);
                         p.setStrokeWidth(1);
@@ -253,13 +239,10 @@ public class DrawView extends View {
                 case TAPTOZOOM: {
                     scaleFactor = 3;
                     totalScaleFactor = scaleFactor;
-                    dragged = false;
-                    touched = true;
                     break;
                 }
                 case SELECT: {
                     showButtons();
-                    isReadyToAnswer = true;
                     if (selectedParts.size() > 1) {
                         mode = Mode.CONFIRM;
                     } else {
@@ -281,15 +264,42 @@ public class DrawView extends View {
     }
 
     public void setColorOfWrongAnswer(){
+
+        if (selectedParts.size() == 1){
+            String identifierOfAnswer = selectedParts.get(0).getIdentifier();
+            for (Term option : question.getOptions()){
+                if (option.getIdentifier().equals(identifierOfAnswer)){
+                    question.setAnswer(option);
+                }
+            }
+            for (PartOfBody partOfBody : question.getBodyParts()) {
+                Paint paint = partOfBody.getPaint();
+                if (identifierOfAnswer.equals(partOfBody.getIdentifier())) {
+                    paint.setColor(Color.RED);
+                }
+                else {
+                    int color = paint.getColor();
+                    System.out.println(paint.getColor() + "\n");
+                    System.out.println(String.format("#%06X" + "\n", 0xFFFFFF & color));
+                }
+            }
+            return;
+        }
+
         for (Term option : question.getOptions()) {
             //oznacena odpoved
             RectF button = option.getButton();
             if (button != null && button.contains(x, y)) {
                 for (PartOfBody partOfBody : question.getBodyParts()) {
-
+                    Paint paint = partOfBody.getPaint();
                     if (option.getIdentifier().equals(partOfBody.getIdentifier())) {
-                        Paint paint = partOfBody.getPaint();
                         paint.setColor(Color.RED);
+                        question.setAnswer(option);
+                    }
+                    else {
+                        int color = paint.getColor();
+                        System.out.println(paint.getColor() + "\n");
+                        System.out.println(String.format("#%06X" + "\n", 0xFFFFFF & color));
                     }
                 }
             }
@@ -297,13 +307,16 @@ public class DrawView extends View {
     }
     public void setColorOfRightAnswer(){
         for (Term option : question.getOptions()) {
-            if (option.getIdentifier().equals(question.getCorrectAnswerIdentifier())) {
+            if (option.getIdentifier().equals(question.getCorrectAnswer().getIdentifier())) {
                 for (PartOfBody partOfBody : question.getBodyParts()) {
                     if (partOfBody.getIdentifier() != null && partOfBody.getIdentifier().equals(option.getIdentifier())) {
                         Paint paint = partOfBody.getPaint();
                         paint.setColor(Color.GREEN);
                     }
                 }
+            }
+            if (question.getAnswer() == null){
+                question.setAnswer(question.getCorrectAnswer());
             }
         }
     }
@@ -373,8 +386,6 @@ public class DrawView extends View {
 
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
-
-
             scaleFactor = detector.getScaleFactor();
             scaleFactor = Math.max(MIN_ZOOM, Math.min(scaleFactor, MAX_ZOOM));
 
