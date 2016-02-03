@@ -19,22 +19,10 @@ import java.io.IOException;
 public class MainActivity extends Activity implements RadioGroup.OnCheckedChangeListener {
 
     private static Context context;
-    public Test test;
+    public Test test = new Test();
     public Question question;
     public int goodAnswers = 0, numberOfQuestion = 1;
     TextView textView;
-
-    public static Context getAppContext() {
-        return context;
-    }
-
-    public TextView gettextView() {
-        return textView;
-    }
-
-    public void settextView(TextView t) {
-        this.textView = t;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,7 +30,6 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         StrictMode.setThreadPolicy(policy);
         context = getApplicationContext();
         super.onCreate(savedInstanceState);
-
         // Set full screen view
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -50,6 +37,8 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
         setContentView(R.layout.activity_main);
         DrawView drawView = (DrawView) findViewById(R.id.drawView);
+        drawView.question = test.getNextQuestion();
+        drawView.invalidate();
         question = drawView.question;
         if (question.isD2T()){
             getNextD2TdQuestion();
@@ -68,7 +57,6 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             TextView textView = (TextView) findViewById(R.id.textOfQuestionView);
             textView.setText("Vyber");
             RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
-            options.clearCheck();
             options.removeAllViews();
             RadioButton button;
             button = new RadioButton(this);
@@ -80,7 +68,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     //Co je zvýrazněno?
     public void getNextt2dQuestion() {
         RadioGroup rg = (RadioGroup) findViewById(R.id.optionsView);
-        rg.setOnCheckedChangeListener(this);
+        //rg.setOnCheckedChangeListener(this);
         DrawView drawView = (DrawView) findViewById(R.id.drawView);
         question = drawView.question;
         if (question != null) {
@@ -125,9 +113,11 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     }
 
     public void onNextClick(View v) {
-        HTTPService service = new HTTPService();
         Test test = new Test();
-        setContentView(R.layout.activity_main);
+        DrawView drawView = (DrawView) findViewById(R.id.drawView);
+        drawView.question = test.getNextQuestion();
+        question = drawView.question;
+        drawView.invalidate();
 //        String answer = test.postAnswer(question.getCorrectAnswer().getId(), question.getAnswer().getId(), question.isD2T());
 //        service.post(answer, question.getCookies());
         if (numberOfQuestion < 10) {

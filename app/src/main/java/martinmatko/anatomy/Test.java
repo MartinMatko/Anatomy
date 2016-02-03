@@ -12,8 +12,20 @@ import java.util.List;
  */
 public class Test {
 
-    List<Cookie> cookies;
-    JSONParser parser;
+    JSONParser parser = new JSONParser();
+    HTTPService service = new HTTPService();
+
+    public Question getNextQuestion(){
+        JSONObject context = service.getContext("https://staging.anatom.cz/flashcards/practice/?avoid=[]&categories=[]&contexts=[]&limit=2&types=[]&without_contexts=1");
+        JSONObject flashcard = null;
+        try {
+            context = context.getJSONArray("flashcards").getJSONObject(1);
+            flashcard = service.getFlashcard("https://staging.anatom.cz/flashcards/context/" + context.getString("context_id"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return parser.getQuestion(context, flashcard);
+    }
 
     public String postAnswer(String answerid, String rightAnswerid, boolean isd2t){
         JSONObject response = new JSONObject();

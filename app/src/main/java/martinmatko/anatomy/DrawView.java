@@ -16,6 +16,8 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.WindowManager;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +28,7 @@ public class DrawView extends View {
     private static float MIN_ZOOM = -5f;
     private static float MAX_ZOOM = 5f;
     Context ctx;
-    Question question;
+    Question question = new Question();
     Matrix matrix = new Matrix();
     private float pointOfZoomX = 0;
     private float pointOfZoomY = 0;
@@ -68,12 +70,6 @@ public class DrawView extends View {
 
 
     private void init(Context context) {
-        try {
-            this.question = new JSONParser().getQuestion();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         ctx = context;
 
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -279,8 +275,15 @@ public class DrawView extends View {
                 }
                 else {
                     int color = paint.getColor();
-                    System.out.println(paint.getColor() + "\n");
-                    System.out.println(String.format("#%06X" + "\n", 0xFFFFFF & color));
+                    JSONParser parser = new JSONParser();
+                    String colorString = parser.toGrayScale(String.format("#%06X", 0xFFFFFF & color));
+                    try{
+                        paint.setColor(Color.parseColor(colorString));
+                    }
+                    catch (Exception ex){
+                        System.out.println("Zla farba: " + colorString);
+                    }
+                    partOfBody.setPaint(paint);
                 }
             }
             return;
@@ -298,8 +301,10 @@ public class DrawView extends View {
                     }
                     else {
                         int color = paint.getColor();
-                        System.out.println(paint.getColor() + "\n");
-                        System.out.println(String.format("#%06X" + "\n", 0xFFFFFF & color));
+                        JSONParser parser = new JSONParser();
+                        String colorString = parser.toGrayScale(String.format("#%06X" + "\n", 0xFFFFFF & color));
+                        //paint.setColor(Color.parseColor(colorString));
+                        partOfBody.setPaint(paint);
                     }
                 }
             }
