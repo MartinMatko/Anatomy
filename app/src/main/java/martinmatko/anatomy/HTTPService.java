@@ -14,7 +14,6 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
-import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -22,21 +21,17 @@ import java.util.List;
  */
 public class HTTPService {
     List<Cookie> cookies;
+    DefaultHttpClient client = new DefaultHttpClient();
 
     public JSONObject getContext(String url) {
         JSONObject data = null;
-        DefaultHttpClient client = new DefaultHttpClient();
         try {
             HttpGet get = new HttpGet(url);
             HttpResponse responseGet = client.execute(get);
             HttpEntity resEntityGet = responseGet.getEntity();
             cookies = client.getCookieStore().getCookies();
             if (resEntityGet != null) {
-                //do something with the response
-                InputStream is;
-                is = resEntityGet.getContent();
-                resEntityGet.toString();
-                String json = new JSONParser().readFully(is, "UTF-8");
+                String json = EntityUtils.toString(resEntityGet);
                 JSONObject question = new JSONObject(json);
                 return question.getJSONObject("data");
             }
@@ -49,21 +44,14 @@ public class HTTPService {
     public JSONObject getFlashcard(String url) {
         JSONObject flashcard = null;
         try {
-            DefaultHttpClient client = new DefaultHttpClient();
             HttpGet get = new HttpGet(url);
             HttpResponse responseGet = client.execute(get);
-            cookies = client.getCookieStore().getCookies();
             HttpEntity resEntityGet = responseGet.getEntity();
 
             if (resEntityGet != null) {
-                //do something with the response
-                InputStream is;
-                is = resEntityGet.getContent();
-                resEntityGet.toString();
-                String json = new JSONParser().readFully(is, "UTF-8");
+                String json = EntityUtils.toString(resEntityGet);
                 flashcard = new JSONObject(json);
             }
-            //post("hulahop", cookies);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -71,7 +59,8 @@ public class HTTPService {
     }
 
 
-    public void post(String answer, List<Cookie> cookies) {
+    public String post(String answer) {
+        String response = "Shit happnes";
         try {
             String postURL = "https://staging.anatom.cz/flashcards/practice/";
             HttpPost post = new HttpPost(postURL);
@@ -81,7 +70,6 @@ public class HTTPService {
             entity.setContentType(new BasicHeader("Content-Type",
                     "raw"));
             post.setEntity(entity);
-            DefaultHttpClient client = new DefaultHttpClient();
             HttpResponse responsePOST = client.execute(post);
             StringBuilder sb = new StringBuilder();
             for (Header header : post.getAllHeaders()) {
@@ -90,10 +78,12 @@ public class HTTPService {
             Log.i("Cookies: ", sb.toString());
             HttpEntity resEntity = responsePOST.getEntity();
             if (resEntity != null) {
-                Log.i("RESPONSE ", EntityUtils.toString(resEntity));
+                response = EntityUtils.toString(resEntity);
+                Log.i("RESPONSE ", response);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return response;
     }
 }

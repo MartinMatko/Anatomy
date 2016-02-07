@@ -12,10 +12,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import org.json.JSONException;
-
-import java.io.IOException;
-
 public class MainActivity extends Activity implements RadioGroup.OnCheckedChangeListener {
 
     private static Context context;
@@ -37,48 +33,43 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
         setContentView(R.layout.activity_main);
         DrawView drawView = (DrawView) findViewById(R.id.drawView);
-        drawView.question = test.getNextQuestion();
+        drawView.question = test.getFirstQuestion();
         drawView.invalidate();
         question = drawView.question;
-        if (question.isD2T()){
+        if (question.isD2T()) {
             getNextD2TdQuestion();
-        }
-        else
+        } else
             getNextt2dQuestion();
     }
 
     //Vyber
     public void getNextD2TdQuestion() {
-        DrawView drawView = (DrawView) findViewById(R.id.drawView);
-        question = drawView.question;
         if (question != null) {
             TextView captionView = (TextView) findViewById(R.id.captionView);
             captionView.setText(question.getCaption());
             TextView textView = (TextView) findViewById(R.id.textOfQuestionView);
-            textView.setText("Vyber");
+            textView.setText("Vyber: " + question.getCorrectAnswer().getName());
             RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
-            options.removeAllViews();
             RadioButton button;
-            button = new RadioButton(this);
-            button.setText(question.getCorrectAnswer().getName());
-            options.addView(button);
+            for (Term option : question.getOptions()) {
+                button = new RadioButton(this);
+
+                button.setBackgroundColor(option.color);
+                options.addView(button, options.getWidth(), 100);
+            }
         }
     }
 
     //Co je zvýrazněno?
     public void getNextt2dQuestion() {
         RadioGroup rg = (RadioGroup) findViewById(R.id.optionsView);
-        //rg.setOnCheckedChangeListener(this);
-        DrawView drawView = (DrawView) findViewById(R.id.drawView);
-        question = drawView.question;
+        rg.setOnCheckedChangeListener(this);
         if (question != null) {
             TextView captionView = (TextView) findViewById(R.id.captionView);
             captionView.setText(question.getCaption());
             TextView textView = (TextView) findViewById(R.id.textOfQuestionView);
             textView.setText("Co je zvýrazněno?");
             RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
-            options.clearCheck();
-            options.removeAllViews();
             RadioButton button;
             for (int i = 0; i < question.getOptions().size(); i++) {
                 button = new RadioButton(this);
@@ -97,14 +88,14 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             group.getChildAt(i).setEnabled(false);
         }
         RadioButton checked = (RadioButton) findViewById(checkedId);
-        if (checked.getText().equals(question.getCorrectAnswer())) {
+        if (checked.getText().equals(question.getCorrectAnswer().getName())) {
             checked.setBackgroundColor(Color.GREEN);
             question.setAnswer(question.getCorrectAnswer());
             goodAnswers++;
-        } else{
+        } else {
             checked.setBackgroundColor(Color.RED);
-            for (Term option : question.getOptions()){
-                if (option.getName().equals(checked.getText())){
+            for (Term option : question.getOptions()) {
+                if (option.getName().equals(checked.getText())) {
                     question.setAnswer(option);
                 }
             }
@@ -113,22 +104,22 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     }
 
     public void onNextClick(View v) {
-        Test test = new Test();
+        String answer = test.postAnswer(question.getAnswer(), question.getCorrectAnswer(), question.isD2T());
+        System.out.println(answer);
+        question = test.getNextQuestion(answer);
         DrawView drawView = (DrawView) findViewById(R.id.drawView);
-        drawView.question = test.getNextQuestion();
-        question = drawView.question;
+        drawView.question = question;
+        drawView.mode = DrawView.Mode.INITIAL;
         drawView.invalidate();
-//        String answer = test.postAnswer(question.getCorrectAnswer().getId(), question.getAnswer().getId(), question.isD2T());
-//        service.post(answer, question.getCookies());
+        RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
+        options.removeAllViews();
+        options.invalidate();
         if (numberOfQuestion < 10) {
-            numberOfQuestion++;
-            getNextD2TdQuestion();
-        } else {
-            if (numberOfQuestion < 10) {
-                numberOfQuestion++;
+            if (question.isD2T()) {
                 getNextD2TdQuestion();
-            }
-
+            } else
+                getNextt2dQuestion();
+        } else {
             TextView captionView = (TextView) findViewById(R.id.captionView);
             captionView.setText(question.getCaption());
             int score = goodAnswers * 25;

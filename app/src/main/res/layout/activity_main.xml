@@ -35,7 +35,7 @@
         android:textColor="#ff000000" />
 
     <RadioGroup
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/optionsView"
         android:layout_alignParentLeft="true"
@@ -44,6 +44,7 @@
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/textOfQuestionView"
         android:background="#ffd2e6ff"
+        android:button="@null"
         />
     <Button
         android:layout_width="wrap_content"

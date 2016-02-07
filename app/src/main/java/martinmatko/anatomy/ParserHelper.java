@@ -30,11 +30,13 @@ public class ParserHelper {
      * Array of powers of ten. Using double instead of float gives a tiny bit more precision.
      */
     private static final double[] pow10 = new double[128];
+
     static {
         for (int i = 0; i < pow10.length; i++) {
             pow10[i] = Math.pow(10, i);
         }
     }
+
     public int pos;
     private char current;
     private CharSequence s;

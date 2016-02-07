@@ -1,6 +1,5 @@
 package martinmatko.anatomy;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
@@ -8,9 +7,6 @@ import android.graphics.RectF;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,17 +15,15 @@ import java.util.List;
  */
 public class JSONParser {
 
-    private List<Term> terms = new ArrayList<>();
-
     public Question getQuestion(JSONObject context, JSONObject flashcard) {
+        List<Term> terms = new ArrayList<>();
         Question question = new Question();
-        HTTPService service = new HTTPService();
         String content;
         JSONArray paths;
         String caption;
         List<PartOfBody> parts = new ArrayList<>();
 
-        try{
+        try {
             String directionOfQuestion = context.getString("direction");
             String nameOfCorrectAnswer = context.getJSONObject("term").getString("name");
             String identifierOfCorrectAnswer = context.getString("description");
@@ -37,7 +31,6 @@ public class JSONParser {
             Term correctAnswer = new Term(nameOfCorrectAnswer, identifierOfCorrectAnswer, idOfCorrectAnswer);
             question.setCorrectAnswer(correctAnswer);
             question.setD2T(directionOfQuestion.equals("d2t"));
-            question.setCookies(service.cookies);
             JSONObject data = flashcard.getJSONObject("data");
             content = data.getString("content");
             JSONObject JSONContent = new JSONObject(content);
@@ -45,7 +38,14 @@ public class JSONParser {
             question.setCaption(caption);
             paths = JSONContent.getJSONArray("paths");
             SVGParser parser = new SVGParser();
-
+            JSONArray options = context.getJSONArray("options");
+            for (int i = 0; i < options.length(); i++) {
+                JSONObject option = options.getJSONObject(i);
+                JSONObject term = option.getJSONObject("term");
+                String name = term.getString("name").split(",")[0];
+                terms.add(new Term(name, term.getString("identifier"), term.getString("id")));
+            }
+            question.setOptions(terms);
             // not possible to use foreach cycle
             for (int i = 0; i < paths.length(); i++) {
                 JSONObject path = paths.getJSONObject(i);
@@ -62,7 +62,7 @@ public class JSONParser {
                 } catch (org.json.JSONException ex) {
                 }
                 if (identifier != null) {
-                    if (identifier.equals(identifierOfCorrectAnswer) || question.isD2T()) {
+                    if (identifier.equals(identifierOfCorrectAnswer) || isInD2TOptions(question, identifier)) {
                         try {
                             paint.setColor(Color.parseColor(color));
                         } catch (IllegalArgumentException ex) {
@@ -71,7 +71,6 @@ public class JSONParser {
                         }
                         parts.add(new PartOfBody(parser.doPath(line), paint, path.getString("term")));
                     } else {
-                        System.out.println("toto je colorString" + color);
                         color = toGrayScale(color);
                         paint.setColor(Color.parseColor(color));
                         parts.add(new PartOfBody(parser.doPath(line), paint, path.getString("term")));
@@ -90,40 +89,26 @@ public class JSONParser {
                 parts.get(i).setBoundaries(boundaries);
                 question.setBounds(boundaries);
             }
-            JSONArray options = context.getJSONArray("options");
-            for (int i = 0; i < options.length(); i++) {
-                JSONObject option = options.getJSONObject(i);
-                JSONObject term = option.getJSONObject("term");
-                String name = term.getString("name").split(",")[0];
-                terms.add(new Term(name, term.getString("identifier"), term.getString("id")));
-            }
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
-
         question.setOptions(terms);
         question.setBodyParts(parts);
+        if (question.isD2T()) {
+            fillOptionColors(question);
+        }
         return question;
     }
 
-
-    public String readFully(InputStream inputStream, String encoding)
-            throws IOException {
-        return new String(readFully(inputStream), encoding);
-    }
-
-    private byte[] readFully(InputStream inputStream)
-            throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int length = 0;
-        while ((length = inputStream.read(buffer)) != -1) {
-            baos.write(buffer, 0, length);
+    public boolean isInD2TOptions(Question question, String identifier) {
+        if (!question.isD2T())
+            return false;
+        for (Term option : question.getOptions()) {
+            if (option.getIdentifier().equals(identifier))
+                return true;
         }
-        return baos.toByteArray();
+        return false;
     }
-
 
     public String rgbToHex(Integer[] rgb) {
         String ret = "#";
@@ -187,5 +172,14 @@ public class JSONParser {
         return grayValue;
     }
 
-
+    public void fillOptionColors(Question question) {
+        for (Term option : question.getOptions()) {
+            for (PartOfBody partOfBody : question.getBodyParts()) {
+                if (option.getIdentifier().equals(partOfBody.getIdentifier())) {
+                    option.color = partOfBody.getPaint().getColor();
+                    break;
+                }
+            }
+        }
+    }
 }

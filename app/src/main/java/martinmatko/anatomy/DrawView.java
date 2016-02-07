@@ -16,8 +16,6 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.WindowManager;
 
-import org.json.JSONException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +27,8 @@ public class DrawView extends View {
     private static float MAX_ZOOM = 5f;
     Context ctx;
     Question question = new Question();
-    Matrix matrix = new Matrix();
+    Matrix matrix;
+    Mode mode = Mode.INITIAL;
     private float pointOfZoomX = 0;
     private float pointOfZoomY = 0;
     private boolean isD2T = true;
@@ -52,7 +51,7 @@ public class DrawView extends View {
     private float x = 0f;
     private float y = 0f;
     private List<PartOfBody> selectedParts = new ArrayList<>();
-    private Mode mode = Mode.INITIAL;
+
     public DrawView(Context context) {
         super(context);
         init(context);
@@ -104,6 +103,7 @@ public class DrawView extends View {
             switch (mode) {
                 case INITIAL:
                     //centering picture
+                    matrix = new Matrix();
                     scaleFactor = question.computeScaleFactorOfPicture(this.getWidth(), this.getHeight());
                     matrix.setTranslate(this.getWidth() / 2 - x1, this.getHeight() / 2 - y1);
                     matrix.postScale(scaleFactor, scaleFactor, this.getWidth() / 2, this.getHeight() / 2);
@@ -123,7 +123,7 @@ public class DrawView extends View {
                     matrix.setTranslate(this.getWidth() / 2 - pointOfZoomX, this.getHeight() / 2 - pointOfZoomY);
                     break;
                 case DRAG:
-                    matrix.setTranslate(translateX/5, translateY/5);
+                    matrix.setTranslate(translateX / 5, translateY / 5);
                     mode = Mode.SELECT;
                     break;
                 case SELECT:
@@ -135,8 +135,8 @@ public class DrawView extends View {
                 case FINISH:
                     setColorOfWrongAnswer();
                     setColorOfRightAnswer();
-                    matrix.setTranslate(this.getWidth()/2 - x1, this.getHeight()/2 - y1);
-                    matrix.postScale(1/totalScaleFactor, 1/totalScaleFactor, this.getWidth()/2, this.getHeight()/2);
+                    matrix.setTranslate(this.getWidth() / 2 - x1, this.getHeight() / 2 - y1);
+                    matrix.postScale(1 / totalScaleFactor, 1 / totalScaleFactor, this.getWidth() / 2, this.getHeight() / 2);
                     mode = Mode.NOACTION;
             }
             matrix.mapRect(question.borders);
@@ -259,12 +259,12 @@ public class DrawView extends View {
         return true;
     }
 
-    public void setColorOfWrongAnswer(){
+    public void setColorOfWrongAnswer() {
 
-        if (selectedParts.size() == 1){
+        if (selectedParts.size() == 1) {
             String identifierOfAnswer = selectedParts.get(0).getIdentifier();
-            for (Term option : question.getOptions()){
-                if (option.getIdentifier().equals(identifierOfAnswer)){
+            for (Term option : question.getOptions()) {
+                if (option.getIdentifier().equals(identifierOfAnswer)) {
                     question.setAnswer(option);
                 }
             }
@@ -272,15 +272,13 @@ public class DrawView extends View {
                 Paint paint = partOfBody.getPaint();
                 if (identifierOfAnswer.equals(partOfBody.getIdentifier())) {
                     paint.setColor(Color.RED);
-                }
-                else {
+                } else {
                     int color = paint.getColor();
                     JSONParser parser = new JSONParser();
                     String colorString = parser.toGrayScale(String.format("#%06X", 0xFFFFFF & color));
-                    try{
+                    try {
                         paint.setColor(Color.parseColor(colorString));
-                    }
-                    catch (Exception ex){
+                    } catch (Exception ex) {
                         System.out.println("Zla farba: " + colorString);
                     }
                     partOfBody.setPaint(paint);
@@ -298,19 +296,19 @@ public class DrawView extends View {
                     if (option.getIdentifier().equals(partOfBody.getIdentifier())) {
                         paint.setColor(Color.RED);
                         question.setAnswer(option);
-                    }
-                    else {
+                    } else {
                         int color = paint.getColor();
                         JSONParser parser = new JSONParser();
                         String colorString = parser.toGrayScale(String.format("#%06X" + "\n", 0xFFFFFF & color));
-                        //paint.setColor(Color.parseColor(colorString));
-                        partOfBody.setPaint(paint);
+//                        paint.setColor(Color.parseColor(colorString));
+//                        partOfBody.setPaint(paint);
                     }
                 }
             }
         }
     }
-    public void setColorOfRightAnswer(){
+
+    public void setColorOfRightAnswer() {
         for (Term option : question.getOptions()) {
             if (option.getIdentifier().equals(question.getCorrectAnswer().getIdentifier())) {
                 for (PartOfBody partOfBody : question.getBodyParts()) {
@@ -320,7 +318,7 @@ public class DrawView extends View {
                     }
                 }
             }
-            if (question.getAnswer() == null){
+            if (question.getAnswer() == null) {
                 question.setAnswer(question.getCorrectAnswer());
             }
         }

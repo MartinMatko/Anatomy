@@ -11,7 +11,9 @@ import java.util.List;
  */
 public class Question {
 
-    RectF borders = new RectF(Float.MAX_VALUE, Float.MAX_VALUE, 0, 0);;
+    RectF borders = new RectF(Float.MAX_VALUE, Float.MAX_VALUE, 0, 0);
+    ;
+    List<Cookie> cookies;
     private List<PartOfBody> bodyParts;
     private String caption;
     private String text;
@@ -20,17 +22,6 @@ public class Question {
     private Term answer;
     private List<Term> options;
     private boolean isD2T;
-
-    public List<Cookie> getCookies() {
-        return cookies;
-    }
-
-    public void setCookies(List<Cookie> cookies) {
-        this.cookies = cookies;
-    }
-
-    List<Cookie> cookies;
-
 
     public Question() {
     }
@@ -41,6 +32,15 @@ public class Question {
         this.text = text;
         this.options = options;
     }
+
+    public List<Cookie> getCookies() {
+        return cookies;
+    }
+
+    public void setCookies(List<Cookie> cookies) {
+        this.cookies = cookies;
+    }
+
     public Term getAnswer() {
         return answer;
     }
@@ -64,6 +64,7 @@ public class Question {
     public void setD2T(boolean isD2T) {
         this.isD2T = isD2T;
     }
+
     public float getScaleFactorOfPicture() {
         return scaleFactorOfPicture;
     }
