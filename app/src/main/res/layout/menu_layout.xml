@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Anatom"
+        android:id="@+id/textView"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#fffaffff"
+        android:textSize="35sp"
+        android:background="#ff72ff00"
+        android:layout_weight="0.17"
+        android:onClick="dra" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Začít procvičovat vše"
+        android:id="@+id/randomTestButton"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.18"
+        android:onClick="onRandomTestClicked" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Vybrat orgánový systém"
+        android:id="@+id/systemButton"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.20"
+        android:onClick="onSystemClicked" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Vybrat část těla"
+        android:id="@+id/locationButton"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.17" />
+</LinearLayout>

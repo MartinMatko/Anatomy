@@ -11,6 +11,7 @@ public class Term {
     private String name;
     private String identifier;
     private RectF button;
+
     public Term(String name, String identifier, String id) {
 
         this.name = name;

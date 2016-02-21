@@ -29,7 +29,7 @@ public class Test {
         JSONObject flashcard = null;
         try {
             context = context.getJSONArray("flashcards").getJSONObject(1);
-            flashcard = service.getFlashcard("https://staging.anatom.cz/flashcards/context/" + context.getString("context_id"));
+            flashcard = service.get("https://staging.anatom.cz/flashcards/context/" + context.getString("context_id"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -43,7 +43,7 @@ public class Test {
         try {
             context = new JSONObject(newQuestion);
             context = context.getJSONObject("data").getJSONArray("flashcards").getJSONObject(1);
-            flashcard = service.getFlashcard("https://staging.anatom.cz/flashcards/context/" + context.getJSONObject("context").getString("id"));
+            flashcard = service.get("https://staging.anatom.cz/flashcards/context/" + context.getJSONObject("context").getString("id"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -72,6 +72,15 @@ public class Test {
             ex.printStackTrace();
         }
         return response.toString();
+    }
+
+    public JSONArray getCategories(){
+        try {
+            return service.get("https://anatom.cz/flashcards/categorys?all=True&db_orderby=identifier").getJSONArray("data");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

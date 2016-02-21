@@ -87,7 +87,7 @@ public class JSONParser {
                 RectF boundaries = new RectF();
                 parts.get(i).getPath().computeBounds(boundaries, true);
                 parts.get(i).setBoundaries(boundaries);
-                question.setBounds(boundaries);
+                question.setBounds(boundaries, question.borders);
             }
         } catch (Exception ex) {
             ex.printStackTrace();

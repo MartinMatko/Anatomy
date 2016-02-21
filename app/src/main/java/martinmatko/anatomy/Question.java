@@ -12,8 +12,6 @@ import java.util.List;
 public class Question {
 
     RectF borders = new RectF(Float.MAX_VALUE, Float.MAX_VALUE, 0, 0);
-    ;
-    List<Cookie> cookies;
     private List<PartOfBody> bodyParts;
     private String caption;
     private String text;
@@ -25,22 +23,6 @@ public class Question {
 
     public Question() {
     }
-
-    public Question(List<PartOfBody> bodyParts, String caption, String text, List<Term> options) {
-        this.bodyParts = bodyParts;
-        this.caption = caption;
-        this.text = text;
-        this.options = options;
-    }
-
-    public List<Cookie> getCookies() {
-        return cookies;
-    }
-
-    public void setCookies(List<Cookie> cookies) {
-        this.cookies = cookies;
-    }
-
     public Term getAnswer() {
         return answer;
     }
@@ -105,7 +87,7 @@ public class Question {
         this.options = options;
     }
 
-    public void setBounds(RectF rectF) {
+    public void setBounds(RectF rectF, RectF borders) {
 
         if (rectF.right > borders.right)
             borders.right = rectF.right;

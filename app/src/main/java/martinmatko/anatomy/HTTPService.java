@@ -41,7 +41,7 @@ public class HTTPService {
         return data;
     }
 
-    public JSONObject getFlashcard(String url) {
+    public JSONObject get(String url) {
         JSONObject flashcard = null;
         try {
             HttpGet get = new HttpGet(url);

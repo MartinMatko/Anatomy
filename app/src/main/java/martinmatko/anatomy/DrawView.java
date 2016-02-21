@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Region;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -28,6 +29,7 @@ public class DrawView extends View {
     Context ctx;
     Question question = new Question();
     Matrix matrix;
+    boolean isHighlighted = false;
     Mode mode = Mode.INITIAL;
     private float pointOfZoomX = 0;
     private float pointOfZoomY = 0;
@@ -92,6 +94,23 @@ public class DrawView extends View {
         drawBodyParts();
         if (mode.equals(Mode.CONFIRM)) {
             drawButtons();
+        }
+        if (isHighlighted){
+            RectF bordersOfSelectedArea = new RectF(Float.MAX_VALUE, Float.MAX_VALUE, 0, 0);
+            for (PartOfBody partOfBody : question.getBodyParts()){
+                if (partOfBody.getIdentifier() != null && partOfBody.getIdentifier().equals(question.getCorrectAnswer().getIdentifier())){
+                    question.setBounds(partOfBody.getBoundaries(), bordersOfSelectedArea);
+                }
+            }
+            float xCenter = (bordersOfSelectedArea.right + bordersOfSelectedArea.left)/2;
+            float yCenter = (bordersOfSelectedArea.top + bordersOfSelectedArea.bottom)/2;
+            float width = (bordersOfSelectedArea.right - bordersOfSelectedArea.left)/2;
+            float height = (bordersOfSelectedArea.bottom - bordersOfSelectedArea.top)/2;
+            float radius = width > height ? width : height;
+            Paint p = new Paint();
+            p.setStyle(Paint.Style.STROKE);
+            p.setStrokeWidth(2);
+            canvas.drawCircle(xCenter, yCenter, radius, p);
         }
     }
 
@@ -297,9 +316,8 @@ public class DrawView extends View {
                         paint.setColor(Color.RED);
                         question.setAnswer(option);
                     } else {
-                        int color = paint.getColor();
-                        JSONParser parser = new JSONParser();
-                        String colorString = parser.toGrayScale(String.format("#%06X" + "\n", 0xFFFFFF & color));
+//                        int color = paint.getColor();
+//                        String colorString = parser.toGrayScale(String.format("#%06X" + "\n", 0xFFFFFF & color));
 //                        paint.setColor(Color.parseColor(colorString));
 //                        partOfBody.setPaint(paint);
                     }
