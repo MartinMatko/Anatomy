@@ -21,9 +21,15 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-
+ 
 # svg images
 *.svg
+
+#pictures
+*.png
+
+#modifications
+workspace.xml
 
 #unnecessary folders
 .gradle/*

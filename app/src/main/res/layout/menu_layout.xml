@@ -20,7 +20,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Začít procvičovat vše"
+        android:text="@string/startTest"
         android:id="@+id/randomTestButton"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.18"
@@ -29,17 +29,18 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Vybrat orgánový systém"
+        android:text="@string/selectSystem"
         android:id="@+id/systemButton"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.20"
-        android:onClick="onSystemClicked" />
+        android:onClick="onSystemCategoriesClicked" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Vybrat část těla"
+        android:text="@string/selectBody"
         android:id="@+id/locationButton"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="0.17" />
+        android:layout_weight="0.17"
+        android:onClick="onBodyCategoriesClicked" />
 </LinearLayout>

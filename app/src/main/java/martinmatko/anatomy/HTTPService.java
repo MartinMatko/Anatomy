@@ -14,6 +14,8 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 /**
@@ -24,6 +26,7 @@ public class HTTPService {
     DefaultHttpClient client = new DefaultHttpClient();
 
     public JSONObject getContext(String url) {
+
         JSONObject data = null;
         try {
             HttpGet get = new HttpGet(url);

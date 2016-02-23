@@ -5,6 +5,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,13 +21,32 @@ public class Test {
     Question question;
     List<Cookie> cookies = new ArrayList<>();
 
-    public void start() {
-        questions.add(getFirstQuestion());
+    public void start(ArrayList categories) {
+        questions.add(getFirstQuestion(categories));
 
     }
 
-    public Question getFirstQuestion() {
-        JSONObject context = service.getContext("https://staging.anatom.cz/flashcards/practice/?avoid=[]&categories=[]&contexts=[]&limit=2&types=[]&without_contexts=1");
+    public Question getFirstQuestion(ArrayList<String> categories) {
+        JSONObject context;
+        if (categories == null || categories.isEmpty()){
+            context = service.getContext("https://staging.anatom.cz/flashcards/practice/?avoid=[]&categories=[]&contexts=[]&limit=2&types=[]&without_contexts=1");
+        }
+        else {
+            StringBuilder numbersOfCategories = new StringBuilder();
+            for (String tag : categories){
+                numbersOfCategories.append("\"" + tag + "\",");
+            }
+            numbersOfCategories.deleteCharAt(numbersOfCategories.length() - 1);
+            String url = "";
+            try {
+                url = URLEncoder.encode(numbersOfCategories.toString(), "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            url = "https://staging.anatom.cz/flashcards/practice/?avoid=[]&categories=["+ url + "]&contexts=[]&limit=2&types=[]&without_contexts=1";
+            context = service.getContext(url);
+        }
+
         JSONObject flashcard = null;
         try {
             context = context.getJSONArray("flashcards").getJSONObject(1);

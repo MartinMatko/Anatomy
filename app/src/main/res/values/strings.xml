@@ -2,8 +2,11 @@
 <resources>
 
     <string name="app_name">Anatomy</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="startTest">Start practicing all</string>
+    <string name="selectSystem">Select an organ system</string>
+    <string name="selectBody">Select a body part</string>
+    <string name="startCategoriesTest">Practice selected</string>
     <string name="action_settings">Settings</string>
-
-
+    <string name="organSystems">Organ systems</string>
+    <string name="bodyParts">Body parts</string>
 </resources>

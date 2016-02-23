@@ -4,4 +4,7 @@
     <color name="blue">#0000ff</color>
     <color name="gray">#808080</color>
     <color name="green">#00fd00</color>
+    <color name="rightAnswer">#00fd00</color>
+    <color name="wrongAnswer">#00fd00</color>
+    <color name="buttonSelected">#99ffcc</color>
 </resources>

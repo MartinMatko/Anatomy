@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Anatomy</string>
+    <string name="startTest">Začít procvičovat vše</string>
+    <string name="selectSystem">Vybrat orgánový systém</string>
+    <string name="selectBody">Vybrat část těla</string>
+    <string name="startCategoriesTest">Procvičovat vybrané</string>
+    <string name="organSystems">Orgánové systémy</string>
+    <string name="bodyParts">Části těla</string>
+</resources>

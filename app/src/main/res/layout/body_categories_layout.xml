@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="1"
+    android:id="@+id/ll2">
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/startCategoriesTest"
+        android:id="@+id/button"
+        android:layout_weight="0.13"
+        android:onClick="onSelectedCategoriesTestClicked" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/organSystems"
+            android:id="@+id/textView"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#fffaffff"
+            android:textSize="35sp"
+            android:background="#ff72ff00"
+            android:clickable="true"
+            android:onClick="onSystemCategoriesClicked"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/bodyParts"
+            android:id="@+id/textView4"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#fffaffff"
+            android:textSize="35sp"
+            android:background="#ff72ff00"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.13">
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal">
+
+            <TableRow>
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/b01"
+                    android:layout_weight="1"
+                    android:tag="01"
+                    android:id="@+id/button1"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:textAlignment="center"
+                    android:clickable="true"
+                    android:onClick="onCategoryClicked" />
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:id="@+id/button2"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/b02"
+                    android:layout_weight="1"
+                    android:tag="02"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:text="this is text"
+                    android:clickable="true"
+                    android:onClick="onCategoryClicked" />
+
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:id="@+id/button3"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/b03"
+                    android:layout_weight="1"
+                    android:contentDescription="Spoje"
+                    android:tag="03"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:text="this is text"
+                    android:clickable="true"
+                    android:onClick="onCategoryClicked" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:textAlignment="center"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Břicho"
+                    android:id="@+id/textView1"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:textAlignment="center"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Záda"
+                    android:id="@+id/textView2"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:textAlignment="center"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Neurokranium"
+                    android:id="@+id/textView3"/>
+            </TableRow>
+        </TableLayout></ScrollView>
+
+</LinearLayout>

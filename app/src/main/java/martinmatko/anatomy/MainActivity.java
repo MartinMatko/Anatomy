@@ -1,35 +1,27 @@
 package martinmatko.anatomy;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.v4.content.ContextCompat;
-import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.GridLayout;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends Activity implements RadioGroup.OnCheckedChangeListener {
@@ -39,6 +31,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     public Question question;
     public int goodAnswers = 0, numberOfQuestion = 1;
     DrawView drawView;
+    public ArrayList<String> selectedCategories = new ArrayList();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,13 +43,20 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.menu_layout);
+        if(isNetworkStatusAvailable(getApplicationContext())) {
+            Toast.makeText(getApplicationContext(), "internet available", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getApplicationContext(), "internet is not available", Toast.LENGTH_SHORT).show();
 
-        Locale locale = new Locale("en_US");
-        Locale.setDefault(locale);
+        }
+        //Locale locale = new Locale("en_US");
+        //Locale.setDefault(locale);
+        //Locale.setDefault(new Locale("cs", "CZ"));
         Configuration config = new Configuration();
-        config.locale = locale;
-        context.getApplicationContext().getResources().updateConfiguration(config, null);
+        config.locale = new Locale("cs", "CZ");
+        getBaseContext().getResources().updateConfiguration(config,
+                getBaseContext().getResources().getDisplayMetrics());
+        setContentView(R.layout.menu_layout);
     }
 
     //Vyber
@@ -157,7 +157,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     public void onRandomTestClicked(View v){
         setContentView(R.layout.activity_main);
         drawView = (DrawView) findViewById(R.id.drawView);
-        drawView.question = test.getFirstQuestion();
+        drawView.question = test.getFirstQuestion(null);
         drawView.invalidate();
         question = drawView.question;
         if (question.isD2T()) {
@@ -166,36 +166,48 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             getNextt2dQuestion();
     }
 
-    public void onSystemClicked (View v){
-        setContentView(R.layout.categories_layout);
-        Display display = getWindowManager().getDefaultDisplay();
-        int screenWidth = display.getWidth();
-        int screenHeight = display.getHeight();
-
-        ImageButton yourBtn = (ImageButton) findViewById(R.id.button1);
-        int btnSize=yourBtn.getLayoutParams().width;
-        yourBtn.setLayoutParams(new TableRow.LayoutParams(screenWidth/3, screenWidth/3));
-        ImageButton yourBtn2 = (ImageButton) findViewById(R.id.button2);
-        int btnSize2=yourBtn2.getLayoutParams().width;
-        yourBtn2.setLayoutParams(new TableRow.LayoutParams(screenWidth/3, screenWidth/3));
-        ImageButton yourBtn3 = (ImageButton) findViewById(R.id.button3);
-        int btnSize3=yourBtn3.getLayoutParams().width;
-        yourBtn3.setLayoutParams(new TableRow.LayoutParams(screenWidth/3, screenWidth/3));
-
-        //GridLayout ll = (GridLayout) findViewById(R.id.layout);
-        JSONArray categories = test.getCategories();
-        for (int i = 0; i < categories.length(); i++){
-            CheckBox checkBox = new CheckBox(this);
-            String text = null;
-            try {
-                text = categories.getJSONObject(i).getString("name");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            checkBox.setText(text);
-            //checkBox.setBackground(ContextCompat.getDrawable(context, R.drawable.one));
-            //ll.addView(checkBox);
+    public void onCategoryClicked (View v){
+        if (selectedCategories.contains(v.getTag())){
+            selectedCategories.remove(v.getTag());
+            v.setBackgroundColor(Color.TRANSPARENT);
         }
+        else {
+            selectedCategories.add(v.getTag().toString());
+            v.setBackgroundColor(Color.rgb(153, 255, 204));
+        }
+    }
+
+    public void onSelectedCategoriesTestClicked(View v){
+        setContentView(R.layout.activity_main);
+        drawView = (DrawView) findViewById(R.id.drawView);
+        drawView.question = test.getFirstQuestion(selectedCategories);
+        drawView.invalidate();
+        question = drawView.question;
+        if (question.isD2T()) {
+            getNextD2TdQuestion();
+        } else
+            getNextt2dQuestion();
+    }
+
+    public void onSystemCategoriesClicked(View v){
+        setContentView(R.layout.system_categories_layout);
+    }
+
+    public void onBodyCategoriesClicked(View v){
+        setContentView(R.layout.body_categories_layout);
+
+    }
+
+    public static boolean isNetworkStatusAvailable (Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null)
+        {
+            NetworkInfo netInfos = connectivityManager.getActiveNetworkInfo();
+            if(netInfos != null)
+                if(netInfos.isConnected())
+                    return true;
+        }
+        return false;
     }
 }
 
