@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="white">#FFFFFFFF</color>
-    <color name="blue">#0000ff</color>
-    <color name="gray">#808080</color>
-    <color name="green">#00fd00</color>
-    <color name="rightAnswer">#00fd00</color>
-    <color name="wrongAnswer">#00fd00</color>
-    <color name="buttonSelected">#99ffcc</color>
+    <color name="blue">#1d71b9</color>
+    <color name="gray">#d3d3d3</color>
+    <color name="green">#8dc63f</color>
+    <color name="black">#000000</color>
+    <color name="button">#FF4279FF</color>
+    <color name="rightAnswer">#64C726</color>
+    <color name="wrongAnswer">#ff3333</color>
+    <color name="buttonSelected">#787878</color>
 </resources>

@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Region;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -95,17 +94,17 @@ public class DrawView extends View {
         if (mode.equals(Mode.CONFIRM)) {
             drawButtons();
         }
-        if (isHighlighted){
+        if (isHighlighted) {
             RectF bordersOfSelectedArea = new RectF(Float.MAX_VALUE, Float.MAX_VALUE, 0, 0);
-            for (PartOfBody partOfBody : question.getBodyParts()){
-                if (partOfBody.getIdentifier() != null && partOfBody.getIdentifier().equals(question.getCorrectAnswer().getIdentifier())){
+            for (PartOfBody partOfBody : question.getBodyParts()) {
+                if (partOfBody.getIdentifier() != null && partOfBody.getIdentifier().equals(question.getCorrectAnswer().getIdentifier())) {
                     question.setBounds(partOfBody.getBoundaries(), bordersOfSelectedArea);
                 }
             }
-            float xCenter = (bordersOfSelectedArea.right + bordersOfSelectedArea.left)/2;
-            float yCenter = (bordersOfSelectedArea.top + bordersOfSelectedArea.bottom)/2;
-            float width = (bordersOfSelectedArea.right - bordersOfSelectedArea.left)/2;
-            float height = (bordersOfSelectedArea.bottom - bordersOfSelectedArea.top)/2;
+            float xCenter = (bordersOfSelectedArea.right + bordersOfSelectedArea.left) / 2;
+            float yCenter = (bordersOfSelectedArea.top + bordersOfSelectedArea.bottom) / 2;
+            float width = (bordersOfSelectedArea.right - bordersOfSelectedArea.left) / 2;
+            float height = (bordersOfSelectedArea.bottom - bordersOfSelectedArea.top) / 2;
             float radius = width > height ? width : height;
             Paint p = new Paint();
             p.setStyle(Paint.Style.STROKE);
@@ -130,9 +129,6 @@ public class DrawView extends View {
                     mode = Mode.NOACTION;
                     break;
                 case NOACTION:
-                    //centering picture
-                    //matrix.setScale(1/totalScaleFactor, 1/totalScaleFactor, this.getWidth()/2, this.getHeight()/2);
-                    //matrix.postTranslate(this.getWidth()/2 - x1, this.getHeight()/2 - y1);
                     scaleFactor = 1.f;
                     pointOfZoomX = 0;
                     pointOfZoomY = 0;

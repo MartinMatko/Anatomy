@@ -2,45 +2,70 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1">
+    android:weightSum="3"
+    android:background="@color/black">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Anatom"
-        android:id="@+id/textView"
+        android:id="@+id/captionView"
         android:layout_gravity="center_horizontal"
         android:textColor="#fffaffff"
-        android:textSize="35sp"
-        android:background="#ff72ff00"
-        android:layout_weight="0.17"
-        android:onClick="dra" />
+        android:textSize="45sp"
+        android:background="@color/green"
+        android:gravity="center"
+        android:shadowColor="#000000"
+        android:shadowDx="0.0"
+        android:shadowDy="0.0"
+        android:shadowRadius="3.0"
+        android:textColorHighlight="#ff1f14ff" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Procvičování anatomie člověka na míru tvým znalostem."
+        android:id="@+id/descriptionView"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#000000"
+        android:background="@color/green"
+        android:gravity="center"/>
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:text="@string/startTest"
         android:id="@+id/randomTestButton"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="0.18"
-        android:onClick="onRandomTestClicked" />
+        android:layout_weight="1"
+        android:onClick="onTestClicked"
+        android:background="@color/button"
+        android:textSize="30sp"
+        android:layout_margin="0.2sp" />
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:text="@string/selectSystem"
         android:id="@+id/systemButton"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="0.20"
-        android:onClick="onSystemCategoriesClicked" />
+        android:layout_weight="1"
+        android:onClick="onSystemCategoriesClicked"
+        android:background="@color/button"
+        android:textSize="30sp"
+        android:layout_margin="0.2sp" />
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:text="@string/selectBody"
         android:id="@+id/locationButton"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="0.17"
-        android:onClick="onBodyCategoriesClicked" />
+        android:layout_weight="1"
+        android:onClick="onBodyCategoriesClicked"
+        android:background="@color/button"
+        android:textSize="30sp"
+        android:layout_margin="0.2sp" />
+
 </LinearLayout>

@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/black"
+    android:weightSum="1"
+    android:id="@+id/ll">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/startCategoriesTest"
+            android:id="@+id/button"
+            android:layout_weight="1"
+            android:onClick="onTestClicked"
+            android:background="@color/button" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/organSystems"
+            android:id="@+id/organSystems"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#fffaffff"
+            android:textSize="40sp"
+            android:background="@color/green"
+            android:gravity="center|center_horizontal"
+            android:onClick="onSystemCategoriesLabelClicked"
+            android:clickable="true"
+            android:layout_weight="1"
+            android:shadowColor="#000000"
+            android:shadowDx="0.0"
+            android:shadowDy="0.0"
+            android:shadowRadius="3.0"
+            android:padding="1sp"
+            android:layout_marginLeft="0.2dp"
+            android:layout_marginRight="0.2dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/bodyParts"
+            android:id="@+id/bodyParts"
+            android:background="@color/green"
+            android:gravity="center|center_horizontal"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#fffaffff"
+            android:textSize="40sp"
+            android:clickable="true"
+            android:onClick="onBodyCategoriesLabelClicked"
+            android:layout_weight="1"
+            android:shadowColor="#000000"
+            android:shadowDx="0.0"
+            android:shadowDy="0.0"
+            android:shadowRadius="3.0"
+            android:padding="1sp"
+            android:layout_marginLeft="0.2dp"
+            android:layout_marginRight="0.2dp" />
+    </LinearLayout>
+    <ViewFlipper
+    android:id="@+id/viewFlipper"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/scrollView"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="0.13">
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal">
+
+                    <TableRow>
+                        <ImageButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/s01"
+                            android:layout_weight="1"
+                            android:tag="01"
+                            android:background="@color/gray"
+                            android:id="@+id/button1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:clickable="true"
+                            android:onClick="onCategoryClicked"
+                            android:padding="1sp"
+                            android:layout_marginLeft="0.2sp"
+                            android:layout_marginRight="0.2sp"
+                            android:layout_marginTop="0.2sp" />
+                        <ImageButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/s02"
+                            android:layout_weight="1"
+                            android:tag="02"
+                            android:background="@color/gray"
+                            android:id="@+id/button2"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:clickable="true"
+                            android:onClick="onCategoryClicked"
+                            android:padding="1sp"
+                            android:layout_marginLeft="0.2sp"
+                            android:layout_marginRight="0.2sp"
+                            android:layout_marginTop="0.2sp" />
+                        <ImageButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/s03"
+                            android:layout_weight="1"
+                            android:tag="03"
+                            android:background="@color/gray"
+                            android:id="@+id/button3"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:clickable="true"
+                            android:onClick="onCategoryClicked"
+                            android:padding="1sp"
+                            android:layout_marginLeft="0.2sp"
+                            android:layout_marginRight="0.2sp"
+                            android:layout_marginTop="0.2sp" />
+                    </TableRow>
+                    <TableRow>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Obecná anatomie"
+                            android:id="@+id/textView1"
+                            android:gravity="center_horizontal"
+                            android:background="@color/gray"
+                            android:padding="1sp"
+                            android:layout_marginLeft="0.2sp"
+                            android:layout_marginRight="0.2sp" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Kostra"
+                            android:id="@+id/textView2"
+                            android:gravity="center_horizontal"
+                            android:background="@color/gray"
+                            android:padding="1sp"
+                            android:layout_marginLeft="0.2sp"
+                            android:layout_marginRight="0.2sp" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Kosterní spoje"
+                            android:id="@+id/textView3"
+                            android:gravity="center_horizontal"
+                            android:background="@color/gray"
+                            android:padding="1sp"
+                            android:layout_marginLeft="0.2sp"
+                            android:layout_marginRight="0.2sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent">
+
+                        <ImageButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/s01"
+                            android:layout_weight="1"
+                            android:tag="01"
+                            android:background="@color/gray"
+                            android:id="@+id/imageButton"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:clickable="true"
+                            android:onClick="onCategoryClicked"
+                            android:padding="1sp"
+                            android:layout_marginLeft="0.2sp"
+                            android:layout_marginRight="0.2sp"
+                            android:layout_marginTop="0.2sp" />
+
+                        <ImageButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/s02"
+                            android:layout_weight="1"
+                            android:tag="02"
+                            android:background="@color/gray"
+                            android:id="@+id/imageButton2"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:clickable="true"
+                            android:onClick="onCategoryClicked"
+                            android:padding="1sp"
+                            android:layout_marginLeft="0.2sp"
+                            android:layout_marginRight="0.2sp"
+                            android:layout_marginTop="0.2sp" />
+
+                        <ImageButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/s03"
+                            android:layout_weight="1"
+                            android:tag="03"
+                            android:background="@color/gray"
+                            android:id="@+id/imageButton3"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:clickable="true"
+                            android:onClick="onCategoryClicked"
+                            android:padding="1sp"
+                            android:layout_marginLeft="0.2sp"
+                            android:layout_marginRight="0.2sp"
+                            android:layout_marginTop="0.2sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Obecná anatomie"
+                            android:id="@+id/textView"
+                            android:gravity="center_horizontal"
+                            android:background="@color/gray"
+                            android:padding="1sp"
+                            android:layout_marginLeft="0.2sp"
+                            android:layout_marginRight="0.2sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Kostra"
+                            android:id="@+id/textView4"
+                            android:gravity="center_horizontal"
+                            android:background="@color/gray"
+                            android:padding="1sp"
+                            android:layout_marginLeft="0.2sp"
+                            android:layout_marginRight="0.2sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Kosterní spoje"
+                            android:id="@+id/textView5"
+                            android:gravity="center_horizontal"
+                            android:background="@color/gray"
+                            android:padding="1sp"
+                            android:layout_marginLeft="0.2sp"
+                            android:layout_marginRight="0.2sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent">
+
+                        <ImageButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/s01"
+                            android:layout_weight="1"
+                            android:tag="01"
+                            android:background="@color/gray"
+                            android:id="@+id/imageButton4"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:clickable="true"
+                            android:onClick="onCategoryClicked"
+                            android:padding="1sp"
+                            android:layout_marginLeft="0.2sp"
+                            android:layout_marginRight="0.2sp"
+                            android:layout_marginTop="0.2sp" />
+
+                        <ImageButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/s02"
+                            android:layout_weight="1"
+                            android:tag="02"
+                            android:background="@color/gray"
+                            android:id="@+id/imageButton5"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:clickable="true"
+                            android:onClick="onCategoryClicked"
+                            android:padding="1sp"
+                            android:layout_marginLeft="0.2sp"
+                            android:layout_marginRight="0.2sp"
+                            android:layout_marginTop="0.2sp" />
+
+                        <ImageButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/s03"
+                            android:layout_weight="1"
+                            android:tag="03"
+                            android:background="@color/gray"
+                            android:id="@+id/imageButton6"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:clickable="true"
+                            android:onClick="onCategoryClicked"
+                            android:padding="1sp"
+                            android:layout_marginLeft="0.2sp"
+                            android:layout_marginRight="0.2sp"
+                            android:layout_marginTop="0.2sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Obecná anatomie"
+                            android:id="@+id/textView6"
+                            android:gravity="center_horizontal"
+                            android:background="@color/gray"
+                            android:padding="1sp"
+                            android:layout_marginLeft="0.2sp"
+                            android:layout_marginRight="0.2sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Kostra"
+                            android:id="@+id/textView7"
+                            android:gravity="center_horizontal"
+                            android:background="@color/gray"
+                            android:padding="1sp"
+                            android:layout_marginLeft="0.2sp"
+                            android:layout_marginRight="0.2sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Kosterní spoje"
+                            android:id="@+id/textView8"
+                            android:gravity="center_horizontal"
+                            android:background="@color/gray"
+                            android:padding="1sp"
+                            android:layout_marginLeft="0.2sp"
+                            android:layout_marginRight="0.2sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent">
+
+                        <ImageButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/s01"
+                            android:layout_weight="1"
+                            android:tag="01"
+                            android:background="@color/gray"
+                            android:id="@+id/imageButton7"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:clickable="true"
+                            android:onClick="onCategoryClicked"
+                            android:padding="1sp"
+                            android:layout_marginLeft="0.2sp"
+                            android:layout_marginRight="0.2sp"
+                            android:layout_marginTop="0.2sp" />
+
+                        <ImageButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/s02"
+                            android:layout_weight="1"
+                            android:tag="02"
+                            android:background="@color/gray"
+                            android:id="@+id/imageButton8"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:clickable="true"
+                            android:onClick="onCategoryClicked"
+                            android:padding="1sp"
+                            android:layout_marginLeft="0.2sp"
+                            android:layout_marginRight="0.2sp"
+                            android:layout_marginTop="0.2sp" />
+
+                        <ImageButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/s03"
+                            android:layout_weight="1"
+                            android:tag="03"
+                            android:background="@color/gray"
+                            android:id="@+id/imageButton9"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:clickable="true"
+                            android:onClick="onCategoryClicked"
+                            android:padding="1sp"
+                            android:layout_marginLeft="0.2sp"
+                            android:layout_marginRight="0.2sp"
+                            android:layout_marginTop="0.2sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Obecná anatomie"
+                            android:id="@+id/textView9"
+                            android:gravity="center_horizontal"
+                            android:background="@color/gray"
+                            android:padding="1sp"
+                            android:layout_marginLeft="0.2sp"
+                            android:layout_marginRight="0.2sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Kostra"
+                            android:id="@+id/textView10"
+                            android:gravity="center_horizontal"
+                            android:background="@color/gray"
+                            android:padding="1sp"
+                            android:layout_marginLeft="0.2sp"
+                            android:layout_marginRight="0.2sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Kosterní spoje"
+                            android:id="@+id/textView11"
+                            android:gravity="center_horizontal"
+                            android:background="@color/gray"
+                            android:padding="1sp"
+                            android:layout_marginLeft="0.2sp"
+                            android:layout_marginRight="0.2sp" />
+                    </TableRow>
+                </TableLayout></ScrollView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:orientation="vertical" >
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/scrollViewB"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="0.13">
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal">
+
+                    <TableRow>
+                        <ImageButton
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/b01"
+                            android:layout_weight="1"
+                            android:tag="A"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:clickable="true"
+                            android:onClick="onCategoryClicked" />
+                        <ImageButton
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/b02"
+                            android:layout_weight="1"
+                            android:tag="B"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:text="this is text"
+                            android:clickable="true"
+                            android:onClick="onCategoryClicked" />
+
+                        <ImageButton
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/b03"
+                            android:layout_weight="1"
+                            android:contentDescription="Spoje"
+                            android:tag="Hb"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:text="this is text"
+                            android:clickable="true"
+                            android:onClick="onCategoryClicked" />
+                    </TableRow>
+                    <TableRow>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Břicho"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Záda"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:textAlignment="center"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Neurokranium"/>
+                    </TableRow>
+                </TableLayout></ScrollView>
+            </LinearLayout>
+    </ViewFlipper>
+</LinearLayout>

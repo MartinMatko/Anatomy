@@ -2,8 +2,6 @@ package martinmatko.anatomy;
 
 import android.graphics.RectF;
 
-import org.apache.http.cookie.Cookie;
-
 import java.util.List;
 
 /**
@@ -23,6 +21,7 @@ public class Question {
 
     public Question() {
     }
+
     public Term getAnswer() {
         return answer;
     }

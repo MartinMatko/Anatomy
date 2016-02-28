@@ -21,29 +21,42 @@ public class Test {
     Question question;
     List<Cookie> cookies = new ArrayList<>();
 
-    public void start(ArrayList categories) {
-        questions.add(getFirstQuestion(categories));
+    public void start(ArrayList systemCategories, ArrayList bodyCategories) {
+        questions.add(getFirstQuestion(systemCategories, bodyCategories));
 
     }
 
-    public Question getFirstQuestion(ArrayList<String> categories) {
+    public Question getFirstQuestion(ArrayList<String> systemCategories, ArrayList<String> bodyCategories) {
         JSONObject context;
-        if (categories == null || categories.isEmpty()){
+        if (systemCategories.isEmpty() && bodyCategories.isEmpty()) {
             context = service.getContext("https://staging.anatom.cz/flashcards/practice/?avoid=[]&categories=[]&contexts=[]&limit=2&types=[]&without_contexts=1");
-        }
-        else {
-            StringBuilder numbersOfCategories = new StringBuilder();
-            for (String tag : categories){
-                numbersOfCategories.append("\"" + tag + "\",");
+        } else {
+            StringBuilder systemCategoriesTags = new StringBuilder();
+            for (String tag : systemCategories) {
+                systemCategoriesTags.append("\"" + tag + "\",");
             }
-            numbersOfCategories.deleteCharAt(numbersOfCategories.length() - 1);
+            StringBuilder bodyCategoriesTags = new StringBuilder();
+            for (String tag : bodyCategories) {
+                bodyCategoriesTags.append("\"" + tag + "\",");
+            }
             String url = "";
+            String tags = "";
+            if (systemCategoriesTags.length() > 0) {
+                systemCategoriesTags.deleteCharAt(systemCategoriesTags.length() - 1);
+                tags = "[" + systemCategoriesTags.toString() + "]";
+            }
+
+            if (bodyCategoriesTags.length() > 0) {
+
+                bodyCategoriesTags.deleteCharAt(bodyCategoriesTags.length() - 1);
+                tags = tags + ",[" + bodyCategoriesTags.toString() + "]";
+            }
             try {
-                url = URLEncoder.encode(numbersOfCategories.toString(), "UTF-8");
+                url = URLEncoder.encode(tags, "UTF-8");
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            url = "https://staging.anatom.cz/flashcards/practice/?avoid=[]&categories=["+ url + "]&contexts=[]&limit=2&types=[]&without_contexts=1";
+            url = "https://staging.anatom.cz/flashcards/practice/?avoid=[]&categories=[" + url + "]&contexts=[]&limit=2&types=[]&without_contexts=1";
             context = service.getContext(url);
         }
 
@@ -95,7 +108,7 @@ public class Test {
         return response.toString();
     }
 
-    public JSONArray getCategories(){
+    public JSONArray getCategories() {
         try {
             return service.get("https://anatom.cz/flashcards/categorys?all=True&db_orderby=identifier").getJSONArray("data");
         } catch (JSONException e) {

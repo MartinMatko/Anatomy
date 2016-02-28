@@ -7,4 +7,9 @@
     <string name="startCategoriesTest">Procvičovat vybrané</string>
     <string name="organSystems">Orgánové systémy</string>
     <string name="bodyParts">Části těla</string>
+    <string name="choose">Vyber </string>
+    <string name="highlighted">Co je zvýrazněno?</string>
+    <string name="continueToNext">Pokračovat</string>
+    <string name="rate">Úspěšnost: </string>
+    <string name="doNotKnow">Nevím</string>
 </resources>

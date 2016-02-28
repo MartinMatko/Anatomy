@@ -9,4 +9,9 @@
     <string name="action_settings">Settings</string>
     <string name="organSystems">Organ systems</string>
     <string name="bodyParts">Body parts</string>
+    <string name="choose">Choose </string>
+    <string name="highlighted">What is highlighted?</string>
+    <string name="continueToNext">Continue</string>
+    <string name="rate">Success rate: </string>
+    <string name="doNotKnow">I don\'t know</string>
 </resources>
