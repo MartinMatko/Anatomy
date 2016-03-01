@@ -126,7 +126,7 @@ public class DrawView extends View {
                     matrix.setTranslate(this.getWidth() / 2 - x1, this.getHeight() / 2 - y1);
                     matrix.postScale(scaleFactor, scaleFactor, this.getWidth() / 2, this.getHeight() / 2);
                     scaleFactor = 1.f;
-                    mode = Mode.NOACTION;
+                    //mode = Mode.NOACTION;
                     break;
                 case NOACTION:
                     scaleFactor = 1.f;
@@ -139,12 +139,23 @@ public class DrawView extends View {
                     break;
                 case DRAG:
                     matrix.setTranslate(translateX / 5, translateY / 5);
-                    mode = Mode.SELECT;
+                    if (question.isD2T()){
+                        mode = Mode.SELECT;
+                    }
+                    else{
+                        mode = Mode.NOACTION;
+                    }
                     break;
                 case SELECT:
                     break;
                 case TAPTOZOOM:
                     matrix.setScale(scaleFactor, scaleFactor, pointOfZoomX, pointOfZoomY);
+//                    if (question.isD2T()){
+//                        mode = Mode.SELECT;
+//                    }
+//                    else{
+//                        mode = Mode.NOACTION;
+//                    }
                     mode = Mode.SELECT;
                     break;
                 case FINISH:
@@ -165,18 +176,17 @@ public class DrawView extends View {
                 partOfBody.setPath(path);
                 canvas.drawPath(path, partOfBody.getPaint());
             }
-            for (PartOfBody partOfBody : question.getBodyParts()) {
-                if (partOfBody.getIdentifier() != null) {
-                    if (partOfBody.getIdentifier().equals(question.getCorrectAnswer().getIdentifier()) || isD2T) {
-                        Paint p = new Paint();
-                        p.setStyle(Paint.Style.STROKE);
-                        p.setStrokeWidth(1);
-                        canvas.drawRect(partOfBody.getBoundaries(), p);
-                    }
-
-                    canvas.drawPath(partOfBody.getPath(), partOfBody.getPaint());
-                }
-            }
+            //used for debugging - showing path boundaries
+//            for (PartOfBody partOfBody : question.getBodyParts()) {
+//                if (partOfBody.getIdentifier() != null) {
+//                    if (partOfBody.getIdentifier().equals(question.getCorrectAnswer().getIdentifier()) || isD2T) {
+//                        Paint p = new Paint();
+//                        p.setStyle(Paint.Style.STROKE);
+//                        p.setStrokeWidth(1);
+//                        canvas.drawRect(partOfBody.getBoundaries(), p);
+//                    }
+//                }
+//            }
         } catch (NullPointerException ex) {
             ex.printStackTrace();
         }
@@ -235,7 +245,18 @@ public class DrawView extends View {
         }
         detector.onTouchEvent(event);
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            if (mode == Mode.INITIAL || mode == Mode.NOACTION) {
+            if (mode == Mode.INITIAL) {
+                showButtons();
+                if (selectedParts.size() > 1) {
+                    scaleFactor = 3;
+                    totalScaleFactor = scaleFactor;
+                    mode = Mode.SELECT;
+                }
+                else {
+                    mode = Mode.FINISH;
+                }
+            }
+            if (mode == Mode.NOACTION){
                 mode = Mode.TAPTOZOOM;
             }
             x = event.getX();
@@ -286,7 +307,7 @@ public class DrawView extends View {
             for (PartOfBody partOfBody : question.getBodyParts()) {
                 Paint paint = partOfBody.getPaint();
                 if (identifierOfAnswer.equals(partOfBody.getIdentifier())) {
-                    paint.setColor(Color.RED);
+                    paint.setColor(getResources().getColor(R.color.wrongAnswer));
                 } else {
                     int color = paint.getColor();
                     JSONParser parser = new JSONParser();
@@ -309,7 +330,7 @@ public class DrawView extends View {
                 for (PartOfBody partOfBody : question.getBodyParts()) {
                     Paint paint = partOfBody.getPaint();
                     if (option.getIdentifier().equals(partOfBody.getIdentifier())) {
-                        paint.setColor(Color.RED);
+                        paint.setColor(getResources().getColor(R.color.wrongAnswer));
                         question.setAnswer(option);
                     } else {
 //                        int color = paint.getColor();
@@ -328,7 +349,7 @@ public class DrawView extends View {
                 for (PartOfBody partOfBody : question.getBodyParts()) {
                     if (partOfBody.getIdentifier() != null && partOfBody.getIdentifier().equals(option.getIdentifier())) {
                         Paint paint = partOfBody.getPaint();
-                        paint.setColor(Color.GREEN);
+                        paint.setColor(getResources().getColor(R.color.rightAnswer));
                     }
                 }
             }

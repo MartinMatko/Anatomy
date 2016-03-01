@@ -9,4 +9,5 @@
     <color name="rightAnswer">#64C726</color>
     <color name="wrongAnswer">#ff3333</color>
     <color name="buttonSelected">#787878</color>
+    <color name="optionsBackround">#ffd2e6ff</color>
 </resources>

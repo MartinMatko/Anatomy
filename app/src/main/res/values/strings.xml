@@ -14,4 +14,32 @@
     <string name="continueToNext">Continue</string>
     <string name="rate">Success rate: </string>
     <string name="doNotKnow">I don\'t know</string>
+    <string name="exercise">Practice medical anatomy with personalized questions.</string>
+    <string name="exit">Exit</string>
+    <string name="internetAvailable">Internet is available..</string>
+    <string name="internetNotAvailable">Internet is not available.</string>
+
+    <string name="s01">General anatomy</string>
+    <string name="s02">Bones</string>
+    <string name="s03">Joints</string>
+    <string name="s04">Muscles</string>
+    <string name="s05">Digestive system</string>
+    <string name="s06">Respiratory system</string>
+    <string name="s07">Urinary system</string>
+    <string name="s08">Genital system</string>
+    <string name="s09">Heart and blood vessels</string>
+    <string name="s10">Lymphatic and immune system</string>
+    <string name="s11">Peripheral nervous system</string>
+    <string name="s12">Central nervous system</string>
+    <string name="s13">Sense and skin</string>
+    <string name="s15">Topography</string>
+    <string name="A">Abdomen</string>
+    <string name="B">Back</string>
+    <string name="Hb">Head - Brain</string>
+    <string name="Hf">Head - Face</string>
+    <string name="LE">Lower Extremity</string>
+    <string name="N">Neck</string>
+    <string name="P">Pelvis</string>
+    <string name="T">Thorax</string>
+    <string name="UE">Upper Extremity</string>
 </resources>

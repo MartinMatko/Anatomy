@@ -48,7 +48,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/textOfQuestionView"
-        android:background="#ffd2e6ff"
+        android:background="@color/optionsBackround"
         android:button="@null"
         />
     <Button
@@ -74,7 +74,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:onClick="onNextClick"
-        android:background="#ff0700ff" />
+        android:background="@color/button" />
 
     <martinmatko.anatomy.DrawView
         android:id="@+id/drawView"

@@ -12,4 +12,32 @@
     <string name="continueToNext">Pokračovat</string>
     <string name="rate">Úspěšnost: </string>
     <string name="doNotKnow">Nevím</string>
+    <string name="exercise">Procvičování anatomie člověka na míru tvým znalostem.</string>
+    <string name="exit">Ukončit</string>
+    <string name="internetAvailable">Internet je dostupný..</string>
+    <string name="internetNotAvailable">Internet není dostupný.</string>
+
+    <string name="s01">Obecn\u00e1 anatomie</string>
+    <string name="s02">Kosti</string>
+    <string name="s03">Kostern\u00ed spoje</string>
+    <string name="s04">Svaly</string>
+    <string name="s05">Tr\u00e1vic\u00ed syst\u00e9m</string>
+    <string name="s06">D\u00fdchac\u00ed syst\u00e9m</string>
+    <string name="s07">Mo\u010dov\u00fd syst\u00e9m</string>
+    <string name="s08">Pohlavn\u00ed syst\u00e9m</string>
+    <string name="s09">Srdce a krevn\u00ed c\u00e9vy</string>
+    <string name="s10">Lymfatick\u00fd a imunitn\u00ed syst\u00e9m</string>
+    <string name="s11">Perifern\u00ed nervov\u00fd syst\u00e9m</string>
+    <string name="s12">Centr\u00e1ln\u00ed nervov\u00fd syst\u00e9m</string>
+    <string name="s13">Smysly a k\u016f\u017ee</string>
+    <string name="s15">Topografie</string>
+    <string name="A">B\u0159icho</string>
+    <string name="B">Z\u00e1da</string>
+    <string name="Hb">Neurokranium</string>
+    <string name="Hf">Splanchnokranium</string>
+    <string name="LE">Doln\u00ed kon\u010detina</string>
+    <string name="N">Krk</string>
+    <string name="P">P\u00e1nev</string>
+    <string name="T">Hrudn\u00edk</string>
+    <string name="UE">Horn\u00ed kon\u010detina</string>
 </resources>

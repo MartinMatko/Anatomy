@@ -2,32 +2,11 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\Martin\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.0.0\support-annotations-23.0.0.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="990e7f98a7bad86a40b1f0bcfeb039023afd0839">
-        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.0-523da1c93a5ebc72a611d322e802cdf89b345cfc.jar" />
-    </item>
-    <item
         jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-basement\8.4.0\jars\classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="8e673cdfadd8f2d98fdb2fda2285c30f6e449782">
         <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\classes-d724948af1e0e4de8f230d4b64024e78d6c2bf1c.jar" />
-    </item>
-    <item
-        jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-auth\8.4.0\jars\classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="966e5771a5a2ebfb31bf00d7cd6cd2546d245517">
-        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\classes-7091d49931276d8d79b1c673f51076175720ef10.jar" />
-    </item>
-    <item
-        jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\libs\internal_impl-23.0.0.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="8bd336eeae661e8311330284897ee07f8ebaa297">
-        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\internal_impl-23.0.0-dca01f3d16630f201f8490114966b15f9704a887.jar" />
     </item>
     <item
         jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\21.0.3\jars\classes.jar"
@@ -37,11 +16,32 @@
         <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\classes-cfd676e739f5faca637b19b750186bbf88a6e21d.jar" />
     </item>
     <item
+        jar="C:\Users\Martin\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.0.0\support-annotations-23.0.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="990e7f98a7bad86a40b1f0bcfeb039023afd0839">
+        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.0-523da1c93a5ebc72a611d322e802cdf89b345cfc.jar" />
+    </item>
+    <item
+        jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\libs\internal_impl-23.0.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="8bd336eeae661e8311330284897ee07f8ebaa297">
+        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\internal_impl-23.0.0-dca01f3d16630f201f8490114966b15f9704a887.jar" />
+    </item>
+    <item
         jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="8413c27b45b7fe61dca4a98159f65e2cee215f5a">
         <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\classes-f8201c72100576ed0158a7bca0c7c5a1c9d29211.jar" />
+    </item>
+    <item
+        jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-auth\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="966e5771a5a2ebfb31bf00d7cd6cd2546d245517">
+        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\classes-7091d49931276d8d79b1c673f51076175720ef10.jar" />
     </item>
     <item
         jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-base\8.4.0\jars\classes.jar"

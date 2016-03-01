@@ -87,442 +87,117 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal">
-
                     <TableRow>
                         <ImageButton
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
                             android:src="@drawable/s01"
-                            android:layout_weight="1"
                             android:tag="01"
-                            android:background="@color/gray"
-                            android:id="@+id/button1"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:clickable="true"
-                            android:onClick="onCategoryClicked"
-                            android:padding="1sp"
-                            android:layout_marginLeft="0.2sp"
-                            android:layout_marginRight="0.2sp"
-                            android:layout_marginTop="0.2sp" />
+                            style="@style/imageTileButton" />
                         <ImageButton
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
                             android:src="@drawable/s02"
-                            android:layout_weight="1"
                             android:tag="02"
-                            android:background="@color/gray"
-                            android:id="@+id/button2"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:clickable="true"
-                            android:onClick="onCategoryClicked"
-                            android:padding="1sp"
-                            android:layout_marginLeft="0.2sp"
-                            android:layout_marginRight="0.2sp"
-                            android:layout_marginTop="0.2sp" />
+                            style="@style/imageTileButton" />
                         <ImageButton
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
                             android:src="@drawable/s03"
-                            android:layout_weight="1"
                             android:tag="03"
-                            android:background="@color/gray"
-                            android:id="@+id/button3"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:clickable="true"
-                            android:onClick="onCategoryClicked"
-                            android:padding="1sp"
-                            android:layout_marginLeft="0.2sp"
-                            android:layout_marginRight="0.2sp"
-                            android:layout_marginTop="0.2sp" />
+                            style="@style/imageTileButton" />
                     </TableRow>
                     <TableRow>
                         <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:text="Obecná anatomie"
-                            android:id="@+id/textView1"
-                            android:gravity="center_horizontal"
-                            android:background="@color/gray"
-                            android:padding="1sp"
-                            android:layout_marginLeft="0.2sp"
-                            android:layout_marginRight="0.2sp" />
+                            style="@style/imageTileLabel"
+                            android:text="@string/s01"
+                            android:tag="01" />
                         <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:text="Kostra"
-                            android:id="@+id/textView2"
-                            android:gravity="center_horizontal"
-                            android:background="@color/gray"
-                            android:padding="1sp"
-                            android:layout_marginLeft="0.2sp"
-                            android:layout_marginRight="0.2sp" />
+                            style="@style/imageTileLabel"
+                            android:text="@string/s02"
+                            android:tag="02"  />
                         <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:text="Kosterní spoje"
-                            android:id="@+id/textView3"
-                            android:gravity="center_horizontal"
-                            android:background="@color/gray"
-                            android:padding="1sp"
-                            android:layout_marginLeft="0.2sp"
-                            android:layout_marginRight="0.2sp" />
+                            style="@style/imageTileLabel"
+                            android:text="@string/s03"
+                            android:tag="03"  />
                     </TableRow>
-
-                    <TableRow
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent">
-
+                    <TableRow>
                         <ImageButton
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/s01"
-                            android:layout_weight="1"
-                            android:tag="01"
-                            android:background="@color/gray"
-                            android:id="@+id/imageButton"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:clickable="true"
-                            android:onClick="onCategoryClicked"
-                            android:padding="1sp"
-                            android:layout_marginLeft="0.2sp"
-                            android:layout_marginRight="0.2sp"
-                            android:layout_marginTop="0.2sp" />
-
+                            android:src="@drawable/s04"
+                            android:tag="04"
+                            style="@style/imageTileButton" />
                         <ImageButton
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/s02"
-                            android:layout_weight="1"
-                            android:tag="02"
-                            android:background="@color/gray"
-                            android:id="@+id/imageButton2"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:clickable="true"
-                            android:onClick="onCategoryClicked"
-                            android:padding="1sp"
-                            android:layout_marginLeft="0.2sp"
-                            android:layout_marginRight="0.2sp"
-                            android:layout_marginTop="0.2sp" />
-
+                            android:src="@drawable/s05"
+                            android:tag="05"
+                            style="@style/imageTileButton" />
                         <ImageButton
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/s03"
-                            android:layout_weight="1"
-                            android:tag="03"
-                            android:background="@color/gray"
-                            android:id="@+id/imageButton3"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:clickable="true"
-                            android:onClick="onCategoryClicked"
-                            android:padding="1sp"
-                            android:layout_marginLeft="0.2sp"
-                            android:layout_marginRight="0.2sp"
-                            android:layout_marginTop="0.2sp" />
+                            android:src="@drawable/s06"
+                            android:tag="06"
+                            style="@style/imageTileButton" />
                     </TableRow>
-
-                    <TableRow
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent">
-
+                    <TableRow>
                         <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:text="Obecná anatomie"
-                            android:id="@+id/textView"
-                            android:gravity="center_horizontal"
-                            android:background="@color/gray"
-                            android:padding="1sp"
-                            android:layout_marginLeft="0.2sp"
-                            android:layout_marginRight="0.2sp" />
-
+                            style="@style/imageTileLabel"
+                            android:text="@string/s04"
+                            android:tag="04" />
                         <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:text="Kostra"
-                            android:id="@+id/textView4"
-                            android:gravity="center_horizontal"
-                            android:background="@color/gray"
-                            android:padding="1sp"
-                            android:layout_marginLeft="0.2sp"
-                            android:layout_marginRight="0.2sp" />
-
+                            style="@style/imageTileLabel"
+                            android:text="@string/s05"
+                            android:tag="05"  />
                         <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:text="Kosterní spoje"
-                            android:id="@+id/textView5"
-                            android:gravity="center_horizontal"
-                            android:background="@color/gray"
-                            android:padding="1sp"
-                            android:layout_marginLeft="0.2sp"
-                            android:layout_marginRight="0.2sp" />
+                            style="@style/imageTileLabel"
+                            android:text="@string/s06"
+                            android:tag="06"  />
                     </TableRow>
-
-                    <TableRow
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent">
-
+                    <TableRow>
                         <ImageButton
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/s01"
-                            android:layout_weight="1"
-                            android:tag="01"
-                            android:background="@color/gray"
-                            android:id="@+id/imageButton4"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:clickable="true"
-                            android:onClick="onCategoryClicked"
-                            android:padding="1sp"
-                            android:layout_marginLeft="0.2sp"
-                            android:layout_marginRight="0.2sp"
-                            android:layout_marginTop="0.2sp" />
-
+                            android:src="@drawable/s07"
+                            android:tag="07"
+                            style="@style/imageTileButton" />
                         <ImageButton
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/s02"
-                            android:layout_weight="1"
-                            android:tag="02"
-                            android:background="@color/gray"
-                            android:id="@+id/imageButton5"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:clickable="true"
-                            android:onClick="onCategoryClicked"
-                            android:padding="1sp"
-                            android:layout_marginLeft="0.2sp"
-                            android:layout_marginRight="0.2sp"
-                            android:layout_marginTop="0.2sp" />
-
+                            android:src="@drawable/s08"
+                            android:tag="08"
+                            style="@style/imageTileButton" />
                         <ImageButton
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/s03"
-                            android:layout_weight="1"
-                            android:tag="03"
-                            android:background="@color/gray"
-                            android:id="@+id/imageButton6"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:clickable="true"
-                            android:onClick="onCategoryClicked"
-                            android:padding="1sp"
-                            android:layout_marginLeft="0.2sp"
-                            android:layout_marginRight="0.2sp"
-                            android:layout_marginTop="0.2sp" />
+                            android:src="@drawable/s09"
+                            android:tag="09"
+                            style="@style/imageTileButton" />
                     </TableRow>
-
-                    <TableRow
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent">
-
+                    <TableRow>
                         <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:text="Obecná anatomie"
-                            android:id="@+id/textView6"
-                            android:gravity="center_horizontal"
-                            android:background="@color/gray"
-                            android:padding="1sp"
-                            android:layout_marginLeft="0.2sp"
-                            android:layout_marginRight="0.2sp" />
-
+                            style="@style/imageTileLabel"
+                            android:text="@string/s07"
+                            android:tag="07" />
                         <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:text="Kostra"
-                            android:id="@+id/textView7"
-                            android:gravity="center_horizontal"
-                            android:background="@color/gray"
-                            android:padding="1sp"
-                            android:layout_marginLeft="0.2sp"
-                            android:layout_marginRight="0.2sp" />
-
+                            style="@style/imageTileLabel"
+                            android:text="@string/s08"
+                            android:tag="08"  />
                         <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:text="Kosterní spoje"
-                            android:id="@+id/textView8"
-                            android:gravity="center_horizontal"
-                            android:background="@color/gray"
-                            android:padding="1sp"
-                            android:layout_marginLeft="0.2sp"
-                            android:layout_marginRight="0.2sp" />
+                            style="@style/imageTileLabel"
+                            android:text="@string/s09"
+                            android:tag="09"  />
                     </TableRow>
-
-                    <TableRow
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent">
-
+                    <TableRow>
                         <ImageButton
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/s01"
-                            android:layout_weight="1"
-                            android:tag="01"
-                            android:background="@color/gray"
-                            android:id="@+id/imageButton7"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:clickable="true"
-                            android:onClick="onCategoryClicked"
-                            android:padding="1sp"
-                            android:layout_marginLeft="0.2sp"
-                            android:layout_marginRight="0.2sp"
-                            android:layout_marginTop="0.2sp" />
-
+                            android:src="@drawable/s11"
+                            android:tag="11"
+                            style="@style/imageTileButton" />
                         <ImageButton
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/s02"
-                            android:layout_weight="1"
-                            android:tag="02"
-                            android:background="@color/gray"
-                            android:id="@+id/imageButton8"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:clickable="true"
-                            android:onClick="onCategoryClicked"
-                            android:padding="1sp"
-                            android:layout_marginLeft="0.2sp"
-                            android:layout_marginRight="0.2sp"
-                            android:layout_marginTop="0.2sp" />
-
+                            android:src="@drawable/s12"
+                            android:tag="12"
+                            style="@style/imageTileButton" />
                         <ImageButton
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/s03"
-                            android:layout_weight="1"
-                            android:tag="03"
-                            android:background="@color/gray"
-                            android:id="@+id/imageButton9"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:clickable="true"
-                            android:onClick="onCategoryClicked"
-                            android:padding="1sp"
-                            android:layout_marginLeft="0.2sp"
-                            android:layout_marginRight="0.2sp"
-                            android:layout_marginTop="0.2sp" />
+                            android:src="@drawable/s15"
+                            android:tag="15"
+                            style="@style/imageTileButton" />
                     </TableRow>
-
-                    <TableRow
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent">
-
+                    <TableRow>
                         <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:text="Obecná anatomie"
-                            android:id="@+id/textView9"
-                            android:gravity="center_horizontal"
-                            android:background="@color/gray"
-                            android:padding="1sp"
-                            android:layout_marginLeft="0.2sp"
-                            android:layout_marginRight="0.2sp" />
-
+                            style="@style/imageTileLabel"
+                            android:text="@string/s11"
+                            android:tag="11" />
                         <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:text="Kostra"
-                            android:id="@+id/textView10"
-                            android:gravity="center_horizontal"
-                            android:background="@color/gray"
-                            android:padding="1sp"
-                            android:layout_marginLeft="0.2sp"
-                            android:layout_marginRight="0.2sp" />
-
+                            style="@style/imageTileLabel"
+                            android:text="@string/s12"
+                            android:tag="12"  />
                         <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:text="Kosterní spoje"
-                            android:id="@+id/textView11"
-                            android:gravity="center_horizontal"
-                            android:background="@color/gray"
-                            android:padding="1sp"
-                            android:layout_marginLeft="0.2sp"
-                            android:layout_marginRight="0.2sp" />
+                            style="@style/imageTileLabel"
+                            android:text="@string/s15"
+                            android:tag="15"  />
                     </TableRow>
                 </TableLayout></ScrollView>
         </LinearLayout>
@@ -534,79 +209,95 @@
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/scrollViewB"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="0.13">
                 <TableLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal">
-
                     <TableRow>
                         <ImageButton
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
                             android:src="@drawable/b01"
-                            android:layout_weight="1"
                             android:tag="A"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:clickable="true"
-                            android:onClick="onCategoryClicked" />
+                            style="@style/imageTileButton" />
                         <ImageButton
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
                             android:src="@drawable/b02"
-                            android:layout_weight="1"
                             android:tag="B"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:text="this is text"
-                            android:clickable="true"
-                            android:onClick="onCategoryClicked" />
-
+                            style="@style/imageTileButton" />
                         <ImageButton
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
                             android:src="@drawable/b03"
-                            android:layout_weight="1"
-                            android:contentDescription="Spoje"
                             android:tag="Hb"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:text="this is text"
-                            android:clickable="true"
-                            android:onClick="onCategoryClicked" />
+                            style="@style/imageTileButton" />
                     </TableRow>
                     <TableRow>
                         <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:text="Břicho"/>
+                            style="@style/imageTileLabel"
+                            android:text="@string/A"
+                            android:tag="A" />
                         <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:text="Záda"/>
+                            style="@style/imageTileLabel"
+                            android:text="@string/B"
+                            android:tag="B"  />
                         <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:textAlignment="center"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:text="Neurokranium"/>
+                            style="@style/imageTileLabel"
+                            android:text="@string/Hb"
+                            android:tag="Hb"  />
+                    </TableRow>
+                    <TableRow>
+                        <ImageButton
+                            android:src="@drawable/b04"
+                            android:tag="Hf"
+                            style="@style/imageTileButton" />
+                        <ImageButton
+                            android:src="@drawable/b05"
+                            android:tag="LE"
+                            style="@style/imageTileButton" />
+                        <ImageButton
+                            android:src="@drawable/b06"
+                            android:tag="N"
+                            style="@style/imageTileButton" />
+                    </TableRow>
+                    <TableRow>
+                        <TextView
+                            style="@style/imageTileLabel"
+                            android:text="@string/Hf"
+                            android:tag="Hf" />
+                        <TextView
+                            style="@style/imageTileLabel"
+                            android:text="@string/LE"
+                            android:tag="LE"  />
+                        <TextView
+                            style="@style/imageTileLabel"
+                            android:text="@string/N"
+                            android:tag="N"  />
+                    </TableRow>
+                    <TableRow>
+                        <ImageButton
+                            android:src="@drawable/b07"
+                            android:tag="P"
+                            style="@style/imageTileButton" />
+                        <ImageButton
+                            android:src="@drawable/b08"
+                            android:tag="T"
+                            style="@style/imageTileButton" />
+                        <ImageButton
+                            android:src="@drawable/b09"
+                            android:tag="UE"
+                            style="@style/imageTileButton" />
+                    </TableRow>
+                    <TableRow>
+                        <TextView
+                            style="@style/imageTileLabel"
+                            android:text="@string/P"
+                            android:tag="P" />
+                        <TextView
+                            style="@style/imageTileLabel"
+                            android:text="@string/T"
+                            android:tag="T"  />
+                        <TextView
+                            style="@style/imageTileLabel"
+                            android:text="@string/UE"
+                            android:tag="UE"  />
                     </TableRow>
                 </TableLayout></ScrollView>
             </LinearLayout>
