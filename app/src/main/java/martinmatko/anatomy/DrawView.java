@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Region;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -25,6 +26,7 @@ public class DrawView extends View {
     //These two constants specify the minimum and maximum zoom
     private static float MIN_ZOOM = -5f;
     private static float MAX_ZOOM = 5f;
+    private final int FRAME_RATE = 30;
     Context ctx;
     Question question = new Question();
     Matrix matrix;
@@ -35,7 +37,8 @@ public class DrawView extends View {
     private boolean isD2T = true;
     private Canvas canvas = new Canvas();
     private float scaleFactor = 1.f;
-    private float totalScaleFactor = 1.f;
+    private float zoomScaleFactor = 1.f;
+    public float totalScaleFactor = 1.f;
     private ScaleGestureDetector detector;
     //These two variables keep track of the X and Y coordinate of the finger when it first
     //touches the screen
@@ -52,6 +55,13 @@ public class DrawView extends View {
     private float x = 0f;
     private float y = 0f;
     private List<PartOfBody> selectedParts = new ArrayList<>();
+    private Handler h = new Handler();
+    private Runnable r = new Runnable() {
+        @Override
+        public void run() {
+            invalidate();
+        }
+    };
 
     public DrawView(Context context) {
         super(context);
@@ -66,6 +76,7 @@ public class DrawView extends View {
     public DrawView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context);
+
     }
 
 
@@ -90,12 +101,18 @@ public class DrawView extends View {
 
         super.onDraw(canvas);
         this.canvas = canvas;
-        drawBodyParts();
-        if (mode.equals(Mode.CONFIRM)) {
-            drawButtons();
-        }
+
         if (isHighlighted) {
             RectF bordersOfSelectedArea = new RectF(Float.MAX_VALUE, Float.MAX_VALUE, 0, 0);
+            for (PartOfBody partOfBody : question.getBodyParts()) {
+                if (partOfBody.getIdentifier() != null && partOfBody.getIdentifier().equals(question.getCorrectAnswer().getIdentifier())) {
+                    question.setBounds(partOfBody.getBoundaries(), bordersOfSelectedArea);
+                }
+            }
+            pointOfZoomX = (bordersOfSelectedArea.right + bordersOfSelectedArea.left) / 2;
+            pointOfZoomY = (bordersOfSelectedArea.top + bordersOfSelectedArea.bottom) / 2;
+            zoomScaleFactor = 1.2f;
+
             for (PartOfBody partOfBody : question.getBodyParts()) {
                 if (partOfBody.getIdentifier() != null && partOfBody.getIdentifier().equals(question.getCorrectAnswer().getIdentifier())) {
                     question.setBounds(partOfBody.getBoundaries(), bordersOfSelectedArea);
@@ -110,6 +127,14 @@ public class DrawView extends View {
             p.setStyle(Paint.Style.STROKE);
             p.setStrokeWidth(2);
             canvas.drawCircle(xCenter, yCenter, radius, p);
+            if (totalScaleFactor < 3) {
+                h.postDelayed(r, FRAME_RATE);
+            }
+        }
+
+        drawBodyParts();
+        if (mode.equals(Mode.CONFIRM)) {
+            drawButtons();
         }
     }
 
@@ -121,12 +146,15 @@ public class DrawView extends View {
             switch (mode) {
                 case INITIAL:
                     //centering picture
-                    matrix = new Matrix();
                     scaleFactor = question.computeScaleFactorOfPicture(this.getWidth(), this.getHeight());
                     matrix.setTranslate(this.getWidth() / 2 - x1, this.getHeight() / 2 - y1);
                     matrix.postScale(scaleFactor, scaleFactor, this.getWidth() / 2, this.getHeight() / 2);
                     scaleFactor = 1.f;
                     //mode = Mode.NOACTION;
+                    if (isHighlighted) {
+                        matrix.setScale(zoomScaleFactor, zoomScaleFactor, pointOfZoomX, pointOfZoomY);
+                        totalScaleFactor += (zoomScaleFactor - 1);
+                    }
                     break;
                 case NOACTION:
                     scaleFactor = 1.f;
@@ -139,10 +167,9 @@ public class DrawView extends View {
                     break;
                 case DRAG:
                     matrix.setTranslate(translateX / 5, translateY / 5);
-                    if (question.isD2T()){
+                    if (question.isD2T()) {
                         mode = Mode.SELECT;
-                    }
-                    else{
+                    } else {
                         mode = Mode.NOACTION;
                     }
                     break;
@@ -251,12 +278,11 @@ public class DrawView extends View {
                     scaleFactor = 3;
                     totalScaleFactor = scaleFactor;
                     mode = Mode.SELECT;
-                }
-                else {
+                } else {
                     mode = Mode.FINISH;
                 }
             }
-            if (mode == Mode.NOACTION){
+            if (mode == Mode.NOACTION) {
                 mode = Mode.TAPTOZOOM;
             }
             x = event.getX();

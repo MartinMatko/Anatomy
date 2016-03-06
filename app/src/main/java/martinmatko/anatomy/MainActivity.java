@@ -3,12 +3,12 @@ package martinmatko.anatomy;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.view.Display;
 import android.view.View;
@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -29,6 +30,7 @@ import java.util.Locale;
 public class MainActivity extends Activity implements RadioGroup.OnCheckedChangeListener {
 
     private static Context context;
+    private final int FRAME_RATE = 30;
     public Test test = new Test();
     public Question question;
     public int goodAnswers = 0, numberOfQuestion = 1;
@@ -39,6 +41,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     private ViewFlipper viewFlipper;
     private Typeface tf;
     private int width;
+    private Handler h;
 
     public static boolean isNetworkStatusAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -71,14 +74,24 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         config.locale = new Locale("cs", "CZ");
         getBaseContext().getResources().updateConfiguration(config,
                 getBaseContext().getResources().getDisplayMetrics());
-        setContentView(R.layout.menu_layout);
-        TextView tv = (TextView) findViewById(R.id.captionView);
-        tf = Typeface.createFromAsset(context.getAssets(), "webfont.ttf");
-        tv.setTypeface(tf);
+        setContentView(R.layout.my_layout);
+        viewFlipper = (ViewFlipper) findViewById(R.id.viewFlipper);
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         width = size.x;
+        test.service.setUpCookies();
+        TabHost tabhost = (TabHost) findViewById(R.id.tabHost);
+        tabhost.setup();
+        TabHost.TabSpec ts = tabhost.newTabSpec("tag1");
+        ts.setContent(R.id.tab1);
+        ts.setIndicator("First Tab");
+        tabhost.addTab(ts);
+
+        ts = tabhost.newTabSpec("tag2");
+        ts.setContent(R.id.tab2);
+        ts.setIndicator("Second Tab");
+        tabhost.addTab(ts);
     }
 
     //Vyber
@@ -96,6 +109,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             setOptions(true);
         }
     }
+
     //Co je zvýrazněno?
     public void getNextt2dQuestion() {
         Button highlightButton = (Button) findViewById(R.id.highlightButtonView);
@@ -109,17 +123,16 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         }
     }
 
-    public void setOptions (boolean isD2t){
+    public void setOptions(boolean isD2t) {
         RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
         options.setOnCheckedChangeListener(this);
         options.setBackgroundColor(getResources().getColor(R.color.optionsBackround));
         RadioButton button;
         for (Term option : question.getOptions()) {
             button = new RadioButton(this);
-            if (isD2t){
+            if (isD2t) {
                 button.setBackgroundColor(option.color);
-            }
-            else {
+            } else {
                 button.setText(option.getName());
             }
             button.setTag(option.getIdentifier());
@@ -134,10 +147,10 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             RadioButton button = (RadioButton) group.getChildAt(i);
             button.setEnabled(false);
             button.setBackgroundColor(getResources().getColor(R.color.optionsBackround));
-            if (button.getTag().equals(question.getCorrectAnswer().getIdentifier())){
+            if (button.getTag().equals(question.getCorrectAnswer().getIdentifier())) {
                 button.setBackgroundColor(getResources().getColor(R.color.rightAnswer));
             }
-            if (question.isD2T()){
+            if (question.isD2T()) {
                 for (Term option : question.getOptions()) {
                     if (option.getIdentifier().equals(button.getTag())) {
                         button.setText(option.getName());
@@ -163,6 +176,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         String answer = test.postAnswer(question.getAnswer(), question.getCorrectAnswer(), question.isD2T());
         question = test.getNextQuestion(answer);
         drawView.question = question;
+        drawView.totalScaleFactor = 1.0f;
         drawView.mode = DrawView.Mode.INITIAL;
         drawView.invalidate();
         RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
@@ -174,12 +188,12 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             } else
                 getNextt2dQuestion();
         } else {
-            setContentView(R.layout.menu_layout);
-            TextView captionView = (TextView) findViewById(R.id.captionView);
-            captionView.setText(question.getCaption());
-            int score = goodAnswers * 25;
-            captionView.setText(getString(R.string.rate) + " " + Integer.toString(score) + " %");
-            captionView.setTypeface(tf);
+            setContentView(R.layout.my_layout);
+//            TextView captionView = (TextView) findViewById(R.id.captionView);
+//            captionView.setText(question.getCaption());
+//            int score = goodAnswers * 25;
+//            captionView.setText(getString(R.string.rate) + " " + Integer.toString(score) + " %");
+//            captionView.setTypeface(tf);
             numberOfQuestion = 0;
         }
     }
@@ -201,6 +215,11 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             getNextD2TdQuestion();
         } else
             getNextt2dQuestion();
+    }
+    public void onRandomTestClicked(View v) {
+        systemCategories.clear();
+        bodyCategories.clear();
+        onTestClicked(v);
     }
 
     public void onCategoryClicked(View v) {
@@ -250,11 +269,20 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             viewFlipper.showPrevious();
         }
     }
-    public void onExitClicked(View v)
-    {
+
+    public void onExitClicked(View v) {
         moveTaskToBack(true);
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(1);
+    }
+
+    public void onFABClicked(View v) {
+        View button = findViewById(R.id.startCategoriesTest);
+        button.setVisibility(View.VISIBLE);
+        button = findViewById(R.id.startTest);
+        button.setVisibility(View.VISIBLE);
+        button = findViewById(R.id.fab);
+        button.setVisibility(View.GONE);
     }
     //protected String fetchToken() throws IOException { try { return GoogleAuthUtil.getToken(this, "mmatko93@gmail.com", mScope); } catch (GooglePlayServicesAvailabilityException playEx) { // GooglePlayServices.apk is either old, disabled, or not present. } catch (UserRecoverableAuthException userRecoverableException) { // Unable to authenticate, but the user can fix this. // Forward the user to the appropriate activity. mActivity.startActivityForResult(userRecoverableException.getIntent(), mRequestCode); } catch (GoogleAuthException fatalException) { onError("Unrecoverable error " + fatalException.getMessage(), fatalException); } return null; }
 

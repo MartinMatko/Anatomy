@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent" >
+
+    <TabHost
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tabHost"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"></TabWidget>
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <LinearLayout
+                    android:id="@+id/organSystems"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical"></LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/bodyParts"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical"></LinearLayout>
+            </FrameLayout>
+
+        </LinearLayout>
+    </TabHost>
+        <ViewFlipper
+            android:id="@+id/viewFlipper"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/tabHost">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/scrollView"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="0.13">
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal">
+                    <TableRow>
+
+                        <android.support.v7.widget.CardView
+                            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                            android:layout_gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            card_view:cardCornerRadius="4dp">
+
+                            <ImageButton
+                                android:src="@drawable/s07"
+                                android:tag="07"
+                                style="@style/imageTileButton" />
+
+                            <TextView
+                                style="@style/imageTileLabel"
+                                android:text="@string/s06"
+                                android:tag="06"  />
+                        </android.support.v7.widget.CardView>
+
+                        <android.support.v7.widget.CardView
+                            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                            android:layout_gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            card_view:cardCornerRadius="4dp">
+
+                            <ImageButton
+                                android:src="@drawable/s07"
+                                android:tag="07"
+                                style="@style/imageTileButton" />
+
+                            <TextView
+                                style="@style/imageTileLabel"
+                                android:text="@string/s06"
+                                android:tag="06"
+                                android:maxLines="2"
+                                android:singleLine="false" />
+                        </android.support.v7.widget.CardView>
+
+                        <android.support.v7.widget.CardView
+                            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                            android:layout_gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            card_view:cardCornerRadius="4dp">
+
+                            <ImageButton
+                                android:src="@drawable/s07"
+                                android:tag="07"
+                                style="@style/imageTileButton" />
+
+                            <TextView
+                                style="@style/imageTileLabel"
+                                android:text="@string/s06"
+                                android:tag="06"  />
+                        </android.support.v7.widget.CardView>
+                    </TableRow>
+                    <TableRow>
+
+                        <android.support.v7.widget.CardView
+                            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                            android:layout_gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            card_view:cardCornerRadius="4dp">
+
+                            <ImageButton
+                                android:src="@drawable/s07"
+                                android:tag="07"
+                                style="@style/imageTileButton" />
+
+                            <TextView
+                                style="@style/imageTileLabel"
+                                android:text="@string/s06"
+                                android:tag="06"  />
+                        </android.support.v7.widget.CardView>
+
+                        <android.support.v7.widget.CardView
+                            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                            android:layout_gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            card_view:cardCornerRadius="4dp">
+
+                            <ImageButton
+                                android:src="@drawable/s07"
+                                android:tag="07"
+                                style="@style/imageTileButton" />
+
+                            <TextView
+                                style="@style/imageTileLabel"
+                                android:text="@string/s06"
+                                android:tag="06"
+                                android:maxLines="2"
+                                android:singleLine="false" />
+                        </android.support.v7.widget.CardView>
+
+                        <android.support.v7.widget.CardView
+                            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                            android:layout_gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            card_view:cardCornerRadius="4dp">
+
+                            <ImageButton
+                                android:src="@drawable/s07"
+                                android:tag="07"
+                                style="@style/imageTileButton" />
+
+                            <TextView
+                                style="@style/imageTileLabel"
+                                android:text="@string/s06"
+                                android:tag="06"  />
+                        </android.support.v7.widget.CardView>
+                    </TableRow>
+                    <TableRow>
+
+                        <android.support.v7.widget.CardView
+                            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                            android:layout_gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            card_view:cardCornerRadius="4dp">
+
+                            <ImageButton
+                                android:src="@drawable/s07"
+                                android:tag="07"
+                                style="@style/imageTileButton" />
+
+                            <TextView
+                                style="@style/imageTileLabel"
+                                android:text="@string/s06"
+                                android:tag="06"  />
+                        </android.support.v7.widget.CardView>
+
+                        <android.support.v7.widget.CardView
+                            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                            android:layout_gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            card_view:cardCornerRadius="4dp">
+
+                            <ImageButton
+                                android:src="@drawable/s07"
+                                android:tag="07"
+                                style="@style/imageTileButton" />
+
+                            <TextView
+                                style="@style/imageTileLabel"
+                                android:text="@string/s06"
+                                android:tag="06"
+                                android:maxLines="2"
+                                android:singleLine="false" />
+                        </android.support.v7.widget.CardView>
+
+                        <android.support.v7.widget.CardView
+                            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                            android:layout_gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            card_view:cardCornerRadius="4dp">
+
+                            <ImageButton
+                                android:src="@drawable/s07"
+                                android:tag="07"
+                                style="@style/imageTileButton" />
+
+                            <TextView
+                                style="@style/imageTileLabel"
+                                android:text="@string/s06"
+                                android:tag="06"  />
+                        </android.support.v7.widget.CardView>
+                    </TableRow>
+                    <TableRow>
+
+                        <android.support.v7.widget.CardView
+                            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                            android:layout_gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            card_view:cardCornerRadius="4dp">
+
+                            <ImageButton
+                                android:src="@drawable/s07"
+                                android:tag="07"
+                                style="@style/imageTileButton" />
+
+                            <TextView
+                                style="@style/imageTileLabel"
+                                android:text="@string/s06"
+                                android:tag="06"  />
+                        </android.support.v7.widget.CardView>
+
+                        <android.support.v7.widget.CardView
+                            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                            android:layout_gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            card_view:cardCornerRadius="4dp">
+
+                            <ImageButton
+                                android:src="@drawable/s07"
+                                android:tag="07"
+                                style="@style/imageTileButton" />
+
+                            <TextView
+                                style="@style/imageTileLabel"
+                                android:text="@string/s06"
+                                android:tag="06"
+                                android:maxLines="2"
+                                android:singleLine="false" />
+                        </android.support.v7.widget.CardView>
+
+                        <android.support.v7.widget.CardView
+                            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                            android:layout_gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            card_view:cardCornerRadius="4dp">
+
+                            <ImageButton
+                                android:src="@drawable/s07"
+                                android:tag="07"
+                                style="@style/imageTileButton" />
+
+                            <TextView
+                                style="@style/imageTileLabel"
+                                android:text="@string/s06"
+                                android:tag="06"  />
+                        </android.support.v7.widget.CardView>
+                    </TableRow>
+                    <TableRow>
+
+                        <android.support.v7.widget.CardView
+                            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                            android:layout_gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            card_view:cardCornerRadius="4dp">
+
+                            <ImageButton
+                                android:src="@drawable/s07"
+                                android:tag="07"
+                                style="@style/imageTileButton" />
+
+                            <TextView
+                                style="@style/imageTileLabel"
+                                android:text="@string/s06"
+                                android:tag="06"  />
+                        </android.support.v7.widget.CardView>
+
+                        <android.support.v7.widget.CardView
+                            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                            android:layout_gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            card_view:cardCornerRadius="4dp">
+
+                            <ImageButton
+                                android:src="@drawable/s07"
+                                android:tag="07"
+                                style="@style/imageTileButton" />
+
+                            <TextView
+                                style="@style/imageTileLabel"
+                                android:text="@string/s06"
+                                android:tag="06"
+                                android:maxLines="2"
+                                android:singleLine="false" />
+                        </android.support.v7.widget.CardView>
+
+                        <android.support.v7.widget.CardView
+                            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                            android:layout_gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            card_view:cardCornerRadius="4dp">
+
+                            <ImageButton
+                                android:src="@drawable/s07"
+                                android:tag="07"
+                                style="@style/imageTileButton" />
+
+                            <TextView
+                                style="@style/imageTileLabel"
+                                android:text="@string/s06"
+                                android:tag="06"  />
+                        </android.support.v7.widget.CardView>
+                    </TableRow>
+                    <TableRow>
+
+                        <android.support.v7.widget.CardView
+                            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                            android:layout_gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            card_view:cardCornerRadius="4dp">
+
+                            <ImageButton
+                                android:src="@drawable/s07"
+                                android:tag="07"
+                                style="@style/imageTileButton" />
+
+                            <TextView
+                                style="@style/imageTileLabel"
+                                android:text="@string/s06"
+                                android:tag="06"  />
+                        </android.support.v7.widget.CardView>
+
+                        <android.support.v7.widget.CardView
+                            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                            android:layout_gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            card_view:cardCornerRadius="4dp">
+
+                            <ImageButton
+                                android:src="@drawable/s07"
+                                android:tag="07"
+                                style="@style/imageTileButton" />
+
+                            <TextView
+                                style="@style/imageTileLabel"
+                                android:text="@string/s06"
+                                android:tag="06"
+                                android:maxLines="2"
+                                android:singleLine="false" />
+                        </android.support.v7.widget.CardView>
+
+                        <android.support.v7.widget.CardView
+                            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                            android:layout_gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            card_view:cardCornerRadius="4dp">
+
+                            <ImageButton
+                                android:src="@drawable/s07"
+                                android:tag="07"
+                                style="@style/imageTileButton" />
+
+                            <TextView
+                                style="@style/imageTileLabel"
+                                android:text="@string/s06"
+                                android:tag="06"  />
+                        </android.support.v7.widget.CardView>
+                    </TableRow>
+                </TableLayout></ScrollView>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:orientation="vertical" >
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="0.13">
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal">
+                    </TableLayout></ScrollView>
+            </LinearLayout>
+
+        </ViewFlipper>
+
+    <view
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        class="android.support.design.widget.FloatingActionButton"
+        android:id="@+id/fab"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:clickable="true"
+        android:onClick="onFABClicked" />
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/startCategoriesTest"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:clickable="true"
+        android:onClick="onTestClicked"
+        android:id="@+id/startCategoriesTest"
+        android:visibility="gone"
+        android:background="@color/button" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/startTest"
+        android:layout_above="@+id/startCategoriesTest"
+        android:layout_alignParentRight="true"
+        android:clickable="true"
+        android:onClick="onRandomTestClicked"
+        android:id="@+id/startTest"
+        android:visibility="gone"
+        android:background="@color/button" />
+
+</RelativeLayout>

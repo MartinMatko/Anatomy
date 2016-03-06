@@ -14,6 +14,7 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -23,14 +24,27 @@ public class HTTPService {
     List<Cookie> cookies;
     DefaultHttpClient client = new DefaultHttpClient();
 
+    public void setUpCookies() {
+        HttpGet get = new HttpGet("https://staging.anatom.cz/user/session/");
+        HttpResponse responseGet = null;
+        try {
+            responseGet = client.execute(get);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        HttpEntity resEntityGet = responseGet.getEntity();
+        cookies = client.getCookieStore().getCookies();
+    }
+
     public JSONObject getContext(String url) {
 
         JSONObject data = null;
         try {
             HttpGet get = new HttpGet(url);
+            get.addHeader("X-" + cookies.get(0).getName(), cookies.get(0).getValue());
+            get.addHeader("X-" + cookies.get(1).getName(), cookies.get(1).getValue());
             HttpResponse responseGet = client.execute(get);
             HttpEntity resEntityGet = responseGet.getEntity();
-            cookies = client.getCookieStore().getCookies();
             if (resEntityGet != null) {
                 String json = EntityUtils.toString(resEntityGet);
                 JSONObject question = new JSONObject(json);
@@ -46,6 +60,8 @@ public class HTTPService {
         JSONObject flashcard = null;
         try {
             HttpGet get = new HttpGet(url);
+            get.addHeader("X-" + cookies.get(0).getName(), cookies.get(0).getValue());
+            get.addHeader("X-" + cookies.get(1).getName(), cookies.get(1).getValue());
             HttpResponse responseGet = client.execute(get);
             HttpEntity resEntityGet = responseGet.getEntity();
 
@@ -65,8 +81,8 @@ public class HTTPService {
         try {
             String postURL = "https://staging.anatom.cz/flashcards/practice/";
             HttpPost post = new HttpPost(postURL);
-            post.addHeader("X-CSRFTOKEN", cookies.get(0).getValue());
-            post.addHeader("X-sessionid", cookies.get(1).getValue());
+            post.addHeader("X-" + cookies.get(0).getName(), cookies.get(0).getValue());
+            post.addHeader("X-" + cookies.get(1).getName(), cookies.get(1).getValue());
             StringEntity entity = new StringEntity(answer);
             entity.setContentType(new BasicHeader("Content-Type",
                     "raw"));
