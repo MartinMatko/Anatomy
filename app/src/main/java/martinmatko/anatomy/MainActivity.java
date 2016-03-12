@@ -10,6 +10,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.util.TimingLogger;
 import android.view.Display;
 import android.view.View;
 import android.view.Window;
@@ -84,13 +85,14 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         TabHost tabhost = (TabHost) findViewById(R.id.tabHost);
         tabhost.setup();
         TabHost.TabSpec ts = tabhost.newTabSpec("tag1");
+
         ts.setContent(R.id.tab1);
-        ts.setIndicator("First Tab");
+        ts.setIndicator(getString(R.string.organSystems));
         tabhost.addTab(ts);
 
         ts = tabhost.newTabSpec("tag2");
         ts.setContent(R.id.tab2);
-        ts.setIndicator("Second Tab");
+        ts.setIndicator(getString(R.string.bodyParts));
         tabhost.addTab(ts);
     }
 
@@ -173,12 +175,17 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     }
 
     public void onNextClick(View v) {
+        TimingLogger timings = new TimingLogger("tag", "methodA");
         String answer = test.postAnswer(question.getAnswer(), question.getCorrectAnswer(), question.isD2T());
+        timings.addSplit("work A");
         question = test.getNextQuestion(answer);
+        timings.addSplit("work B");
+        drawView.invalidate();
+        timings.addSplit("work C");
+        timings.dumpToLog();
         drawView.question = question;
         drawView.totalScaleFactor = 1.0f;
         drawView.mode = DrawView.Mode.INITIAL;
-        drawView.invalidate();
         RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
         options.removeAllViews();
         numberOfQuestion++;
@@ -216,6 +223,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         } else
             getNextt2dQuestion();
     }
+
     public void onRandomTestClicked(View v) {
         systemCategories.clear();
         bodyCategories.clear();

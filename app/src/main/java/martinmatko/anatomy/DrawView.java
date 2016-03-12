@@ -27,6 +27,7 @@ public class DrawView extends View {
     private static float MIN_ZOOM = -5f;
     private static float MAX_ZOOM = 5f;
     private final int FRAME_RATE = 30;
+    public float totalScaleFactor = 1.f;
     Context ctx;
     Question question = new Question();
     Matrix matrix;
@@ -38,7 +39,6 @@ public class DrawView extends View {
     private Canvas canvas = new Canvas();
     private float scaleFactor = 1.f;
     private float zoomScaleFactor = 1.f;
-    public float totalScaleFactor = 1.f;
     private ScaleGestureDetector detector;
     //These two variables keep track of the X and Y coordinate of the finger when it first
     //touches the screen
@@ -127,7 +127,7 @@ public class DrawView extends View {
             p.setStyle(Paint.Style.STROKE);
             p.setStrokeWidth(2);
             canvas.drawCircle(xCenter, yCenter, radius, p);
-            if (totalScaleFactor < 3) {
+            if (totalScaleFactor < 2.5) {
                 h.postDelayed(r, FRAME_RATE);
             }
         }

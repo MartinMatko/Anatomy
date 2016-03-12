@@ -29,7 +29,12 @@ public class Test {
     public Question getFirstQuestion(ArrayList<String> systemCategories, ArrayList<String> bodyCategories) {
         JSONObject context;
         if (systemCategories.isEmpty() && bodyCategories.isEmpty()) {
-            context = service.getContext("https://staging.anatom.cz/flashcards/practice/?avoid=[]&categories=[]&contexts=[]&limit=2&types=[]&without_contexts=1");
+            context = service.get("https://staging.anatom.cz/flashcards/practice/?avoid=[]&categories=[]&contexts=[]&limit=2&types=[]&without_contexts=1");
+            try {
+                context = context.getJSONObject("data");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         } else {
             StringBuilder systemCategoriesTags = new StringBuilder();
             for (String tag : systemCategories) {
@@ -57,7 +62,12 @@ public class Test {
                 e.printStackTrace();
             }
             url = "https://staging.anatom.cz/flashcards/practice/?avoid=[]&categories=[" + url + "]&contexts=[]&limit=2&types=[]&without_contexts=1";
-            context = service.getContext(url);
+            context = service.get(url);
+            try {
+                context = context.getJSONObject("data");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
         JSONObject flashcard = null;
@@ -71,11 +81,10 @@ public class Test {
     }
 
     public Question getNextQuestion(String answer) {
-        String newQuestion = service.post(answer);//("{\"answers\":[{\"flashcard_id\":1186,\"flashcard_answered_id\":1186,\"response_time\":1925,\"direction\":\"t2d\",\"option_ids\":[528],\"time\":1454838503018}]}");
         JSONObject context = null;
         JSONObject flashcard = null;
         try {
-            context = new JSONObject(newQuestion);
+            context = service.post(answer);
             context = context.getJSONObject("data").getJSONArray("flashcards").getJSONObject(1);
             flashcard = service.get("https://staging.anatom.cz/flashcards/context/" + context.getJSONObject("context").getString("id"));
         } catch (JSONException e) {
