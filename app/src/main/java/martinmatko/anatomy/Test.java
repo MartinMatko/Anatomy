@@ -20,13 +20,14 @@ public class Test {
     List<Question> questions = new ArrayList<>();
     Question question;
     List<Cookie> cookies = new ArrayList<>();
+    boolean isPOSTCompleted = true;
 
     public void start(ArrayList systemCategories, ArrayList bodyCategories) {
-        questions.add(getFirstQuestion(systemCategories, bodyCategories));
+        getFirstQuestion(systemCategories, bodyCategories);
 
     }
 
-    public Question getFirstQuestion(ArrayList<String> systemCategories, ArrayList<String> bodyCategories) {
+    public void getFirstQuestion(ArrayList<String> systemCategories, ArrayList<String> bodyCategories) {
         JSONObject context;
         if (systemCategories.isEmpty() && bodyCategories.isEmpty()) {
             context = service.get("https://staging.anatom.cz/flashcards/practice/?avoid=[]&categories=[]&contexts=[]&limit=2&types=[]&without_contexts=1");
@@ -72,25 +73,35 @@ public class Test {
 
         JSONObject flashcard = null;
         try {
-            context = context.getJSONArray("flashcards").getJSONObject(1);
-            flashcard = service.get("https://staging.anatom.cz/flashcards/context/" + context.getString("context_id"));
+            JSONObject context1 = context.getJSONArray("flashcards").getJSONObject(0);
+            flashcard = service.get("https://staging.anatom.cz/flashcards/context/" + context1.getString("context_id"));
+            Question firstQuestion = parser.getQuestion(context1, flashcard);
+            questions.add(firstQuestion);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return parser.getQuestion(context, flashcard);
+        try {
+            context = context.getJSONArray("flashcards").getJSONObject(1);
+            flashcard = service.get("https://staging.anatom.cz/flashcards/context/" + context.getString("context_id"));
+            Question secondQuestion = parser.getQuestion(context, flashcard);
+            questions.add(secondQuestion);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
-    public Question getNextQuestion(String answer) {
+    public void getNextQuestion(String answer) {
         JSONObject context = null;
         JSONObject flashcard = null;
         try {
             context = service.post(answer);
             context = context.getJSONObject("data").getJSONArray("flashcards").getJSONObject(1);
             flashcard = service.get("https://staging.anatom.cz/flashcards/context/" + context.getJSONObject("context").getString("id"));
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return parser.getQuestion(context, flashcard);
+        questions.add(parser.getQuestion(context, flashcard));
     }
 
 
@@ -116,14 +127,4 @@ public class Test {
         }
         return response.toString();
     }
-
-    public JSONArray getCategories() {
-        try {
-            return service.get("https://anatom.cz/flashcards/categorys?all=True&db_orderby=identifier").getJSONArray("data");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
 }

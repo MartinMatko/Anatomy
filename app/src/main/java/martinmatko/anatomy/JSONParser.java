@@ -38,12 +38,14 @@ public class JSONParser {
             question.setCaption(caption);
             paths = JSONContent.getJSONArray("paths");
             SVGParser parser = new SVGParser();
-            JSONArray options = context.getJSONArray("options");
-            for (int i = 0; i < options.length(); i++) {
-                JSONObject option = options.getJSONObject(i);
-                JSONObject term = option.getJSONObject("term");
-                String name = term.getString("name").split(",")[0];
-                terms.add(new Term(name, term.getString("identifier"), term.getString("id")));
+            if (context.has("options")){
+                JSONArray options = context.getJSONArray("options");
+                for (int i = 0; i < options.length(); i++) {
+                    JSONObject option = options.getJSONObject(i);
+                    JSONObject term = option.getJSONObject("term");
+                    String name = term.getString("name").split(",")[0];
+                    terms.add(new Term(name, term.getString("identifier"), term.getString("id")));
+                }
             }
             question.setOptions(terms);
             // not possible to use foreach cycle

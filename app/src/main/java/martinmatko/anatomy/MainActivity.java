@@ -34,7 +34,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     private final int FRAME_RATE = 30;
     public Test test = new Test();
     public Question question;
-    public int goodAnswers = 0, numberOfQuestion = 1;
+    public int goodAnswers = 0, numberOfQuestion = 0;
     public ArrayList<String> systemCategories = new ArrayList();
     public ArrayList<String> bodyCategories = new ArrayList();
     DrawView drawView;
@@ -175,21 +175,22 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     }
 
     public void onNextClick(View v) {
-        TimingLogger timings = new TimingLogger("tag", "methodA");
         String answer = test.postAnswer(question.getAnswer(), question.getCorrectAnswer(), question.isD2T());
-        timings.addSplit("work A");
-        question = test.getNextQuestion(answer);
-        timings.addSplit("work B");
-        drawView.invalidate();
-        timings.addSplit("work C");
-        timings.dumpToLog();
+        while (!test.isPOSTCompleted) {
+            try {
+                Thread.currentThread().sleep(100); }
+            catch (InterruptedException e) {
+                e.printStackTrace(); }
+        }
+        question = test.questions.get(numberOfQuestion);
         drawView.question = question;
         drawView.totalScaleFactor = 1.0f;
         drawView.mode = DrawView.Mode.INITIAL;
+        drawView.invalidate();
         RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
         options.removeAllViews();
         numberOfQuestion++;
-        if (numberOfQuestion < 4) {
+        if (numberOfQuestion < 6) {
             if (question.isD2T()) {
                 getNextD2TdQuestion();
             } else
@@ -203,6 +204,10 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 //            captionView.setTypeface(tf);
             numberOfQuestion = 0;
         }
+        ServiceAsyncTask task = new ServiceAsyncTask(test);
+        task.execute(answer);
+
+        //test.getNextQuestion(answer);
     }
 
     public void onHighlightClick(View v) {
@@ -213,15 +218,12 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     public void onTestClicked(View v) {
         setContentView(R.layout.activity_main);
         drawView = (DrawView) findViewById(R.id.drawView);
-        drawView.question = test.getFirstQuestion(systemCategories, bodyCategories);
-        drawView.invalidate();
-        TextView tv = (TextView) findViewById(R.id.captionView);
-        tv.setTypeface(tf);
+        test.start(systemCategories, bodyCategories);
+        drawView.question = test.questions.get(numberOfQuestion);
+        drawView.question.setD2T(true);
         question = drawView.question;
-        if (question.isD2T()) {
-            getNextD2TdQuestion();
-        } else
-            getNextt2dQuestion();
+        getNextD2TdQuestion();
+        numberOfQuestion++;
     }
 
     public void onRandomTestClicked(View v) {

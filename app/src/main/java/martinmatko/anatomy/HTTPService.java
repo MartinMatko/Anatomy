@@ -1,197 +1,136 @@
 package martinmatko.anatomy;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.CoreProtocolPNames;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpCookie;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookieStore;
+import java.net.URLConnection;
 import java.util.List;
-import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by Martin on 7.11.2015.
  */
 public class HTTPService {
-    static java.net.CookieManager msCookieManager = new java.net.CookieManager();
     List<Cookie> cookies;
-    HttpURLConnection connection;
-    DefaultHttpClient client = new DefaultHttpClient();
+    DefaultHttpClient client;
+    org.apache.http.client.CookieStore cookieStore;
 
-
-    //    public void setUpCookies() {
-//        URL url = null;
-//        HttpsURLConnection conn = null;
-//        try {
-//            url = new URL("https://staging.anatom.cz/user/session/");
-//            conn = (HttpsURLConnection) url.openConnection();
-//            conn.setRequestProperty("Connection","Keep-Alive");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        Map<String, List<String>> headerFields = conn.getHeaderFields();
-//        List<String> cookiesHeader = headerFields.get("Set-Cookie");
-//
-//        if(cookiesHeader != null)
-//        {
-//            for (String cookie : cookiesHeader)
-//            {
-//                msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
-//            }
-//        }
-//        cookies = msCookieManager.getCookieStore().getCookies();
-//    }
     public void setUpCookies() {
+        HttpParams params = new BasicHttpParams();
+        params.setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
+        params.setBooleanParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, false);
+        client = new DefaultHttpClient(params);
+        HttpParams httpParameters = client.getParams();
+        HttpConnectionParams.setConnectionTimeout(httpParameters, 100000);
+        HttpConnectionParams.setSoTimeout(httpParameters, 100000);
+        HttpConnectionParams.setTcpNoDelay(httpParameters, true);
         HttpGet get = new HttpGet("https://staging.anatom.cz/user/session/");
+        get.addHeader("Connection", "Keep-Alive");
         HttpResponse responseGet = null;
         try {
             responseGet = client.execute(get);
+            responseGet.getHeaders("cookie");
+            System.out.println(responseGet.getHeaders("cookie").toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        HttpEntity resEntityGet = responseGet.getEntity();
-
-        try {
-            resEntityGet.consumeContent();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (responseGet != null){
+            try {
+                responseGet.getEntity().consumeContent();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+        cookieStore = client.getCookieStore();
         cookies = client.getCookieStore().getCookies();
     }
 
-
-    public JSONObject get(String requestURL) {
-        URL url;
-        String response = "";
-        String line;
-        JSONObject data = null;
+    public JSONObject get(String url) {
+        JSONObject flashcard = null;
         try {
-            url = new URL(requestURL);
-            HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-            //conn.connect();
-            conn.setRequestProperty("X-" + cookies.get(0).getName(), cookies.get(0).getValue());
-            conn.setRequestProperty("X-" + cookies.get(1).getName(), cookies.get(1).getValue());
-            conn.setRequestMethod("GET");
-
-
-            Map<String, List<String>> headerFields = conn.getHeaderFields();
-            List<String> cookiesHeader = headerFields.get("Set-Cookie");
-
-            if (cookiesHeader != null) {
-                for (String cookie : cookiesHeader) {
-                    msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
-                }
+            HttpGet get = new HttpGet(url);
+            if (cookies != null){
+                get.addHeader("X-" + cookies.get(0).getName(), cookies.get(0).getValue());
+                get.addHeader("X-" + cookies.get(1).getName(), cookies.get(1).getValue());
             }
-            //cookies = msCookieManager.getCookieStore().getCookies();
-            int status = conn.getResponseCode();
-            if (status != 403) {
-                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                while ((line = br.readLine()) != null) {
-                    response += line;
-                }
+            get.addHeader("Connection", "Keep-Alive");
+            HttpResponse responseGet = client.execute(get);
+            if (responseGet != null) {
+                flashcard = new JSONObject(EntityUtils.toString(responseGet.getEntity()));
+                responseGet.getEntity().consumeContent();
             }
-            conn.disconnect();
-            JSONObject question = new JSONObject(response);
-            return question;
+            if (cookies == null){
+                //cookies = client.getCookieStore().getCookies();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return data;
+        return flashcard;
     }
 
+
     public JSONObject post(String answer) {
-        String response = "Shit happnes";
+        String response = "";
+        long time0;
+        long a, b, c;
         try {
+
             String postURL = "https://staging.anatom.cz/flashcards/practice/";
             HttpPost post = new HttpPost(postURL);
-            post.addHeader("X-" + cookies.get(0).getName(), cookies.get(0).getValue());
-            post.addHeader("X-" + cookies.get(1).getName(), cookies.get(1).getValue());
-            StringEntity entity = new StringEntity(answer);
-            entity.setContentType(new BasicHeader("Content-Type",
-                    "raw"));
-            post.setEntity(entity);
+            post.setHeader("X-" + cookies.get(0).getName(), cookies.get(0).getValue());
+            post.setHeader("X-" + cookies.get(1).getName(), cookies.get(1).getValue());
+            String cookieString = cookies.get(0).getName().toString() + "=" + cookies.get(0).getValue().toString() + "; ";
+            cookieString += cookies.get(1).getName().toString() + "=" + cookies.get(1).getValue().toString();
+            post.setHeader("Cookie", cookieString);
+            post.setHeader("Connection", "Keep-Alive");
+            post.setHeader("Content-Type", "application/json");
+            post.setHeader("Accept", "application/json");
 
+            StringEntity entity = new StringEntity(answer);
+            entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+            post.setEntity(entity);
+            time0 = System.currentTimeMillis();
+            client = new DefaultHttpClient();
+            //client.setCookieStore(cookieStore);
             HttpResponse responsePOST = client.execute(post);
 
-            StringBuilder sb = new StringBuilder();
-            for (Header header : post.getAllHeaders()) {
-                sb.append(header.getName() + ": " + header.getValue());
-            }
-            Log.i("Cookies: ", sb.toString());
+            a = System.currentTimeMillis() - time0;
             HttpEntity resEntity = responsePOST.getEntity();
-
             if (resEntity != null) {
-                response = EntityUtils.toString(resEntity);
-                resEntity.consumeContent();
+                String entityString  = EntityUtils.toString(resEntity);
+                responsePOST.getEntity().consumeContent();
+                b = System.currentTimeMillis() - a - time0;
+                JSONObject question = new JSONObject(entityString);
                 Log.i("RESPONSE ", response);
-                JSONObject question = new JSONObject(response);
+                c = System.currentTimeMillis() - b - a - time0;
+                System.out.println("execute: " + a + "\ntoString: " + b + "\nJSONObject: " + c);
                 return question;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return null;
     }
-
-
-//    public JSONObject post(String answer) {
-//        URL url;
-//        String response = "";
-//        String line;
-//        JSONObject data = null;
-//
-//        try {
-//            url = new URL("https://staging.anatom.cz/flashcards/practice/");
-//            HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-//            conn.setReadTimeout(60 * 1000);
-//            conn.setConnectTimeout(60 * 1000);
-//
-//            conn.setDoOutput(true);
-//            conn.setChunkedStreamingMode(0);
-//            conn.setRequestProperty("X-csrftoken", cookies.get(0).getValue());
-//            conn.setRequestProperty ("X-" + cookies.get(1).getName(), cookies.get(1).getValue());
-//            conn.setRequestProperty ("Content-Type", "raw");
-//            conn.setRequestMethod("POST");
-//            OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
-//            writer.write(answer);
-//            writer.flush();
-//            writer.close();
-//            int status = conn.getResponseCode();
-//            if (status != 403){
-//                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-//                while ((line=br.readLine()) != null) {
-//                    response+=line;
-//                }
-//            }
-//            else {
-//                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-//                while ((line=br.readLine()) != null) {
-//                    response+=line;
-//                }
-//            }
-//            conn.disconnect();
-//            JSONObject question = new JSONObject(response);
-//            return question;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return data;
-//    }
 }
