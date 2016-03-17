@@ -54,7 +54,7 @@ public class DrawView extends View {
     private float previousTranslateY = 0f;
     private float x = 0f;
     private float y = 0f;
-    private List<PartOfBody> selectedParts = new ArrayList<>();
+    public List<PartOfBody> selectedParts = new ArrayList<>();
     private Handler h = new Handler();
     private Runnable r = new Runnable() {
         @Override

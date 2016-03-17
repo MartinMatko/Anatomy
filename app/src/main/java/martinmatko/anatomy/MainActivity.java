@@ -75,6 +75,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         config.locale = new Locale("cs", "CZ");
         getBaseContext().getResources().updateConfiguration(config,
                 getBaseContext().getResources().getDisplayMetrics());
+        //setContentView(R.layout.menu_layout);
         setContentView(R.layout.my_layout);
         viewFlipper = (ViewFlipper) findViewById(R.id.viewFlipper);
         Display display = getWindowManager().getDefaultDisplay();
@@ -172,6 +173,9 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                 }
             }
         }
+        drawView.mode = DrawView.Mode.FINISH;
+        drawView.selectedParts.add(new PartOfBody(null, null, checked.getTag().toString()));
+        drawView.invalidate();
     }
 
     public void onNextClick(View v) {
@@ -203,6 +207,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 //            captionView.setText(getString(R.string.rate) + " " + Integer.toString(score) + " %");
 //            captionView.setTypeface(tf);
             numberOfQuestion = 0;
+            test.questions.clear();
         }
         ServiceAsyncTask task = new ServiceAsyncTask(test);
         task.execute(answer);
@@ -286,14 +291,6 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         System.exit(1);
     }
 
-    public void onFABClicked(View v) {
-        View button = findViewById(R.id.startCategoriesTest);
-        button.setVisibility(View.VISIBLE);
-        button = findViewById(R.id.startTest);
-        button.setVisibility(View.VISIBLE);
-        button = findViewById(R.id.fab);
-        button.setVisibility(View.GONE);
-    }
     //protected String fetchToken() throws IOException { try { return GoogleAuthUtil.getToken(this, "mmatko93@gmail.com", mScope); } catch (GooglePlayServicesAvailabilityException playEx) { // GooglePlayServices.apk is either old, disabled, or not present. } catch (UserRecoverableAuthException userRecoverableException) { // Unable to authenticate, but the user can fix this. // Forward the user to the appropriate activity. mActivity.startActivityForResult(userRecoverableException.getIntent(), mRequestCode); } catch (GoogleAuthException fatalException) { onError("Unrecoverable error " + fatalException.getMessage(), fatalException); } return null; }
 
 }

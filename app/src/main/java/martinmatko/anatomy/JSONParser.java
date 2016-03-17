@@ -10,6 +10,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import utils.SVGParser;
+
 /**
  * Created by Martin on 7.11.2015.
  */

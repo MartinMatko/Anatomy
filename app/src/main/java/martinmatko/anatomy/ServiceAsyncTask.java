@@ -60,7 +60,6 @@ public class ServiceAsyncTask extends AsyncTask<String, Void, JSONObject> {
         JSONObject data = null;
         long time0;
         long a, b, c;
-        time0 = System.currentTimeMillis();
         try {
             url = new URL("https://staging.anatom.cz/flashcards/practice/");
             HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
@@ -74,15 +73,20 @@ public class ServiceAsyncTask extends AsyncTask<String, Void, JSONObject> {
             conn.setRequestProperty("Cookie", cookieString);
             conn.setRequestProperty("X-" + cookies.get(0).getName(), cookies.get(0).getValue());
             conn.setRequestProperty("X-" + cookies.get(1).getName(), cookies.get(1).getValue());
-            conn.setRequestProperty("Content-Type", "raw");
+            //conn.setRequestProperty("Accept", "application/json, text/plain, */*");
+            //conn.setRequestProperty("Accept-Encoding", "gzip, deflate, br");
+            conn.setRequestProperty("Content-Type", "application/json;charset=utf-8");
+            //conn.setRequestProperty("Connection", "keep-alive");
+            conn.setRequestProperty("Content-Length", Integer.toString(params[0].length()));
             conn.setRequestMethod("POST");
             OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
             writer.write(params[0]);
             writer.flush();
             writer.close();
-            int status = conn.getResponseCode();
-            a = System.currentTimeMillis() - time0;
+            time0 = System.currentTimeMillis();
+            conn.connect();
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            a = System.currentTimeMillis() - time0;
             while ((line=br.readLine()) != null) {
                 response+=line;
             }
