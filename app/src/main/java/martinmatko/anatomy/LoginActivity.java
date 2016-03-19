@@ -19,7 +19,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -31,7 +30,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,7 +47,6 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.Plus;
-import com.google.android.gms.plus.model.people.Person;
 
 import org.json.JSONObject;
 
@@ -59,8 +56,6 @@ import java.util.List;
 
 import utils.Constants;
 import utils.ValidateUserInfo;
-
-import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via email/password.
@@ -82,36 +77,29 @@ public class LoginActivity extends AppCompatActivity implements
     private static final String[] DUMMY_CREDENTIALS = new String[]{
             "foo@example.com:hello", "bar@example.com:world"
     };
+    /* Request code used to invoke sign in user interactions. */
+    private static final int RC_SIGN_IN = 0;
+    ProgressDialog ringProgressDialog;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
-
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
-
-    /* Request code used to invoke sign in user interactions. */
-    private static final int RC_SIGN_IN = 0;
     /* Client used to interact with Google APIs. */
     private GoogleApiClient mGoogleApiClient;
-
     /* Is there a ConnectionResult resolution in progress? */
     private boolean mIsResolving = false;
     /* Should we automatically resolve ConnectionResults when possible? */
     private boolean mShouldResolve = false;
-
     private CallbackManager callbackManager;
-
     private SignInButton mPlusSignInButton;
     private Button mEmailSignInButton;
-
     private TextView txt_create, txt_forgot;
     private LoginButton facebookLoginButton;
-
-    ProgressDialog ringProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,14 +120,14 @@ public class LoginActivity extends AppCompatActivity implements
         SharedPreferences prefs = this.getSharedPreferences(
                 "com.example.app", Context.MODE_PRIVATE);
         String email = prefs.getString("email", "");
-        if (!email.equals("")){
+        if (!email.equals("")) {
             mEmailView.setText(email);
         }
 
         mPasswordView = (EditText) findViewById(R.id.txt_password);
 
         String password = prefs.getString("password", "");
-        if (!password.equals("")){
+        if (!password.equals("")) {
             mPasswordView.setText(password);
         }
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -175,7 +163,7 @@ public class LoginActivity extends AppCompatActivity implements
                 .build();
 
         //Facebook Login
-        facebookLoginButton = (LoginButton)findViewById(R.id.f_sign_in_button);
+        facebookLoginButton = (LoginButton) findViewById(R.id.f_sign_in_button);
         facebookLoginButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday, user_friends"));
 
         callbackManager = CallbackManager.Factory.create();
@@ -389,17 +377,6 @@ public class LoginActivity extends AppCompatActivity implements
 
     }
 
-    private interface ProfileQuery {
-        String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
-        };
-
-        int ADDRESS = 0;
-        int IS_PRIMARY = 1;
-    }
-
-
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
@@ -497,16 +474,11 @@ public class LoginActivity extends AppCompatActivity implements
 
     /**
      * Fetching user's information name, email, profile pic
-     * */
+     */
     private void getProfileInformation() {
         ringProgressDialog.dismiss();
-        if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {
-            Person currentPerson = Plus.PeopleApi
-                    .getCurrentPerson(mGoogleApiClient);
-            String personName = currentPerson.getDisplayName();
-            String personPhotoUrl = currentPerson.getImage().getUrl();
-            String personGooglePlusProfile = currentPerson.getUrl();
-            String birth = currentPerson.getBirthday();
+        if (Plus.AccountApi.getAccountName(mGoogleApiClient) != null) {
+
             String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
 
             // by default the profile url gives 50x50 px image only
@@ -522,6 +494,24 @@ public class LoginActivity extends AppCompatActivity implements
             Toast.makeText(getApplicationContext(),
                     "Person information is null", Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    private interface ProfileQuery {
+        String[] PROJECTION = {
+                ContactsContract.CommonDataKinds.Email.ADDRESS,
+                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
+        };
+
+        int ADDRESS = 0;
+        int IS_PRIMARY = 1;
     }
 
     /**
@@ -579,14 +569,6 @@ public class LoginActivity extends AppCompatActivity implements
         protected void onCancelled() {
             mAuthTask = null;
             showProgress(false);
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
         }
     }
 }

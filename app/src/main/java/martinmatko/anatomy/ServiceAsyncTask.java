@@ -1,26 +1,14 @@
 package martinmatko.anatomy;
 
-import android.app.Activity;
 import android.os.AsyncTask;
-import android.text.TextUtils;
-import android.util.Log;
+import android.os.Debug;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.cookie.Cookie;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
@@ -53,6 +41,7 @@ public class ServiceAsyncTask extends AsyncTask<String, Void, JSONObject> {
 
     @Override
     protected JSONObject doInBackground(String... params) {
+        //Debug.waitForDebugger();
         test.isPOSTCompleted = false;
         URL url;
         String response = "";
@@ -61,7 +50,8 @@ public class ServiceAsyncTask extends AsyncTask<String, Void, JSONObject> {
         long time0;
         long a, b, c;
         try {
-            url = new URL("https://staging.anatom.cz/flashcards/practice/");
+            url = new URL("https://staging.anatom.cz/flashcards/practice/?avoid=%5B2064%5D&categories=%5B%5D&contexts=%5B%5D&limit=1&types=%5B%5D&without_contexts=1");
+            //https://staging.anatom.cz/flashcards/practice/?avoid=%5B2064%5D&categories=%5B%5D&contexts=%5B%5D&limit=1&types=%5B%5D&without_contexts=1
             HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
             conn.setReadTimeout(60 * 1000);
             conn.setConnectTimeout(60 * 1000);
@@ -87,8 +77,8 @@ public class ServiceAsyncTask extends AsyncTask<String, Void, JSONObject> {
             conn.connect();
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             a = System.currentTimeMillis() - time0;
-            while ((line=br.readLine()) != null) {
-                response+=line;
+            while ((line = br.readLine()) != null) {
+                response += line;
             }
             br.close();
             b = System.currentTimeMillis() - a - time0;
@@ -97,16 +87,19 @@ public class ServiceAsyncTask extends AsyncTask<String, Void, JSONObject> {
             try {
                 JSONObject question = new JSONObject(response);
                 context = question;
-                context = context.getJSONObject("data").getJSONArray("flashcards").getJSONObject(1);
-                flashcard = test.service.get("https://staging.anatom.cz/flashcards/context/" + context.getJSONObject("context").getString("id"));
+                context = context.getJSONObject("data").getJSONArray("flashcards").getJSONObject(0);
+                flashcard = test.service.get("https://staging.anatom.cz/flashcards/context/" + context.getString("context_id"));
 
             } catch (JSONException e) {
+                System.out.println(context);
+                System.out.println(flashcard);
+                System.out.println(e.getMessage() + e.toString());
                 e.printStackTrace();
             }
             c = System.currentTimeMillis() - b - a - time0;
             test.questions.add(new JSONParser().getQuestion(context, flashcard));
             test.isPOSTCompleted = true;
-            conn.disconnect();
+            //conn.disconnect();
             System.out.println("execute: " + a + "\ntoString: " + b + "\nJSONObject: " + c);
         } catch (Exception e) {
             e.printStackTrace();

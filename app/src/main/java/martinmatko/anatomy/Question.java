@@ -113,6 +113,9 @@ public class Question {
                 return true;
             }
         }
+        if (options.size() == 0 && isD2T){ // for free choice questions
+            return true;
+        }
         return false;
     }
 }

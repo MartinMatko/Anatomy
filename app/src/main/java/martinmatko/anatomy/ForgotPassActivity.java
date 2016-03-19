@@ -20,7 +20,7 @@ import utils.ValidateUserInfo;
 /**
  * Created by AndreBTS on 20/08/2015.
  */
-public class ForgotPassActivity extends Activity implements View.OnClickListener{
+public class ForgotPassActivity extends Activity implements View.OnClickListener {
     EditText edit_email;
     TextView txt_remembered;
     Button btn_recover;
@@ -103,6 +103,12 @@ public class ForgotPassActivity extends Activity implements View.OnClickListener
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(ForgotPassActivity.this, LoginActivity.class));
+        finish();
+    }
+
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -144,11 +150,5 @@ public class ForgotPassActivity extends Activity implements View.OnClickListener
         protected void onCancelled() {
             mForgotTask = null;
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        startActivity(new Intent(ForgotPassActivity.this, LoginActivity.class));
-        finish();
     }
 }

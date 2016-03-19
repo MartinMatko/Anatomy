@@ -19,7 +19,7 @@ import utils.ValidateUserInfo;
 /**
  * Created by AndreBTS on 20/08/2015.
  */
-public class RegisterActivity extends Activity implements View.OnClickListener{
+public class RegisterActivity extends Activity implements View.OnClickListener {
     EditText edit_nome, edit_email, edit_password;
     TextView txt_alreadyHave;
     Button btn_registrar;
@@ -116,6 +116,12 @@ public class RegisterActivity extends Activity implements View.OnClickListener{
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+        finish();
+    }
+
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -161,11 +167,5 @@ public class RegisterActivity extends Activity implements View.OnClickListener{
         protected void onCancelled() {
             mCreateTask = null;
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-        finish();
     }
 }

@@ -3,11 +3,13 @@ package martinmatko.anatomy;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.provider.Telephony;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import utils.SVGParser;
@@ -16,6 +18,8 @@ import utils.SVGParser;
  * Created by Martin on 7.11.2015.
  */
 public class JSONParser {
+
+    List<String> colors = new ArrayList<>(Arrays.asList("#f9b234", "#1d71b9", "#36a9e0", "#312883", "#fdea11", "#951b80"));
 
     public Question getQuestion(JSONObject context, JSONObject flashcard) {
         List<Term> terms = new ArrayList<>();
@@ -40,13 +44,15 @@ public class JSONParser {
             question.setCaption(caption);
             paths = JSONContent.getJSONArray("paths");
             SVGParser parser = new SVGParser();
-            if (context.has("options")){
+            if (context.has("options")) {
                 JSONArray options = context.getJSONArray("options");
                 for (int i = 0; i < options.length(); i++) {
                     JSONObject option = options.getJSONObject(i);
-                    JSONObject term = option.getJSONObject("term");
-                    String name = term.getString("name").split(",")[0];
-                    terms.add(new Term(name, term.getString("identifier"), term.getString("id")));
+                    JSONObject termJSON = option.getJSONObject("term");
+                    String name = termJSON.getString("name").split(",")[0];
+                    Term term = new Term(name, termJSON.getString("identifier"), termJSON.getString("id"));
+                    term.setColor(Color.parseColor(colors.get(i)));
+                    terms.add(term);
                 }
             }
             question.setOptions(terms);
@@ -56,24 +62,27 @@ public class JSONParser {
                 Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
                 paint.setStyle(Paint.Style.FILL_AND_STROKE);
                 String color = path.getString("color");
+                if (color == "none" || color.length() < 5){//invalid color strings
+                    continue;
+                }
                 if (color.charAt(0) == '#') {
                     paint.setColor(Color.parseColor(color));
                 }
                 String line = path.getString("d");
-                String identifier = null;
-                try {
-                    identifier = path.getString("term");
-                } catch (org.json.JSONException ex) {
-                }
-                if (identifier != null) {
-                    if (identifier.equals(identifierOfCorrectAnswer) || isInD2TOptions(question, identifier)) {
-                        try {
-                            paint.setColor(Color.parseColor(color));
-                        } catch (IllegalArgumentException ex) {
-                            System.out.println("Unknown color" + color);
-                            ex.printStackTrace();
+                if (path.has("term")) {
+                    String identifier = path.getString("term");
+                    if ((!question.isD2T() && identifier.equals(identifierOfCorrectAnswer)) || isInD2TOptions(question, identifier)) {
+                        if (!question.isD2T()){
+                            paint.setColor(Color.parseColor(colors.get(1)));
                         }
-                        parts.add(new PartOfBody(parser.doPath(line), paint, path.getString("term")));
+                        PartOfBody partOfBody = new PartOfBody(parser.doPath(line), paint, path.getString("term"));
+                        for (Term option : terms) {
+                            if (identifier.equals(option.getIdentifier())){
+                                option.getPartOfBodyList().add(partOfBody);
+                                partOfBody.getPaint().setColor(option.getColor());
+                            }
+                        }
+                        parts.add(partOfBody);
                     } else {
                         color = toGrayScale(color);
                         paint.setColor(Color.parseColor(color));
@@ -81,11 +90,7 @@ public class JSONParser {
                     }
                 } else {
                     color = toGrayScale(color);
-                    try {
-                        paint.setColor(Color.parseColor(color));
-                    } catch (IllegalArgumentException ex) {
-                        //ex.printStackTrace();
-                    }
+                    paint.setColor(Color.parseColor(color));
                     parts.add(new PartOfBody(parser.doPath(line), paint));
                 }
                 RectF boundaries = new RectF();
@@ -96,10 +101,9 @@ public class JSONParser {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        question.setOptions(terms);
         question.setBodyParts(parts);
         if (question.isD2T()) {
-            fillOptionColors(question);
+            //fillOptionColors(question);
         }
         return question;
     }
@@ -107,10 +111,13 @@ public class JSONParser {
     public boolean isInD2TOptions(Question question, String identifier) {
         if (!question.isD2T())
             return false;
-        for (Term option : question.getOptions()) {
-            if (option.getIdentifier().equals(identifier))
-                return true;
+        if (question.getOptions() != null){
+            for (Term option : question.getOptions()) {
+                if (option.getIdentifier().equals(identifier))
+                    return true;
+            }
         }
+
         return false;
     }
 
@@ -145,9 +152,6 @@ public class JSONParser {
     }
 
     public String toGrayScale(String colorStr) {
-        if (colorStr == "none" || colorStr.length() < 5) {
-            return "#000000";
-        }
         if (isGray(colorStr)) {
             return colorStr;
         }
@@ -177,10 +181,12 @@ public class JSONParser {
     }
 
     public void fillOptionColors(Question question) {
-        for (Term option : question.getOptions()) {
-            for (PartOfBody partOfBody : question.getBodyParts()) {
+        for (int i = 0; i < question.getOptions().size(); i++) {
+            Term option = question.getOptions().get(i);
+            for (PartOfBody partOfBody : option.getPartOfBodyList()) {
                 if (option.getIdentifier().equals(partOfBody.getIdentifier())) {
-                    option.color = partOfBody.getPaint().getColor();
+                    option.setColor(Color.parseColor(colors.get(i)));
+                    partOfBody.getPaint().setColor(Color.parseColor(colors.get(i)));
                     break;
                 }
             }

@@ -28,6 +28,7 @@ public class DrawView extends View {
     private static float MAX_ZOOM = 5f;
     private final int FRAME_RATE = 30;
     public float totalScaleFactor = 1.f;
+    public List<PartOfBody> selectedParts = new ArrayList<>();
     Context ctx;
     Question question = new Question();
     Matrix matrix;
@@ -54,7 +55,6 @@ public class DrawView extends View {
     private float previousTranslateY = 0f;
     private float x = 0f;
     private float y = 0f;
-    public List<PartOfBody> selectedParts = new ArrayList<>();
     private Handler h = new Handler();
     private Runnable r = new Runnable() {
         @Override
@@ -395,7 +395,8 @@ public class DrawView extends View {
                 boolean isTerm = (question.containsIdentifier(partOfBody.getIdentifier()));
                 boolean isNotInButtons = true;
                 for (int i = 0; i < selectedParts.size(); i++) {
-                    if (selectedParts.get(i).getIdentifier().equals(partOfBody.getIdentifier())) {
+                    if (selectedParts.get(i).getIdentifier() != null &&
+                            selectedParts.get(i).getIdentifier().equals(partOfBody.getIdentifier())) {
                         isNotInButtons = false;
                     }
                 }
@@ -406,6 +407,27 @@ public class DrawView extends View {
             }
 
         }
+    }
+    public void clearVariables(){
+        totalScaleFactor = 1.f;
+        selectedParts = new ArrayList<>();
+        question = new Question();
+        isHighlighted = false;
+        mode = Mode.INITIAL;
+        pointOfZoomX = 0;
+        pointOfZoomY = 0;
+        isD2T = true;
+        canvas = new Canvas();
+        scaleFactor = 1.f;
+        zoomScaleFactor = 1.f;
+        startX = 0f;
+        startY = 0f;
+        translateX = 0f;
+        translateY = 0f;
+        previousTranslateX = 0f;
+        previousTranslateY = 0f;
+        x = 0f;
+        y = 0f;
     }
 
     public void drawButtons() {

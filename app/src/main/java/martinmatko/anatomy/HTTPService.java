@@ -1,13 +1,10 @@
 package martinmatko.anatomy;
 
-import android.text.TextUtils;
 import android.util.Log;
 
-import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.cookie.Cookie;
@@ -23,10 +20,6 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.CookieHandler;
-import java.net.CookieManager;
-import java.net.CookieStore;
-import java.net.URLConnection;
 import java.util.List;
 
 /**
@@ -56,7 +49,7 @@ public class HTTPService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (responseGet != null){
+        if (responseGet != null) {
             try {
                 responseGet.getEntity().consumeContent();
             } catch (IOException e) {
@@ -71,7 +64,7 @@ public class HTTPService {
         JSONObject flashcard = null;
         try {
             HttpGet get = new HttpGet(url);
-            if (cookies != null){
+            if (cookies != null) {
                 get.addHeader("X-" + cookies.get(0).getName(), cookies.get(0).getValue());
                 get.addHeader("X-" + cookies.get(1).getName(), cookies.get(1).getValue());
             }
@@ -81,8 +74,9 @@ public class HTTPService {
                 flashcard = new JSONObject(EntityUtils.toString(responseGet.getEntity()));
                 responseGet.getEntity().consumeContent();
             }
-            if (cookies == null){
-                //cookies = client.getCookieStore().getCookies();
+            if (cookies == null) {
+                cookieStore = client.getCookieStore();
+                cookies = client.getCookieStore().getCookies();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -119,7 +113,7 @@ public class HTTPService {
             a = System.currentTimeMillis() - time0;
             HttpEntity resEntity = responsePOST.getEntity();
             if (resEntity != null) {
-                String entityString  = EntityUtils.toString(resEntity);
+                String entityString = EntityUtils.toString(resEntity);
                 responsePOST.getEntity().consumeContent();
                 b = System.currentTimeMillis() - a - time0;
                 JSONObject question = new JSONObject(entityString);
