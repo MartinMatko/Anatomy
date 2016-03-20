@@ -1,29 +1,30 @@
 package martinmatko.anatomy;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.StrictMode;
-import android.support.v4.app.ActivityCompat;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Display;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TabHost;
@@ -31,15 +32,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
-import com.getbase.floatingactionbutton.FloatingActionButton;
-
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Locale;
 
-public class MainActivity extends Activity implements RadioGroup.OnCheckedChangeListener {
+public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
 
     private static Context context;
     public Test test = new Test();
@@ -52,42 +47,34 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     private int width;
 
     public static boolean isNetworkStatusAvailable(Context context) {
-        Runtime runtime = Runtime.getRuntime();
-        try {
-
-            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-            int     exitValue = ipProcess.waitFor();
-            return (exitValue == 0);
-
-        } catch (IOException e)          { e.printStackTrace(); }
-        catch (InterruptedException e) { e.printStackTrace(); }
-
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            NetworkInfo netInfos = connectivityManager.getActiveNetworkInfo();
+            if (netInfos != null)
+                if (netInfos.isConnected())
+                    return true;
+        }
         return false;
     }
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+
+    /**
+     * The {@link ViewPager} that will host the section contents.
+     */
+    private ViewPager mViewPager;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+                // Set full screen view
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         long time0 = System.currentTimeMillis();
         long a, b, c;
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         context = getApplicationContext();
-        super.onCreate(savedInstanceState);
-        // Set full screen view
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-
-        Configuration config = new Configuration();
-        config.locale = new Locale("cs", "CZ");
-        getBaseContext().getResources().updateConfiguration(config,
-                getBaseContext().getResources().getDisplayMetrics());
-
-        setCategoriesMenu(null);
-
-        viewFlipper = (ViewFlipper) findViewById(R.id.viewFlipper);
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -95,38 +82,107 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         a = System.currentTimeMillis() - time0;
         //test.service.setUpCookies();
 
-        b = System.currentTimeMillis() - a - time0;
         if (!isNetworkStatusAvailable(getApplicationContext())) {
-            buildDialog(this).show();
+            b = System.currentTimeMillis() - a - time0;
+            //buildDialog(this).show();
         } else {
+            b = System.currentTimeMillis() - a - time0;
             Toast.makeText(getApplicationContext(), "internet is available", Toast.LENGTH_LONG).show();
         }
         c = System.currentTimeMillis() - b - a - time0;
-        System.out.println("execute: " + a + "\ntoString: " + b + "\nJSONObject: " + c);
+         System.out.println("execute: " + a + "\ntoString: " + b + "\nJSONObject: " + c);
+        super.onCreate(savedInstanceState);
+        try{
+            setContentView(R.layout.categories_layout);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        // Create the adapter that will return a fragment for each of the three
+        // primary sections of the activity.
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
     }
 
+
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        // Set full screen view
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//
+//        long time0 = System.currentTimeMillis();
+//        long a, b, c;
+//        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+//        StrictMode.setThreadPolicy(policy);
+//        context = getApplicationContext();
+//        super.onCreate(savedInstanceState);
+//
+//
+//        Configuration config = new Configuration();
+//        config.locale = new Locale("cs", "CZ");
+//        getBaseContext().getResources().updateConfiguration(config,
+//                getBaseContext().getResources().getDisplayMetrics());
+//
+//        setCategoriesMenu(null);
+//
+//        Display display = getWindowManager().getDefaultDisplay();
+//        Point size = new Point();
+//        display.getSize(size);
+//        width = size.x;
+//        a = System.currentTimeMillis() - time0;
+//        //test.service.setUpCookies();
+//
+//        if (!isNetworkStatusAvailable(getApplicationContext())) {
+//            b = System.currentTimeMillis() - a - time0;
+//            //buildDialog(this).show();
+//        } else {
+//            b = System.currentTimeMillis() - a - time0;
+//            Toast.makeText(getApplicationContext(), "internet is available", Toast.LENGTH_LONG).show();
+//        }
+//        c = System.currentTimeMillis() - b - a - time0;
+//         System.out.println("execute: " + a + "\ntoString: " + b + "\nJSONObject: " + c);
+//    }
+
     public void setCategoriesMenu(View v) {
-        setContentView(R.layout.my_layout);
-        TabHost tabHost = (TabHost) findViewById(R.id.tabHost);
-        tabHost.setup();
-        TabHost.TabSpec ts = tabHost.newTabSpec("tag1");
+        try {
+            setContentView(R.layout.my_layout);
+            TabHost tabHost = (TabHost) findViewById(R.id.tabHost);
+            tabHost.setup();
+            TabHost.TabSpec ts = tabHost.newTabSpec("tag1");
 
-        ts.setContent(R.id.tab1);
-        ts.setIndicator(getString(R.string.organSystems));
-        tabHost.addTab(ts);
+            ts.setContent(R.id.tab1);
+            ts.setIndicator(getString(R.string.organSystems));
+            tabHost.addTab(ts);
 
-        ts = tabHost.newTabSpec("tag2");
-        ts.setContent(R.id.tab2);
-        ts.setIndicator(getString(R.string.bodyParts));
-        tabHost.addTab(ts);
-        tabHost.setOnTabChangedListener(new AnimatedTabHostListener(tabHost));
+            ts = tabHost.newTabSpec("tag2");
+            ts.setContent(R.id.tab2);
+            ts.setIndicator(getString(R.string.bodyParts));
+            tabHost.addTab(ts);
+            tabHost.setOnTabChangedListener(new AnimatedTabHostListener(tabHost));
 
-        for(int i=0;i<tabHost.getTabWidget().getChildCount();i++)
-        {
-            tabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.color.green); //unselected
+            for(int i=0;i<tabHost.getTabWidget().getChildCount();i++)
+            {
+                tabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.color.green); //unselected
+            }
+            tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab()).setBackgroundResource(R.color.grey_100); // selected
+
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
         }
-        tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab()).setBackgroundResource(R.color.grey_100); // selected
-
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     //Vyber
@@ -298,24 +354,9 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         }
     }
 
-    public void onSystemCategoriesLabelClicked(View v) {
-        if (viewFlipper.getDisplayedChild() == 1) {
-            viewFlipper.showPrevious();
-        }
-    }
-
-    public void onBodyCategoriesLabelClicked(View v) {
-        if (viewFlipper.getDisplayedChild() == 0) {
-            viewFlipper.showPrevious();
-        }
-    }
-
     public void onExitClicked(View v) {
-        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
-        homeIntent.addCategory( Intent.CATEGORY_HOME );
-        homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(homeIntent);
-
+        finish();
+        System.exit(0);
     }
 
     @Override
@@ -340,6 +381,117 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         });
 
         return builder;
+    }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        Intent intent;
+        switch (id){
+            case R.id.about:
+                intent = new Intent(this,AboutActivity.class);
+                break;
+            case R.id.language:
+                intent = new Intent(this,LanguageActivity.class);
+                break;
+            case R.id.sign:
+                intent = new Intent(this,LoginActivity.class);
+                break;
+            default:
+                intent = new Intent(this, MainActivity.class);
+                break;
+        }
+        startActivity(intent);
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * A placeholder fragment containing a simple view.
+     */
+    public static class PlaceholderFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String ARG_SECTION_NUMBER = "section_number";
+
+        public PlaceholderFragment() {
+        }
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static PlaceholderFragment newInstance(int sectionNumber) {
+            PlaceholderFragment fragment = new PlaceholderFragment();
+            Bundle args = new Bundle();
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            int tabNumber = getArguments().getInt(ARG_SECTION_NUMBER);
+            View rootView;
+            if (tabNumber == 1){
+                rootView = inflater.inflate(R.layout.organsystems, container, false);
+            }
+            else {
+
+                rootView = inflater.inflate(R.layout.bodyorgans, container, false);
+            }
+
+            return rootView;
+        }
+    }
+
+    /**
+     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+     * one of the sections/tabs/pages.
+     */
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        public SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            // getItem is called to instantiate the fragment for the given page.
+            // Return a PlaceholderFragment (defined as a static inner class below).
+            return PlaceholderFragment.newInstance(position + 1);
+        }
+
+        @Override
+        public int getCount() {
+            // Show 3 total pages.
+            return 2;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return getResources().getString(R.string.organSystems);
+                case 1:
+                    return getResources().getString(R.string.bodyParts);
+            }
+            return null;
+        }
     }
 }
 

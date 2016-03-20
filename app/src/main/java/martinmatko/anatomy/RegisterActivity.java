@@ -110,7 +110,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                 attemptCreate();
                 break;
             case R.id.txt_already_have:
-                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                startActivity(new Intent(RegisterActivity.this, LoginActivity1.class));
                 finish();
                 break;
         }
@@ -118,7 +118,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+        startActivity(new Intent(RegisterActivity.this, LoginActivity1.class));
         finish();
     }
 

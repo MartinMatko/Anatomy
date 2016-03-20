@@ -97,7 +97,7 @@ public class ForgotPassActivity extends Activity implements View.OnClickListener
                 attemptRecover();
                 break;
             case R.id.txt_remembered:
-                startActivity(new Intent(ForgotPassActivity.this, LoginActivity.class));
+                startActivity(new Intent(ForgotPassActivity.this, LoginActivity1.class));
                 finish();
                 break;
         }
@@ -105,7 +105,7 @@ public class ForgotPassActivity extends Activity implements View.OnClickListener
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(ForgotPassActivity.this, LoginActivity.class));
+        startActivity(new Intent(ForgotPassActivity.this, LoginActivity1.class));
         finish();
     }
 

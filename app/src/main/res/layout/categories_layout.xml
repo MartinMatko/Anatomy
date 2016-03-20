@@ -1,295 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_content"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/black"
-    android:weightSum="1"
-    android:id="@+id/ll">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/startCategoriesTest"
-            android:id="@+id/button"
-            android:layout_weight="1"
-            android:onClick="onTestClicked"
-            android:background="@color/button" />
-        <ImageButton
-            android:id="@+id/btn_add"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="end"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="28dp"
-            android:alpha="0.0"
-            android:background="@drawable/btn_background"
-            android:contentDescription="@null"
-            android:elevation="1dp"/>
-    </LinearLayout>
-    <TabHost
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="martinmatko.myapplication.MainActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tabHost">
+        android:paddingTop="8dp"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:background="?attr/colorPrimary">
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
 
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"></TabWidget>
+        </android.support.v7.widget.Toolbar>
 
-            <FrameLayout
-                android:id="@android:id/tabcontent"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-                <LinearLayout
-                    android:id="@+id/tab1"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="@string/organSystems"
-                        android:id="@+id/organSystems"
-                        android:layout_gravity="center_horizontal"
-                        android:textColor="#fffaffff"
-                        android:textSize="40sp"
-                        android:background="@color/green"
-                        android:gravity="center|center_horizontal"
-                        android:onClick="onSystemCategoriesLabelClicked"
-                        android:clickable="true"
-                        android:shadowColor="#000000"
-                        android:shadowDx="0.0"
-                        android:shadowDy="0.0"
-                        android:shadowRadius="3.0"
-                        android:padding="1sp"
-                        android:layout_marginLeft="0.2dp"
-                        android:layout_marginRight="0.2dp" />
-                    </LinearLayout>
+    </android.support.design.widget.AppBarLayout>
 
-                <LinearLayout
-                    android:id="@+id/tab2"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:orientation="vertical">
+    <android.support.v4.view.ViewPager
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="@string/bodyParts"
-                        android:id="@+id/bodyParts"
-                        android:background="@color/green"
-                        android:gravity="center|center_horizontal"
-                        android:layout_gravity="center_horizontal"
-                        android:textColor="#fffaffff"
-                        android:textSize="40sp"
-                        android:clickable="true"
-                        android:onClick="onBodyCategoriesLabelClicked"
-                        android:shadowColor="#000000"
-                        android:shadowDx="0.0"
-                        android:shadowDy="0.0"
-                        android:shadowRadius="3.0"
-                        android:padding="1sp"
-                        android:layout_marginLeft="0.2dp"
-                        android:layout_marginRight="0.2dp" />
-                    </LinearLayout>
-            </FrameLayout>
-        </LinearLayout>
-    </TabHost>
-    <ViewFlipper
-    android:id="@+id/viewFlipper"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/scrollView"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="0.13">
-                <TableLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal">
-                    <TableRow>
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/multiple_actions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        app:fab_addButtonColorNormal="@color/white"
+        app:fab_addButtonColorPressed="@color/white_pressed"
+        app:fab_addButtonPlusIconColor="@color/half_black"
+        app:fab_labelStyle="@style/menu_labels_style"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp">
 
-                        <android.support.v7.widget.CardView
-                            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                            android:layout_gravity="center"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            card_view:cardCornerRadius="4dp">
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_a"
+            android:onClick="onRandomTestClicked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/white"
+            app:fab_title="@string/startTest"
+            app:fab_colorPressed="@color/white_pressed"/>
 
-                            <ImageButton
-                                android:src="@drawable/s07"
-                                android:tag="07"
-                                style="@style/imageTileButton" />
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_b"
+            android:onClick="onTestClicked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/white"
+            app:fab_title="@string/startCategoriesTest"
+            app:fab_colorPressed="@color/white_pressed"/>
 
-                            <TextView
-                                style="@style/imageTileLabel"
-                                android:text="@string/s06"
-                                android:tag="06"  />
-                        </android.support.v7.widget.CardView>
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
-                        <android.support.v7.widget.CardView
-                            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                            android:layout_gravity="center"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            card_view:cardCornerRadius="4dp">
-
-                            <ImageButton
-                                android:src="@drawable/s07"
-                                android:tag="07"
-                                style="@style/imageTileButton" />
-
-                            <TextView
-                                style="@style/imageTileLabel"
-                                android:text="@string/s06"
-                                android:tag="06"
-                                android:maxLines="2"
-                                android:singleLine="false" />
-                        </android.support.v7.widget.CardView>
-
-                        <android.support.v7.widget.CardView
-                            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                            android:layout_gravity="center"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            card_view:cardCornerRadius="4dp">
-
-                            <ImageButton
-                                android:src="@drawable/s07"
-                                android:tag="07"
-                                style="@style/imageTileButton" />
-
-                            <TextView
-                                style="@style/imageTileLabel"
-                                android:text="@string/s06"
-                                android:tag="06"  />
-                        </android.support.v7.widget.CardView>
-                    </TableRow>
-                </TableLayout></ScrollView>
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:gravity="center"
-            android:orientation="vertical" >
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="0.13">
-                <TableLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal">
-                    <TableRow>
-                        <ImageButton
-                            android:src="@drawable/b01"
-                            android:tag="A"
-                            style="@style/imageTileButton" />
-                        <ImageButton
-                            android:src="@drawable/b02"
-                            android:tag="B"
-                            style="@style/imageTileButton" />
-                        <ImageButton
-                            android:src="@drawable/b03"
-                            android:tag="Hb"
-                            style="@style/imageTileButton" />
-                    </TableRow>
-                    <TableRow>
-                        <TextView
-                            style="@style/imageTileLabel"
-                            android:text="@string/A"
-                            android:tag="A" />
-                        <TextView
-                            style="@style/imageTileLabel"
-                            android:text="@string/B"
-                            android:tag="B"  />
-                        <TextView
-                            style="@style/imageTileLabel"
-                            android:text="@string/Hb"
-                            android:tag="Hb"  />
-                    </TableRow>
-                    <TableRow>
-                        <ImageButton
-                            android:src="@drawable/b04"
-                            android:tag="Hf"
-                            style="@style/imageTileButton" />
-                        <ImageButton
-                            android:src="@drawable/b05"
-                            android:tag="LE"
-                            style="@style/imageTileButton" />
-                        <ImageButton
-                            android:src="@drawable/b06"
-                            android:tag="N"
-                            style="@style/imageTileButton" />
-                    </TableRow>
-                    <TableRow>
-                        <TextView
-                            style="@style/imageTileLabel"
-                            android:text="@string/Hf"
-                            android:tag="Hf" />
-                        <TextView
-                            style="@style/imageTileLabel"
-                            android:text="@string/LE"
-                            android:tag="LE"  />
-                        <TextView
-                            style="@style/imageTileLabel"
-                            android:text="@string/N"
-                            android:tag="N"  />
-                    </TableRow>
-                    <TableRow>
-                        <ImageButton
-                            android:src="@drawable/b07"
-                            android:tag="P"
-                            style="@style/imageTileButton" />
-                        <ImageButton
-                            android:src="@drawable/b08"
-                            android:tag="T"
-                            style="@style/imageTileButton" />
-                        <ImageButton
-                            android:src="@drawable/b09"
-                            android:tag="UE"
-                            style="@style/imageTileButton" />
-                    </TableRow>
-                    <TableRow>
-                        <TextView
-                            style="@style/imageTileLabel"
-                            android:text="@string/P"
-                            android:tag="P" />
-                        <TextView
-                            style="@style/imageTileLabel"
-                            android:text="@string/T"
-                            android:tag="T"  />
-                        <TextView
-                            style="@style/imageTileLabel"
-                            android:text="@string/UE"
-                            android:tag="UE"  />
-                    </TableRow>
-                </TableLayout></ScrollView>
-            </LinearLayout>
-    </ViewFlipper>
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

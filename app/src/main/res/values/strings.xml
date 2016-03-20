@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="section_format">Hello World from section: %1$d</string>
+
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Anatom</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_forgot">ForgotPassActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -49,4 +51,36 @@
     <string name="P">Pelvis</string>
     <string name="T">Thorax</string>
     <string name="UE">Upper Extremity</string>
+
+    <string name="language">Language</string>
+    <string name="czech">Czech</string>
+    <string name="english">English</string>
+    <string name="signin">Sign in</string>
+    <string name="signout">Sign out</string>
+    <string name="about">About</string>
+    <string name="aboutus">About us</string>
+    <string name="aboutustext">
+        Practice Anatomy is a joint project of research group Adaptive Learning at Faculty of Informatics of Masaryk University,
+        and team Memorix comprising clinicians and medical students at Medical Faculty of Masaryk University, Brno, Czech republic.
+    </string>
+    <string name="mission">Mission</string>
+    <string name="missionText">
+        Our mission is to help students of medicine, anthropology or just anyone interested in human anatomy to practice their knowledge.
+        Reviewing and recognizing anatomical structures and names (either in English or Latin) with pictures from Memorix Anatomy
+        reinforces your knowledge. Our secondary goal is to examine the benefit of an innovative software model, which based on previous
+        answers chooses the next question of the appropriate difficulty.
+    </string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="withfb">with Facebook</string>
+    <string name="withgoogle">with Google</string>
+
 </resources>

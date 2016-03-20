@@ -1,5 +1,5 @@
 <resources>
-	<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+	<style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/app_primary</item>
         <item name="colorPrimaryDark">@color/app_primary_dark</item>
         <item name="colorAccent">@color/material_deep_orange_700</item>
@@ -30,7 +30,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:scaleType">fitCenter</item>
-        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceListItem</item>
         <item name="android:gravity">center</item>
         <item name="android:background">@color/white</item>
 
