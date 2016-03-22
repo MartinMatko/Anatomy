@@ -82,5 +82,7 @@
     <string name="error_field_required">This field is required</string>
     <string name="withfb">with Facebook</string>
     <string name="withgoogle">with Google</string>
+    <string name="failedLogin">Log in failed</string>
+    <string name="failedLoginText">Password or username does not match.</string>
 
 </resources>

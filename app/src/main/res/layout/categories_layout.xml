@@ -7,6 +7,12 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context="martinmatko.myapplication.MainActivity">
+    <View
+        android:id="@+id/background_dimmer"
+        android:visibility="gone"
+        android:background="#55000000"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"

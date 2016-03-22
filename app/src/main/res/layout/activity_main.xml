@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:id="@+id/relativeLayout"
-    style="@style/Base.TextAppearance.AppCompat.Headline">
+    style="@style/Base.TextAppearance.AppCompat.Headline"
+    android:orientation="vertical">
 
 
         <TextView
@@ -13,11 +14,7 @@
             android:text="looooooooooooooong teeeeeeeeeeext"
             android:id="@+id/captionView"
             android:textColor="#fffaffff"
-            android:background="@color/green"
-            android:shadowColor="#000000"
-            android:shadowDx="0.0"
-            android:shadowDy="0.0"
-            android:shadowRadius="3.0"
+            android:background="?attr/colorPrimary"
             android:gravity="center"
 
             android:focusable="true"
@@ -27,16 +24,29 @@
             android:layout_height="wrap_content"
             android:maxLines="2" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/drawViewLayout"
+        android:layout_below="@+id/captionView">
+        <martinmatko.anatomy.DrawView
+            android:id="@+id/drawView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            class="martinmatko.anatomy.DrawView"
+            android:background="#ffffffff" />
+    </LinearLayout>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/textOfQuestionView"
-        android:layout_below="@+id/captionView"
+        android:layout_below="@+id/drawViewLayout"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentStart="false"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
+        android:layout_alignParentEnd="false"
         android:textSize="25sp"
         android:background="#ffd2e6ff"
         android:textColor="#ff000000" />
@@ -46,9 +56,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/optionsView"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentStart="false"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
+        android:layout_alignParentEnd="false"
         android:layout_below="@+id/textOfQuestionView"
         android:background="@color/optionsBackround"
         android:button="@null"
@@ -60,8 +70,8 @@
         android:id="@+id/highlightButtonView"
         android:layout_below="@+id/optionsView"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentEnd="false"
         android:layout_alignParentRight="true"
         android:onClick="onHighlightClick"
         android:background="@color/white" />
@@ -71,25 +81,15 @@
         android:text="@string/continueToNext"
         android:id="@+id/nextButtonView"
         android:layout_below="@+id/highlightButtonView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
         android:onClick="onNextClick"
         android:background="@color/button"
         android:textColor="@color/white"/>
 
-    <martinmatko.anatomy.DrawView
-        android:id="@+id/drawView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        class="martinmatko.anatomy.DrawView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/nextButtonView"
-        android:background="#ffffffff" />
+
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         xmlns:fab="http://schemas.android.com/apk/res-auto"
         android:id="@+id/multiple_actions"
@@ -105,7 +105,8 @@
         android:layout_marginBottom="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginEnd="16dp"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:layout_alignParentLeft="true">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/action_a"

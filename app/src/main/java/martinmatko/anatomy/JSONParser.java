@@ -36,7 +36,12 @@ public class JSONParser {
             String idOfCorrectAnswer = context.getString("id");
             Term correctAnswer = new Term(nameOfCorrectAnswer, identifierOfCorrectAnswer, idOfCorrectAnswer);
             question.setCorrectAnswer(correctAnswer);
-            question.setD2T(directionOfQuestion.equals("d2t"));
+            if (context.has("options")){
+                question.setD2T(directionOfQuestion.equals("d2t"));
+            }
+            else {
+                question.setD2T(true);
+            }
             JSONObject data = flashcard.getJSONObject("data");
             content = data.getString("content");
             JSONObject JSONContent = new JSONObject(content);

@@ -4,9 +4,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.TabLayout;
@@ -24,6 +26,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.CookieManager;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -32,6 +38,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
+
+import org.apache.http.cookie.Cookie;
+
+import java.security.spec.ECField;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
@@ -45,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     DrawView drawView;
     private ViewFlipper viewFlipper;
     private int width;
+    private View backgroundDimmer;
+    private FloatingActionsMenu floatingActionsMenu;
 
     public static boolean isNetworkStatusAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -65,10 +78,6 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-                // Set full screen view
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         long time0 = System.currentTimeMillis();
         long a, b, c;
@@ -84,14 +93,42 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
         if (!isNetworkStatusAvailable(getApplicationContext())) {
             b = System.currentTimeMillis() - a - time0;
-            //buildDialog(this).show();
+            buildDialog(this).show();
         } else {
             b = System.currentTimeMillis() - a - time0;
-            Toast.makeText(getApplicationContext(), "internet is available", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "internet is available", Toast.LENGTH_LONG).show();
         }
         c = System.currentTimeMillis() - b - a - time0;
          System.out.println("execute: " + a + "\ntoString: " + b + "\nJSONObject: " + c);
         super.onCreate(savedInstanceState);
+
+        setCategoriesMenu(null);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String value = extras.getString("cookies");
+            System.out.println("cookies" + value);
+            test.service.setUpCookies(value);
+        }
+        setFloatingButtonControls();
+    }
+    private void setFloatingButtonControls(){
+        this.backgroundDimmer = findViewById(R.id.background_dimmer);
+        this.floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.multiple_actions);
+        this.floatingActionsMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
+            @Override
+            public void onMenuExpanded() {
+                backgroundDimmer.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onMenuCollapsed() {
+                backgroundDimmer.setVisibility(View.GONE);
+            }
+        });
+    }
+
+
+    public void setCategoriesMenu(View v) {
         try{
             setContentView(R.layout.categories_layout);
         }
@@ -111,78 +148,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-    }
 
-
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        // Set full screen view
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-//
-//        long time0 = System.currentTimeMillis();
-//        long a, b, c;
-//        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-//        StrictMode.setThreadPolicy(policy);
-//        context = getApplicationContext();
-//        super.onCreate(savedInstanceState);
-//
-//
-//        Configuration config = new Configuration();
-//        config.locale = new Locale("cs", "CZ");
-//        getBaseContext().getResources().updateConfiguration(config,
-//                getBaseContext().getResources().getDisplayMetrics());
-//
-//        setCategoriesMenu(null);
-//
-//        Display display = getWindowManager().getDefaultDisplay();
-//        Point size = new Point();
-//        display.getSize(size);
-//        width = size.x;
-//        a = System.currentTimeMillis() - time0;
-//        //test.service.setUpCookies();
-//
-//        if (!isNetworkStatusAvailable(getApplicationContext())) {
-//            b = System.currentTimeMillis() - a - time0;
-//            //buildDialog(this).show();
-//        } else {
-//            b = System.currentTimeMillis() - a - time0;
-//            Toast.makeText(getApplicationContext(), "internet is available", Toast.LENGTH_LONG).show();
-//        }
-//        c = System.currentTimeMillis() - b - a - time0;
-//         System.out.println("execute: " + a + "\ntoString: " + b + "\nJSONObject: " + c);
-//    }
-
-    public void setCategoriesMenu(View v) {
-        try {
-            setContentView(R.layout.my_layout);
-            TabHost tabHost = (TabHost) findViewById(R.id.tabHost);
-            tabHost.setup();
-            TabHost.TabSpec ts = tabHost.newTabSpec("tag1");
-
-            ts.setContent(R.id.tab1);
-            ts.setIndicator(getString(R.string.organSystems));
-            tabHost.addTab(ts);
-
-            ts = tabHost.newTabSpec("tag2");
-            ts.setContent(R.id.tab2);
-            ts.setIndicator(getString(R.string.bodyParts));
-            tabHost.addTab(ts);
-            tabHost.setOnTabChangedListener(new AnimatedTabHostListener(tabHost));
-
-            for(int i=0;i<tabHost.getTabWidget().getChildCount();i++)
-            {
-                tabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.color.green); //unselected
-            }
-            tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab()).setBackgroundResource(R.color.grey_100); // selected
-
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
     }
 
     //Vyber
@@ -227,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                 button.setText(option.getName());
             }
             button.setTag(option.getIdentifier());
+            button.setButtonDrawable(null);
             options.addView(button, width, 100);
         }
         invalidateOptionsMenu();
@@ -270,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         if (numberOfQuestion < 8) {
             RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
             options.removeAllViews();
-            while (!test.isPOSTCompleted) {
+            while (numberOfQuestion + 1 != test.questions.size()) {
                 try {
                     Thread.currentThread().sleep(100);
                 } catch (InterruptedException e) {
@@ -308,6 +275,11 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         }
 
         //test.getNextQuestion(answer);
+    }
+
+    public void onFABClicked(View v){
+        View backgroundDimmer = findViewById(R.id.background_dimmer);
+        backgroundDimmer.setVisibility(View.VISIBLE);
     }
 
     public void onHighlightClick(View v) {

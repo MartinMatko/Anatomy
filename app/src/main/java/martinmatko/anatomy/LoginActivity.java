@@ -3,6 +3,10 @@ package martinmatko.anatomy;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -20,6 +24,10 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.webkit.CookieManager;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -28,8 +36,16 @@ import android.widget.TextView;
 
 import com.facebook.FacebookSdk;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
 
 
 /**
@@ -65,16 +81,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
-            }
-        });
+//        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+//                if (id == R.id.login || id == EditorInfo.IME_NULL) {
+//                    attemptLogin();
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
@@ -87,6 +103,46 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
     }
+
+    public void onFacebookClicked(View v){
+        loginWithSocialNetwork("http://staging.anatom.cz/login/facebook/");
+    }
+
+    public void onGoogleClicked(View v){
+        loginWithSocialNetwork("https://anatom.cz/login/google-oauth2/");
+    }
+
+    private void loginWithSocialNetwork(String url){
+        try {
+            WebView myWebView = new WebView(this);
+            WebSettings webSettings = myWebView.getSettings();
+            webSettings.setJavaScriptEnabled(true);
+            webSettings.setBuiltInZoomControls(true);
+            myWebView.setWebViewClient(new WebViewClient() {
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    //finish();
+                    String url1 = view.getUrl();
+                    if (url.equals("https://staging.anatom.cz/overview/#_=_")) {
+                        return true;
+                    }
+                    return false;
+                }
+
+            });
+            setContentView(myWebView);
+            myWebView.loadUrl(url);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        String cookies = CookieManager.getInstance().getCookie(url);
+        System.out.println("///////////////" + cookies);
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("cookies", cookies);
+        startActivity(intent);
+    }
+
 
     private void populateAutoComplete() {
         getLoaderManager().initLoader(0, null, this);
@@ -126,23 +182,88 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
         }
+//        else if (!isEmailValid(email)) {
+//            mEmailView.setError(getString(R.string.error_invalid_email));
+//            focusView = mEmailView;
+//            cancel = true;
+//        }
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            try {
+                URL url = new URL("https://staging.anatom.cz/user/session/");
+                HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+                conn.getHeaderFields();
+                List<String> cookies = conn.getHeaderFields().get("Set-Cookie");
+                String[] token = cookies.get(0).split("=");
+                conn.disconnect();
+                JSONObject loginData = new JSONObject();
+                loginData.put("username", email);
+                loginData.put("password", password);
+                String loginDataString = "{" + "username: \"" + email.toString() + "\", password: \"" + password.toString() + "\"}";
+                url = new URL("https://staging.anatom.cz/user/login/");
+                conn = (HttpsURLConnection) url.openConnection();
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                conn.setChunkedStreamingMode(0);
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Cookie", "activeType=system; csrftoken=wm25pmh5Co4QjVKKUHrc4W9dXz4v6WMB; activeType=system; sessionid=9qi3bv4ct3r9p4zxy43ebxmpj743o6t5; " + "csrftoken=" + token[1].split(";")[0]);
+                conn.setRequestProperty("X-csrftoken", token[1].split(";")[0]);
+                OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+                writer.write(loginData.toString());
+                writer.flush();
+                writer.close();
+                int status = conn.getResponseCode();
+                BufferedReader br;
+                if (status == 200){
+                    br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    String line;
+                    String response = "";
+                    while ((line = br.readLine()) != null) {
+                        response += line;
+                    }
+                    br.close();
+                    Intent intent = new Intent(this, MainActivity.class);
+                    intent.putExtra("cookies", conn.getHeaderFields().get("Set-Cookie").toString());
+                    startActivity(intent);
+                }
+                else {
+                    br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+                    String line;
+                    String response = "";
+                    while ((line = br.readLine()) != null) {
+                        response += line;
+                    }
+                    br.close();
+                    buildDialog(this).show();
+                    return;
+                }
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
         }
+    }
+
+    public AlertDialog.Builder buildDialog(Context c) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(c);
+        builder.setTitle(getResources().getString(R.string.failedLogin));
+        builder.setMessage(getResources().getString(R.string.failedLoginText));
+
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        return builder;
     }
 
     private boolean isEmailValid(String email) {
@@ -261,24 +382,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
             try {
-                // Simulate network access.
-                Thread.sleep(20);
-            } catch (InterruptedException e) {
-                return false;
+                URL url = new URL("https://staging.anatom.cz/user/login/");
+                HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                conn.setChunkedStreamingMode(0);
             }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
+            catch (Exception e){
+                e.printStackTrace();
             }
-
-            // TODO: register the new account here.
             return true;
         }
 

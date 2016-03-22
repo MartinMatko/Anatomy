@@ -90,19 +90,6 @@ public class Test {
         }
     }
 
-    public void getNextQuestion(String answer) {
-        JSONObject context = null;
-        JSONObject flashcard = null;
-        try {
-            context = service.post(answer);
-            context = context.getJSONObject("data").getJSONArray("flashcards").getJSONObject(1);
-            flashcard = service.get("https://staging.anatom.cz/flashcards/context/" + context.getJSONObject("context").getString("id"));
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        questions.add(parser.getQuestion(context, flashcard));
-    }
 
 
     public String postAnswer(Term answered, Term rightAnswer, boolean isd2t) {
