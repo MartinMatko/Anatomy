@@ -1,21 +1,18 @@
 package martinmatko.anatomy;
 
 import android.os.AsyncTask;
-import android.os.Debug;
 
-import org.apache.http.cookie.Cookie;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
-import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
+
+import utils.Constants;
 
 /**
  * Created by Martin on 15.3.2016.
@@ -47,14 +44,13 @@ public class ServiceAsyncTask extends AsyncTask<String, Void, JSONObject> {
         String line;
         JSONObject data = null;
         try {
-            url = new URL("https://staging.anatom.cz/flashcards/practice/?avoid=%5B2064%5D&categories=%5B%5D&contexts=%5B%5D&limit=1&types=%5B%5D&without_contexts=1");
-            //https://staging.anatom.cz/flashcards/practice/?avoid=%5B2064%5D&categories=%5B%5D&contexts=%5B%5D&limit=1&types=%5B%5D&without_contexts=1
+            url = new URL(Constants.SERVER_NAME + "flashcards/practice/?avoid=%5B2064%5D&categories=%5B%5D&contexts=%5B%5D&limit=1&types=%5B%5D&without_contexts=1");
             HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
             conn.setDoInput(true);
             conn.setDoOutput(true);
             conn.setChunkedStreamingMode(0);
             conn.setRequestProperty("Cookie", cookieString);
-            conn.setRequestProperty("X-" + "csrftoken", cookieString.split(";")[1].split("=")[1] );
+            conn.setRequestProperty("X-" + "csrftoken", cookieString.split(";")[1].split("=")[1]);
             conn.setRequestProperty("X-" + "sessionid", cookies.get("sessionid"));
             conn.setRequestProperty("Accept", "application/json, text/plain, */*");
             conn.setRequestProperty("Content-Type", "application/json;charset=utf-8");
@@ -68,11 +64,10 @@ public class ServiceAsyncTask extends AsyncTask<String, Void, JSONObject> {
             conn.connect();
             int status = conn.getResponseCode();
             BufferedReader br;
-            if (status == 200){
-                 br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            }
-            else {
-                 br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+            if (status == 200) {
+                br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            } else {
+                br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
             }
             while ((line = br.readLine()) != null) {
                 response += line;
@@ -84,7 +79,7 @@ public class ServiceAsyncTask extends AsyncTask<String, Void, JSONObject> {
                 System.out.println(response);
                 JSONObject question = new JSONObject(response);
                 context = question.getJSONObject("data").getJSONArray("flashcards").getJSONObject(0);
-                flashcard = test.service.get("https://staging.anatom.cz/flashcards/context/" + context.getString("context_id"));
+                flashcard = test.service.get(Constants.SERVER_NAME + "flashcards/context/" + context.getString("context_id"));
                 test.questions.add(new JSONParser().getQuestion(context, flashcard));
                 test.isPOSTCompleted = true;
             } catch (Exception e) {

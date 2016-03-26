@@ -9,6 +9,22 @@ import java.util.List;
  * Created by Martin on 19.12.2015.
  */
 public class Term {
+    private int color;
+    private int originalColor;
+    private String id;
+    private String name;
+    private String identifier;
+    private RectF button;
+    private List<PartOfBody> partOfBodyList;
+
+    public Term(String name, String identifier, String id) {
+
+        this.name = name;
+        this.identifier = identifier;
+        this.id = id;
+        partOfBodyList = new ArrayList<>();
+    }
+
     public int getColor() {
         return color;
     }
@@ -25,29 +41,12 @@ public class Term {
         this.partOfBodyList = partOfBodyList;
     }
 
-    private int color;
-
     public int getOriginalColor() {
         return originalColor;
     }
 
     public void setOriginalColor(int originalColor) {
         this.originalColor = originalColor;
-    }
-
-    private int originalColor;
-    private String id;
-    private String name;
-    private String identifier;
-    private RectF button;
-    private List<PartOfBody> partOfBodyList;
-
-    public Term(String name, String identifier, String id) {
-
-        this.name = name;
-        this.identifier = identifier;
-        this.id = id;
-        partOfBodyList = new ArrayList<>();
     }
 
     public String getId() {

@@ -10,6 +10,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import utils.Constants;
+
 /**
  * Created by Martin on 17.1.2016.
  */
@@ -30,7 +32,7 @@ public class Test {
     public void getFirstQuestion(ArrayList<String> systemCategories, ArrayList<String> bodyCategories) {
         JSONObject context;
         if (systemCategories.isEmpty() && bodyCategories.isEmpty()) {
-            context = service.get("https://staging.anatom.cz/flashcards/practice/?avoid=[]&categories=[]&contexts=[]&limit=2&types=[]&without_contexts=1");
+            context = service.get(Constants.SERVER_NAME + "flashcards/practice/?avoid=[]&categories=[]&contexts=[]&limit=2&types=[]&without_contexts=1");
             try {
                 context = context.getJSONObject("data");
             } catch (JSONException e) {
@@ -62,7 +64,7 @@ public class Test {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            url = "https://staging.anatom.cz/flashcards/practice/?avoid=[]&categories=[" + url + "]&contexts=[]&limit=2&types=[]&without_contexts=1";
+            url = Constants.SERVER_NAME + "flashcards/practice/?avoid=[]&categories=[" + url + "]&contexts=[]&limit=2&types=[]&without_contexts=1";
             context = service.get(url);
             try {
                 context = context.getJSONObject("data");
@@ -74,7 +76,7 @@ public class Test {
         JSONObject flashcard = null;
         try {
             JSONObject context1 = context.getJSONArray("flashcards").getJSONObject(0);
-            flashcard = service.get("https://staging.anatom.cz/flashcards/context/" + context1.getString("context_id"));
+            flashcard = service.get(Constants.SERVER_NAME + "flashcards/context/" + context1.getString("context_id"));
             Question firstQuestion = parser.getQuestion(context1, flashcard);
             questions.add(firstQuestion);
         } catch (JSONException e) {
@@ -82,14 +84,13 @@ public class Test {
         }
         try {
             context = context.getJSONArray("flashcards").getJSONObject(1);
-            flashcard = service.get("https://staging.anatom.cz/flashcards/context/" + context.getString("context_id"));
+            flashcard = service.get(Constants.SERVER_NAME + "flashcards/context/" + context.getString("context_id"));
             Question secondQuestion = parser.getQuestion(context, flashcard);
             questions.add(secondQuestion);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
-
 
 
     public String postAnswer(Term answered, Term rightAnswer, boolean isd2t) {

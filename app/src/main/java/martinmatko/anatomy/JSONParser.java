@@ -3,7 +3,6 @@ package martinmatko.anatomy;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.provider.Telephony;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -36,10 +35,9 @@ public class JSONParser {
             String idOfCorrectAnswer = context.getString("id");
             Term correctAnswer = new Term(nameOfCorrectAnswer, identifierOfCorrectAnswer, idOfCorrectAnswer);
             question.setCorrectAnswer(correctAnswer);
-            if (context.has("options")){
+            if (context.has("options")) {
                 question.setD2T(directionOfQuestion.equals("d2t"));
-            }
-            else {
+            } else {
                 question.setD2T(true);
             }
             JSONObject data = flashcard.getJSONObject("data");
@@ -74,12 +72,12 @@ public class JSONParser {
                 if (path.has("term")) {
                     String identifier = path.getString("term");
                     if ((!question.isD2T() && identifier.equals(identifierOfCorrectAnswer)) || isInD2TOptions(question, identifier)) {
-                        if (!question.isD2T()){
+                        if (!question.isD2T()) {
                             paint.setColor(Color.parseColor(colors.get(1)));
                         }
                         PartOfBody partOfBody = new PartOfBody(parser.doPath(line), paint, path.getString("term"));
                         for (Term option : terms) {
-                            if (identifier.equals(option.getIdentifier())){
+                            if (identifier.equals(option.getIdentifier())) {
                                 option.getPartOfBodyList().add(partOfBody);
                                 partOfBody.getPaint().setColor(option.getColor());
                             }
@@ -87,7 +85,7 @@ public class JSONParser {
                         parts.add(partOfBody);
                     } else {
                         PartOfBody partOfBody = new PartOfBody(parser.doPath(line), paint, path.getString("term"));
-                        if (question.getOptions().size() == 0){
+                        if (question.getOptions().size() == 0) {
                             Paint originalPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
                             originalPaint.setStyle(Paint.Style.FILL_AND_STROKE);
                             originalPaint.setColor(Color.parseColor(color));
@@ -123,7 +121,7 @@ public class JSONParser {
     public boolean isInD2TOptions(Question question, String identifier) {
         if (!question.isD2T())
             return false;
-        if (question.getOptions() != null){
+        if (question.getOptions() != null) {
             for (Term option : question.getOptions()) {
                 if (option.getIdentifier().equals(identifier))
                     return true;

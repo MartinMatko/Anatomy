@@ -30,8 +30,6 @@ import java.util.HashMap;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import martinmatko.anatomy.ParserHelper;
-
 /*
 
    Licensed to the Apache Software Foundation (ASF) under one or more

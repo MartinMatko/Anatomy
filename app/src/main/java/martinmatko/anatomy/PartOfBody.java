@@ -9,6 +9,23 @@ import android.graphics.RectF;
  */
 public class PartOfBody {
     private Paint paint;
+    private Paint originalPaint;
+    private Path path;
+    private RectF boundaries;
+    private boolean selected;
+    private boolean right;
+    private String identifier;
+    public PartOfBody(Path path, Paint paint, String identifier) {
+        this.paint = paint;
+        this.identifier = identifier;
+        this.path = path;
+    }
+    public PartOfBody(Path path, Paint paint) {
+        this.paint = paint;
+        this.path = path;
+        boundaries = new RectF();
+        path.computeBounds(boundaries, true);
+    }
 
     public Paint getOriginalPaint() {
         return originalPaint;
@@ -16,26 +33,6 @@ public class PartOfBody {
 
     public void setOriginalPaint(Paint originalPaint) {
         this.originalPaint = originalPaint;
-    }
-
-    private Paint originalPaint;
-    private Path path;
-    private RectF boundaries;
-    private boolean selected;
-    private boolean right;
-    private String identifier;
-
-    public PartOfBody(Path path, Paint paint, String identifier) {
-        this.paint = paint;
-        this.identifier = identifier;
-        this.path = path;
-    }
-
-    public PartOfBody(Path path, Paint paint) {
-        this.paint = paint;
-        this.path = path;
-        boundaries = new RectF();
-        path.computeBounds(boundaries, true);
     }
 
     public String getIdentifier() {

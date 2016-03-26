@@ -1,12 +1,13 @@
 package martinmatko.anatomy;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import utils.Constants;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -16,8 +17,7 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
 
-
-        JSONObject userData = new HTTPService().get("https://staging.anatom.cz/user/profile/");
+        JSONObject userData = new HTTPService().get(Constants.SERVER_NAME + "user/profile/");
         try {
             userData = userData.getJSONObject("data").getJSONObject("user");
             String firstName = userData.getString("first_name");

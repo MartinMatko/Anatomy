@@ -208,8 +208,8 @@ public class DrawView extends View {
 //                    canvas.drawPath(path, partOfBody.getPaint());
 //                }
             }//partOfBody.getOriginalPaint() != null
-            if (question.getOptions().size() == 0 && mode.equals(Mode.CONFIRM)){
-                for (PartOfBody partOfBody : selectedParts){
+            if (question.getOptions().size() == 0 && mode.equals(Mode.CONFIRM)) {
+                for (PartOfBody partOfBody : selectedParts) {
                     canvas.drawPath(partOfBody.getPath(), partOfBody.getOriginalPaint());
                 }
             }
@@ -418,7 +418,8 @@ public class DrawView extends View {
 
         }
     }
-    public void clearVariables(){
+
+    public void clearVariables() {
         totalScaleFactor = 1.f;
         selectedParts = new ArrayList<>();
         question = new Question();
@@ -455,10 +456,9 @@ public class DrawView extends View {
             p.setStyle(Paint.Style.STROKE);
             p.setStrokeWidth(3);
             canvas.drawCircle(xCenter, yCenter, radius, p);
-            if (question.getOptions().size() == 0 && partOfBody.getOriginalPaint() != null){
+            if (question.getOptions().size() == 0 && partOfBody.getOriginalPaint() != null) {
                 p = partOfBody.getOriginalPaint();
-            }
-            else {
+            } else {
                 p = partOfBody.getPaint();
             }
             p.setStyle(Paint.Style.FILL);
@@ -478,22 +478,22 @@ public class DrawView extends View {
         }
     }
 
-    public boolean shouldDrawOriginalPaint(PartOfBody partOfBody){
-        if (question.getOptions().size() != 0){
+    public boolean shouldDrawOriginalPaint(PartOfBody partOfBody) {
+        if (question.getOptions().size() != 0) {
             return false;
         }
-        if (!mode.equals(Mode.CONFIRM)){
+        if (!mode.equals(Mode.CONFIRM)) {
             return false;
         }
-        if (partOfBody.getOriginalPaint() == null){
+        if (partOfBody.getOriginalPaint() == null) {
             return false;
         }
-        for (PartOfBody part : selectedParts){
-            if (part.getIdentifier().equals(partOfBody.getIdentifier())){
+        for (PartOfBody part : selectedParts) {
+            if (part.getIdentifier().equals(partOfBody.getIdentifier())) {
                 return true;
             }
         }
-            return false;
+        return false;
     }
 
     public enum Mode {
