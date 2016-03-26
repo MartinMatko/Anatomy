@@ -58,10 +58,19 @@ public class HTTPService {
             conn.setConnectTimeout(60 * 1000);
             conn.setDoInput(true);
             conn.setChunkedStreamingMode(0);
-            conn.connect();
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            while ((line = br.readLine()) != null) {
-                response += line;
+            BufferedReader br;
+            if (conn.getResponseCode() == 200){
+                 br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                while ((line = br.readLine()) != null) {
+                    response += line;
+                }
+            }
+            else {
+                 br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+                while ((line = br.readLine()) != null) {
+                    response += line;
+                }
+                System.out.println(response);
             }
 
             br.close();

@@ -35,7 +35,7 @@
                             android:tag="06" />
                         <TextView
                             style="@style/imageTileLabel"
-                            android:text="@string/s06"
+                            android:text="@string/s10"
                             android:tag="06"/>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>

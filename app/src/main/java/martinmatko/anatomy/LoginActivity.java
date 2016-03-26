@@ -7,6 +7,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -33,9 +35,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import com.facebook.FacebookSdk;
-
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -74,7 +73,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -91,6 +89,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 //                return false;
 //            }
 //        });
+
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mEmailView.setText(preferences.getString("username", ""));
+        mPasswordView.setText(preferences.getString("password", ""));
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
@@ -138,9 +141,36 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
         String cookies = CookieManager.getInstance().getCookie(url);
         System.out.println("///////////////" + cookies);
+
+        try {
+            WebView myWebView = new WebView(this);
+            WebSettings webSettings = myWebView.getSettings();
+            webSettings.setJavaScriptEnabled(true);
+            webSettings.setBuiltInZoomControls(true);
+            JSONObject userData;
+            myWebView.setWebViewClient(new WebViewClient() {
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    //finish();
+                    String url1 = view.getUrl();
+                    if (url.equals("https://staging.anatom.cz/user/profile/")) {
+                        JSONObject userData = new HTTPService().get("https://staging.anatom.cz/user/profile/");
+                        System.out.println("///////////////" + userData.toString());
+                        return true;
+                    }
+                    return false;
+                }
+
+            });
+            setContentView(myWebView);
+            myWebView.loadUrl("https://staging.anatom.cz/user/profile/");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("cookies", cookies);
-        startActivity(intent);
+        //startActivity(intent);
     }
 
 
@@ -227,6 +257,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         response += line;
                     }
                     br.close();
+
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("username", email);
+                    editor.putString("password", password);
+                    editor.apply();
                     Intent intent = new Intent(this, MainActivity.class);
                     intent.putExtra("cookies", conn.getHeaderFields().get("Set-Cookie").toString());
                     startActivity(intent);

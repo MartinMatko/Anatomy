@@ -11,38 +11,24 @@
         <TextView
             android:layout_weight="1.0"
             android:textSize="25sp"
-            android:text="looooooooooooooong teeeeeeeeeeext"
             android:id="@+id/captionView"
             android:textColor="#fffaffff"
             android:background="?attr/colorPrimary"
             android:gravity="center"
-
+            android:clickable="true"
+            android:onClick="onCaptionClick"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:scrollHorizontally="true"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:maxLines="2" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:id="@+id/drawViewLayout"
-        android:layout_below="@+id/captionView">
-        <martinmatko.anatomy.DrawView
-            android:id="@+id/drawView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            class="martinmatko.anatomy.DrawView"
-            android:background="#ffffffff" />
-    </LinearLayout>
+            android:singleLine="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
         android:id="@+id/textOfQuestionView"
-        android:layout_below="@+id/drawViewLayout"
+        android:layout_below="@+id/captionView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="false"
         android:layout_alignParentRight="true"
@@ -63,31 +49,41 @@
         android:background="@color/optionsBackround"
         android:button="@null"
         />
-    <Button
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/highlighted"
-        android:id="@+id/highlightButtonView"
+        android:orientation="horizontal"
+        android:id="@+id/buttons"
         android:layout_below="@+id/optionsView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="false"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentRight="true"
-        android:onClick="onHighlightClick"
-        android:background="@color/white" />
-    <Button
+        android:weightSum="2">
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/highlighted"
+            android:id="@+id/highlightButtonView"
+            android:onClick="onHighlightClick"
+            android:background="@color/grey_200"
+            android:layout_weight="1"/>
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/continueToNext"
+            android:id="@+id/nextButtonView"
+            android:onClick="onNextClick"
+            android:background="@color/button"
+            android:textColor="@color/white"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <martinmatko.anatomy.DrawView
+        android:id="@+id/drawView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/continueToNext"
-        android:id="@+id/nextButtonView"
-        android:layout_below="@+id/highlightButtonView"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentEnd="true"
-        android:onClick="onNextClick"
-        android:background="@color/button"
-        android:textColor="@color/white"/>
+        android:layout_below="@+id/buttons"
+        class="martinmatko.anatomy.DrawView"
+        android:background="#ffffffff" />
 
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu

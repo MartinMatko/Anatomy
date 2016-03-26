@@ -28,7 +28,7 @@ public class JSONParser {
         JSONArray paths;
         String caption;
         List<PartOfBody> parts = new ArrayList<>();
-
+        String color = "";
         try {
             String directionOfQuestion = context.getString("direction");
             String nameOfCorrectAnswer = context.getJSONObject("term").getString("name");
@@ -66,10 +66,7 @@ public class JSONParser {
                 JSONObject path = paths.getJSONObject(i);
                 Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
                 paint.setStyle(Paint.Style.FILL_AND_STROKE);
-                String color = path.getString("color");
-                if (color == "none" || color.length() < 5){//invalid color strings
-                    continue;
-                }
+                color = path.getString("color");
                 if (color.charAt(0) == '#') {
                     paint.setColor(Color.parseColor(color));
                 }
@@ -89,9 +86,17 @@ public class JSONParser {
                         }
                         parts.add(partOfBody);
                     } else {
+                        PartOfBody partOfBody = new PartOfBody(parser.doPath(line), paint, path.getString("term"));
+                        if (question.getOptions().size() == 0){
+                            Paint originalPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                            originalPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+                            originalPaint.setColor(Color.parseColor(color));
+                            partOfBody.setOriginalPaint(originalPaint);
+                        }
                         color = toGrayScale(color);
                         paint.setColor(Color.parseColor(color));
-                        parts.add(new PartOfBody(parser.doPath(line), paint, path.getString("term")));
+                        partOfBody.setPaint(paint);
+                        parts.add(partOfBody);
                     }
                 } else {
                     color = toGrayScale(color);
@@ -105,6 +110,8 @@ public class JSONParser {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+            System.out.println(color);
+
         }
         question.setBodyParts(parts);
         if (question.isD2T()) {
@@ -157,6 +164,9 @@ public class JSONParser {
     }
 
     public String toGrayScale(String colorStr) {
+        if (colorStr == "none" || colorStr.length() < 5) {
+            return "#000000";
+        }
         if (isGray(colorStr)) {
             return colorStr;
         }

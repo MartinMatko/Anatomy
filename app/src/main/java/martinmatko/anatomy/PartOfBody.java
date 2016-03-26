@@ -9,6 +9,16 @@ import android.graphics.RectF;
  */
 public class PartOfBody {
     private Paint paint;
+
+    public Paint getOriginalPaint() {
+        return originalPaint;
+    }
+
+    public void setOriginalPaint(Paint originalPaint) {
+        this.originalPaint = originalPaint;
+    }
+
+    private Paint originalPaint;
     private Path path;
     private RectF boundaries;
     private boolean selected;

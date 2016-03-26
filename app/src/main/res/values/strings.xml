@@ -57,6 +57,11 @@
     <string name="english">English</string>
     <string name="signin">Sign in</string>
     <string name="signout">Sign out</string>
+    <string name="profile">Profile</string>
+    <string name="firstName">First name</string>
+    <string name="surname">Surname</string>
+    <string name="email">E-mail</string>
+    <string name="username">Username</string>
     <string name="about">About</string>
     <string name="aboutus">About us</string>
     <string name="aboutustext">
@@ -69,6 +74,14 @@
         Reviewing and recognizing anatomical structures and names (either in English or Latin) with pictures from Memorix Anatomy
         reinforces your knowledge. Our secondary goal is to examine the benefit of an innovative software model, which based on previous
         answers chooses the next question of the appropriate difficulty.
+    </string>
+    <string name="development">Development</string>
+    <string name="developmentText">
+        PracticeAnatomy.com is being developed at Faculty of Informatics of Masaryk University (Brno, Czech republic) by Adaptive Learning research group.
+    </string>
+    <string name="privacy">Privacy</string>
+    <string name="privacyText">
+        Data about your responses are being saved and used in order to improve user experience (select the most appropriate next question ) and research purposes. All research analyses are performed on anonymized data. The data from registration (Facebook, Google) are used only for identification during recurrent visits. We will not provide user identification data to a third party.
     </string>
     <string name="title_activity_login">Sign in</string>
 

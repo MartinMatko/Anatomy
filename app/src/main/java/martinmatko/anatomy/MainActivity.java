@@ -5,7 +5,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -18,9 +21,14 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +56,9 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
 
     private static Context context;
+    private boolean isUserSigned;
+    private String cookies = "";
+    private Menu menu;
     public Test test = new Test();
     public Question question;
     public int goodAnswers = 0, numberOfQuestion = 0;
@@ -107,26 +118,11 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         if (extras != null) {
             String value = extras.getString("cookies");
             System.out.println("cookies" + value);
+            cookies = value;
             test.service.setUpCookies(value);
+            isUserSigned = true;
         }
-        setFloatingButtonControls();
     }
-    private void setFloatingButtonControls(){
-        this.backgroundDimmer = findViewById(R.id.background_dimmer);
-        this.floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.multiple_actions);
-        this.floatingActionsMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
-            @Override
-            public void onMenuExpanded() {
-                backgroundDimmer.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onMenuCollapsed() {
-                backgroundDimmer.setVisibility(View.GONE);
-            }
-        });
-    }
-
 
     public void setCategoriesMenu(View v) {
         try{
@@ -138,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -159,10 +156,13 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         highlightButton.invalidate();
 
         if (question != null) {
-            TextView captionView = (TextView) findViewById(R.id.captionView);
-            captionView.setText(question.getCaption());
             TextView textView = (TextView) findViewById(R.id.textOfQuestionView);
-            textView.setText(getString(R.string.choose) + " " + question.getCorrectAnswer().getName());
+            SpannableString text = new SpannableString(getString(R.string.choose) + " " + question.getCorrectAnswer().getName());
+            int lengthOfFirstPart = getString(R.string.choose).length();
+            text.setSpan(new ForegroundColorSpan(Color.BLACK), 0, lengthOfFirstPart, 0);
+            text.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.grey_500)), lengthOfFirstPart + 1, text.length(), 0);
+            text.setSpan(new RelativeSizeSpan(0.8f), lengthOfFirstPart + 1, text.length(), 0);
+            textView.setText(text, TextView.BufferType.SPANNABLE);
             setOptions(true);
         }
     }
@@ -172,8 +172,6 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         Button highlightButton = (Button) findViewById(R.id.highlightButtonView);
         highlightButton.setVisibility(View.VISIBLE);
         if (question != null) {
-            TextView captionView = (TextView) findViewById(R.id.captionView);
-            captionView.setText(question.getCaption());
             TextView textView = (TextView) findViewById(R.id.textOfQuestionView);
             textView.setText(R.string.highlighted);
             setOptions(false);
@@ -193,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                 button.setText(option.getName());
             }
             button.setTag(option.getIdentifier());
-            button.setButtonDrawable(null);
+            button.setButtonDrawable(new StateListDrawable());
             options.addView(button, width, 100);
         }
         invalidateOptionsMenu();
@@ -235,8 +233,6 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
     public void onNextClick(View v) {
         if (numberOfQuestion < 8) {
-            RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
-            options.removeAllViews();
             while (numberOfQuestion + 1 != test.questions.size()) {
                 try {
                     Thread.currentThread().sleep(100);
@@ -245,6 +241,10 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                 }
             }
             question = test.questions.get(numberOfQuestion);
+            TextView captionView = (TextView) findViewById(R.id.captionView);
+            captionView.setText(question.getCaption());
+            RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
+            options.removeAllViews();
             drawView.clearVariables();
             drawView.question = question;
             drawView.invalidate();
@@ -260,9 +260,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             task.execute(answer);
 
         } else {
-
             TextView captionView = (TextView) findViewById(R.id.captionView);
-            captionView.setText(question.getCaption());
             int score = goodAnswers * 25;
             captionView.setText(getString(R.string.rate) + " " + Integer.toString(score) + " %");
             View fab = findViewById(R.id.multiple_actions);
@@ -331,6 +329,10 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         System.exit(0);
     }
 
+    public void onCaptionClick(View view) {
+        Toast.makeText(context, question.getCaption(), Toast.LENGTH_LONG).show();
+    }
+
     @Override
     public void onBackPressed(){
          setCategoriesMenu(null);
@@ -361,6 +363,14 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        this.menu = menu;
+        if (!cookies.isEmpty()){
+            MenuItem menuItem = menu.findItem(R.id.sign);
+            menuItem.setTitle(R.string.signout);
+            menuItem = menu.findItem(R.id.profile);
+            menuItem.setVisible(true);
+        }
+        invalidateOptionsMenu();
         return true;
     }
 
@@ -370,7 +380,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        Intent intent;
+        Intent intent = new Intent(this, MainActivity.class);
         switch (id){
             case R.id.about:
                 intent = new Intent(this,AboutActivity.class);
@@ -378,8 +388,17 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             case R.id.language:
                 intent = new Intent(this,LanguageActivity.class);
                 break;
+            case R.id.profile:
+                intent = new Intent(this,ProfileActivity.class);
+                break;
             case R.id.sign:
-                intent = new Intent(this,LoginActivity.class);
+                if (isUserSigned){
+                    new HTTPService().get("https://staging.anatom.cz/user/logout/");
+                    isUserSigned = false;
+                }
+                else {
+                    intent = new Intent(this,LoginActivity.class);
+                }
                 break;
             default:
                 intent = new Intent(this, MainActivity.class);
@@ -429,6 +448,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
             return rootView;
         }
+
     }
 
     /**

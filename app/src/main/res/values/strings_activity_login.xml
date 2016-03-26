@@ -1,6 +1,0 @@
-<resources>
-
-    <!-- Strings related to login -->
-    <string name="app_decription">Přihlaste se</string>
-    <string name="different_login">or</string>
-</resources>

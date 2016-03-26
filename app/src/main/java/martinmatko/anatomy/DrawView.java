@@ -199,21 +199,31 @@ public class DrawView extends View {
                 RectF boundaries = new RectF();
                 path.computeBounds(boundaries, true);
                 partOfBody.setBoundaries(boundaries);
-
                 partOfBody.setPath(path);
                 canvas.drawPath(path, partOfBody.getPaint());
+//                if (shouldDrawOriginalPaint(partOfBody)){
+//                    canvas.drawPath(path, partOfBody.getOriginalPaint());
+//                }
+//                else {
+//                    canvas.drawPath(path, partOfBody.getPaint());
+//                }
+            }//partOfBody.getOriginalPaint() != null
+            if (question.getOptions().size() == 0 && mode.equals(Mode.CONFIRM)){
+                for (PartOfBody partOfBody : selectedParts){
+                    canvas.drawPath(partOfBody.getPath(), partOfBody.getOriginalPaint());
+                }
             }
             //used for debugging - showing path boundaries
-//            for (PartOfBody partOfBody : question.getBodyParts()) {
-//                if (partOfBody.getIdentifier() != null) {
-//                    if (partOfBody.getIdentifier().equals(question.getCorrectAnswer().getIdentifier()) || isD2T) {
-//                        Paint p = new Paint();
-//                        p.setStyle(Paint.Style.STROKE);
-//                        p.setStrokeWidth(1);
-//                        canvas.drawRect(partOfBody.getBoundaries(), p);
-//                    }
-//                }
-//            }
+            for (PartOfBody partOfBody : question.getBodyParts()) {
+                if (partOfBody.getIdentifier() != null) {
+                    if (partOfBody.getIdentifier().equals(question.getCorrectAnswer().getIdentifier()) || isD2T) {
+                        Paint p = new Paint();
+                        p.setStyle(Paint.Style.STROKE);
+                        p.setStrokeWidth(1);
+                        canvas.drawRect(partOfBody.getBoundaries(), p);
+                    }
+                }
+            }
         } catch (NullPointerException ex) {
             ex.printStackTrace();
         }
@@ -445,7 +455,12 @@ public class DrawView extends View {
             p.setStyle(Paint.Style.STROKE);
             p.setStrokeWidth(3);
             canvas.drawCircle(xCenter, yCenter, radius, p);
-            p = partOfBody.getPaint();
+            if (question.getOptions().size() == 0 && partOfBody.getOriginalPaint() != null){
+                p = partOfBody.getOriginalPaint();
+            }
+            else {
+                p = partOfBody.getPaint();
+            }
             p.setStyle(Paint.Style.FILL);
             RectF button = new RectF();
             button.bottom = yCenter + radius;
@@ -461,6 +476,24 @@ public class DrawView extends View {
             }
             angle += (2 * Math.PI) / selectedParts.size();
         }
+    }
+
+    public boolean shouldDrawOriginalPaint(PartOfBody partOfBody){
+        if (question.getOptions().size() != 0){
+            return false;
+        }
+        if (!mode.equals(Mode.CONFIRM)){
+            return false;
+        }
+        if (partOfBody.getOriginalPaint() == null){
+            return false;
+        }
+        for (PartOfBody part : selectedParts){
+            if (part.getIdentifier().equals(partOfBody.getIdentifier())){
+                return true;
+            }
+        }
+            return false;
     }
 
     public enum Mode {

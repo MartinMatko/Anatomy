@@ -26,6 +26,16 @@ public class Term {
     }
 
     private int color;
+
+    public int getOriginalColor() {
+        return originalColor;
+    }
+
+    public void setOriginalColor(int originalColor) {
+        this.originalColor = originalColor;
+    }
+
+    private int originalColor;
     private String id;
     private String name;
     private String identifier;
