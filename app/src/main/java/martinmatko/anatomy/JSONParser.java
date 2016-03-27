@@ -8,9 +8,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import utils.Constants;
 import utils.SVGParser;
 
 /**
@@ -18,7 +18,6 @@ import utils.SVGParser;
  */
 public class JSONParser {
 
-    List<String> colors = new ArrayList<>(Arrays.asList("#f9b234", "#1d71b9", "#36a9e0", "#312883", "#fdea11", "#951b80"));
 
     public Question getQuestion(JSONObject context, JSONObject flashcard) {
         List<Term> terms = new ArrayList<>();
@@ -54,7 +53,8 @@ public class JSONParser {
                     JSONObject termJSON = option.getJSONObject("term");
                     String name = termJSON.getString("name").split(",")[0];
                     Term term = new Term(name, termJSON.getString("identifier"), termJSON.getString("id"));
-                    term.setColor(Color.parseColor(colors.get(i)));
+                    term.setColor(Color.parseColor(Constants.COLORS.get(i)));
+                    //term.setItemId(termJSON.getString("item_id"));
                     terms.add(term);
                 }
             }
@@ -71,10 +71,8 @@ public class JSONParser {
                 String line = path.getString("d");
                 if (path.has("term")) {
                     String identifier = path.getString("term");
-                    if ((!question.isD2T() && identifier.equals(identifierOfCorrectAnswer)) || isInD2TOptions(question, identifier)) {
-                        if (!question.isD2T()) {
-                            paint.setColor(Color.parseColor(colors.get(1)));
-                        }
+                     if (isInD2TOptions(question, identifier)) {
+
                         PartOfBody partOfBody = new PartOfBody(parser.doPath(line), paint, path.getString("term"));
                         for (Term option : terms) {
                             if (identifier.equals(option.getIdentifier())) {
@@ -93,6 +91,9 @@ public class JSONParser {
                         }
                         color = toGrayScale(color);
                         paint.setColor(Color.parseColor(color));
+                         if (!question.isD2T() && partOfBody.getIdentifier().equals(question.getCorrectAnswer().getIdentifier())) {
+                             paint.setColor(Color.parseColor(Constants.COLORS.get(1)));
+                         }
                         partOfBody.setPaint(paint);
                         parts.add(partOfBody);
                     }
@@ -112,9 +113,6 @@ public class JSONParser {
 
         }
         question.setBodyParts(parts);
-        if (question.isD2T()) {
-            //fillOptionColors(question);
-        }
         return question;
     }
 
@@ -191,18 +189,5 @@ public class JSONParser {
         grayValue = grayValue * 0.5;
         grayValue = grayValue + 128;
         return grayValue;
-    }
-
-    public void fillOptionColors(Question question) {
-        for (int i = 0; i < question.getOptions().size(); i++) {
-            Term option = question.getOptions().get(i);
-            for (PartOfBody partOfBody : option.getPartOfBodyList()) {
-                if (option.getIdentifier().equals(partOfBody.getIdentifier())) {
-                    option.setColor(Color.parseColor(colors.get(i)));
-                    partOfBody.getPaint().setColor(Color.parseColor(colors.get(i)));
-                    break;
-                }
-            }
-        }
     }
 }

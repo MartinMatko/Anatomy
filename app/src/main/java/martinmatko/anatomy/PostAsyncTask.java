@@ -17,13 +17,13 @@ import utils.Constants;
 /**
  * Created by Martin on 15.3.2016.
  */
-public class ServiceAsyncTask extends AsyncTask<String, Void, JSONObject> {
+public class PostAsyncTask extends AsyncTask<String, Void, JSONObject> {
 
     private Map<String, String> cookies;
     private Test test;
     private String cookieString;
 
-    public ServiceAsyncTask(Test test) {
+    public PostAsyncTask(Test test) {
         this.test = test;
         cookies = test.service.cookies;
         cookieString = test.service.cookieString;
@@ -48,13 +48,11 @@ public class ServiceAsyncTask extends AsyncTask<String, Void, JSONObject> {
             HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
             conn.setDoInput(true);
             conn.setDoOutput(true);
-            conn.setChunkedStreamingMode(0);
             conn.setRequestProperty("Cookie", cookieString);
-            conn.setRequestProperty("X-" + "csrftoken", cookieString.split(";")[1].split("=")[1]);
+            conn.setRequestProperty("X-" + "csrftoken", cookies.get("csrftoken"));
             conn.setRequestProperty("X-" + "sessionid", cookies.get("sessionid"));
             conn.setRequestProperty("Accept", "application/json, text/plain, */*");
             conn.setRequestProperty("Content-Type", "application/json;charset=utf-8");
-            conn.setRequestProperty("Connection", "keep-alive");
             conn.setRequestProperty("Content-Length", Integer.toString(params[0].length()));
             conn.setRequestMethod("POST");
             OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());

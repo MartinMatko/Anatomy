@@ -41,7 +41,6 @@ public class LanguageActivity extends AppCompatActivity implements RadioGroup.On
                 Constants.SERVER_NAME = "https://staging.practiceanatomy.com/";
                 break;
         }
-        Intent intent = new Intent(this, MenuActivity.class);
-        startActivity(intent);
+        onBackPressed();
     }
 }

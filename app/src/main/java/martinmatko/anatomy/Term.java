@@ -17,6 +17,16 @@ public class Term {
     private RectF button;
     private List<PartOfBody> partOfBodyList;
 
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
+    }
+
+    private String itemId;
+
     public Term(String name, String identifier, String id) {
 
         this.name = name;

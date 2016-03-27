@@ -33,10 +33,8 @@ public class MenuActivity extends AppCompatActivity {
 
     private static Context context;
     public Test test = new Test();
-    public Question question;
     public ArrayList<String> systemCategories = new ArrayList();
     public ArrayList<String> bodyCategories = new ArrayList();
-    DrawView drawView;
     private boolean isUserSigned;
     private String cookies = "";
     private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -75,6 +73,10 @@ public class MenuActivity extends AppCompatActivity {
             cookies = value;
             test.service.setUpCookies(value);
             isUserSigned = true;
+            Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            test.service.createSesion();
         }
     }
 
@@ -102,6 +104,7 @@ public class MenuActivity extends AppCompatActivity {
     }
     public void onTestClicked(View v) {
         Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("cookies", test.service.cookieString);
         startActivity(intent);
     }
 
@@ -132,12 +135,6 @@ public class MenuActivity extends AppCompatActivity {
             }
         }
     }
-
-    public void onExitClicked(View v) {
-        finish();
-        System.exit(0);
-    }
-
     public AlertDialog.Builder buildDialog(Context c) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(c);
@@ -148,8 +145,6 @@ public class MenuActivity extends AppCompatActivity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
-                onExitClicked(null);
             }
         });
 
@@ -192,8 +187,10 @@ public class MenuActivity extends AppCompatActivity {
                 if (isUserSigned) {
                     new HTTPService().get(Constants.SERVER_NAME + "user/logout/");
                     isUserSigned = false;
+                    test.service.createSesion();
                 } else {
                     intent = new Intent(this, LoginActivity.class);
+                    intent.putExtra("cookies", test.service.cookieString);
                 }
                 break;
             default:

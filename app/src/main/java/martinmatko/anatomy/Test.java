@@ -20,8 +20,6 @@ public class Test {
     JSONParser parser = new JSONParser();
     HTTPService service = new HTTPService();
     List<Question> questions = new ArrayList<>();
-    Question question;
-    List<Cookie> cookies = new ArrayList<>();
     boolean isPOSTCompleted = true;
 
     public void start(ArrayList systemCategories, ArrayList bodyCategories) {
@@ -93,7 +91,7 @@ public class Test {
     }
 
 
-    public String postAnswer(Term answered, Term rightAnswer, boolean isd2t) {
+    public String postAnswer(Term answered, Term rightAnswer, boolean isd2t, boolean isWithoutOptions,  long timeOfAnswer) {
         JSONObject response = new JSONObject();
         String direction = isd2t ? "d2t" : "t2d";
 
@@ -103,16 +101,23 @@ public class Test {
             answer.put("flashcard_id", Integer.parseInt(rightAnswer.getId()));
             if (answered != null) {
                 answer.put("flashcard_answered_id", Integer.parseInt(answered.getId()));
+                answer.put("option_ids", new JSONArray().put(Integer.parseInt(answered.getId())));
             }
-            answer.put("response_time", 500);
+            answer.put("response_time", timeOfAnswer);
             answer.put("direction", direction);
-            answer.put("option_ids", new JSONArray().put(5));
-            answer.put("time", 14541545);
+            JSONObject metadata = new JSONObject();
+            metadata.put("client", "android");
+            if (isWithoutOptions){
+                metadata.put("test", "random_without_options");
+            }
+            answer.put("meta", metadata);
+            answer.put("time", System.currentTimeMillis());
             answers.put(answer);
             response.put("answers", answers);
         } catch (JSONException ex) {
             ex.printStackTrace();
         }
+        System.out.println(response.toString());
         return response.toString();
     }
 }

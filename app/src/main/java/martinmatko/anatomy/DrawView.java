@@ -1,5 +1,6 @@
 package martinmatko.anatomy;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -98,7 +99,6 @@ public class DrawView extends View {
 
     @Override
     public void onDraw(Canvas canvas) {
-
         super.onDraw(canvas);
         this.canvas = canvas;
 
@@ -113,25 +113,15 @@ public class DrawView extends View {
             pointOfZoomY = (bordersOfSelectedArea.top + bordersOfSelectedArea.bottom) / 2;
             zoomScaleFactor = 1.2f;
 
-            for (PartOfBody partOfBody : question.getBodyParts()) {
-                if (partOfBody.getIdentifier() != null && partOfBody.getIdentifier().equals(question.getCorrectAnswer().getIdentifier())) {
-                    question.setBounds(partOfBody.getBoundaries(), bordersOfSelectedArea);
-                }
-            }
-            float xCenter = (bordersOfSelectedArea.right + bordersOfSelectedArea.left) / 2;
-            float yCenter = (bordersOfSelectedArea.top + bordersOfSelectedArea.bottom) / 2;
-            float width = (bordersOfSelectedArea.right - bordersOfSelectedArea.left) / 2;
-            float height = (bordersOfSelectedArea.bottom - bordersOfSelectedArea.top) / 2;
-            float radius = width > height ? width : height;
-            Paint p = new Paint();
-            p.setStyle(Paint.Style.STROKE);
-            p.setStrokeWidth(2);
-            canvas.drawCircle(xCenter, yCenter, radius, p);
-            if (totalScaleFactor < 2.5) {
+            float width = (bordersOfSelectedArea.right - bordersOfSelectedArea.left);
+            float height = (bordersOfSelectedArea.bottom - bordersOfSelectedArea.top);
+            this.getHeight();
+            this.getWidth();
+
+            if (totalScaleFactor < this.getWidth()/width) {
                 h.postDelayed(r, FRAME_RATE);
             }
         }
-
         drawBodyParts();
         if (mode.equals(Mode.CONFIRM)) {
             drawButtons();
@@ -177,19 +167,19 @@ public class DrawView extends View {
                     break;
                 case TAPTOZOOM:
                     matrix.setScale(scaleFactor, scaleFactor, pointOfZoomX, pointOfZoomY);
-//                    if (question.isD2T()){
-//                        mode = Mode.SELECT;
-//                    }
-//                    else{
-//                        mode = Mode.NOACTION;
-//                    }
-                    mode = Mode.SELECT;
+                    if (question.isD2T()){
+                        mode = Mode.SELECT;
+                    }
+                    else{
+                        mode = Mode.NOACTION;
+                    }
+
                     break;
                 case FINISH:
                     setColorOfWrongAnswer();
                     setColorOfRightAnswer();
                     matrix.setTranslate(this.getWidth() / 2 - x1, this.getHeight() / 2 - y1);
-                    matrix.postScale(1 / totalScaleFactor, 1 / totalScaleFactor, this.getWidth() / 2, this.getHeight() / 2);
+                    //matrix.postScale(1 / totalScaleFactor, 1 / totalScaleFactor, this.getWidth() / 2, this.getHeight() / 2);
                     mode = Mode.NOACTION;
             }
             matrix.mapRect(question.borders);
@@ -210,7 +200,9 @@ public class DrawView extends View {
             }//partOfBody.getOriginalPaint() != null
             if (question.getOptions().size() == 0 && mode.equals(Mode.CONFIRM)) {
                 for (PartOfBody partOfBody : selectedParts) {
-                    canvas.drawPath(partOfBody.getPath(), partOfBody.getOriginalPaint());
+                    if (partOfBody.getOriginalPaint() != null){
+                        canvas.drawPath(partOfBody.getPath(), partOfBody.getOriginalPaint());
+                    }
                 }
             }
             //used for debugging - showing path boundaries
@@ -284,16 +276,19 @@ public class DrawView extends View {
         if (event.getAction() == MotionEvent.ACTION_UP) {
             if (mode == Mode.INITIAL) {
                 showButtons();
-                if (selectedParts.size() > 1) {
-                    scaleFactor = 3;
-                    totalScaleFactor = scaleFactor;
-                    mode = Mode.SELECT;
+                if (question.isD2T()) {
+                    if (selectedParts.size()>1){
+                        scaleFactor = 3;
+                        totalScaleFactor = scaleFactor;
+                        mode = Mode.SELECT;
+                    }
+                    else mode = Mode.FINISH;
                 } else {
-                    mode = Mode.FINISH;
+                    mode = Mode.TAPTOZOOM;
                 }
             }
             if (mode == Mode.NOACTION) {
-                mode = Mode.TAPTOZOOM;
+                //mode = Mode.TAPTOZOOM;
             }
             x = event.getX();
             y = event.getY();
@@ -301,7 +296,9 @@ public class DrawView extends View {
             pointOfZoomY = y;
             switch (mode) {
                 case PINCHTOZOOM: {
-                    mode = Mode.SELECT;
+                    if (question.isD2T()){
+                        mode = Mode.SELECT;
+                    }
                     break;
                 }
                 case TAPTOZOOM: {
@@ -332,6 +329,7 @@ public class DrawView extends View {
     }
 
     public void setColorOfWrongAnswer() {
+        MainActivity host = (MainActivity) getContext();
 
         if (selectedParts.size() == 1) {
             String identifierOfAnswer = selectedParts.get(0).getIdentifier();
@@ -340,6 +338,8 @@ public class DrawView extends View {
                     question.setAnswer(option);
                 }
             }
+
+            host.setAnswersInOptions(identifierOfAnswer);
             for (PartOfBody partOfBody : question.getBodyParts()) {
                 Paint paint = partOfBody.getPaint();
                 if (identifierOfAnswer.equals(partOfBody.getIdentifier())) {
@@ -368,9 +368,10 @@ public class DrawView extends View {
                     if (option.getIdentifier().equals(partOfBody.getIdentifier())) {
                         paint.setColor(getResources().getColor(R.color.wrongAnswer));
                         question.setAnswer(option);
+                        host.setAnswersInOptions(option.getIdentifier());
                     } else {
 //                        int color = paint.getColor();
-//                        String colorString = parser.toGrayScale(String.format("#%06X" + "\n", 0xFFFFFF & color));
+//                        String colorString = new JSONParser().toGrayScale(String.format("#%06X" + "\n", 0xFFFFFF & color));
 //                        paint.setColor(Color.parseColor(colorString));
 //                        partOfBody.setPaint(paint);
                     }
@@ -391,6 +392,14 @@ public class DrawView extends View {
             }
             if (question.getAnswer() == null) {
                 question.setAnswer(question.getCorrectAnswer());
+            }
+        }
+        if (question.getOptions().size() == 0){
+            for (PartOfBody partOfBody : question.getBodyParts()) {
+                if (partOfBody.getIdentifier() != null && partOfBody.getIdentifier().equals(question.getCorrectAnswer().getIdentifier())) {
+                    Paint paint = partOfBody.getPaint();
+                    paint.setColor(getResources().getColor(R.color.rightAnswer));
+                }
             }
         }
     }

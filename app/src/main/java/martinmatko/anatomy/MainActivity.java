@@ -1,37 +1,23 @@
 package martinmatko.anatomy;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.StateListDrawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.view.Display;
-import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ViewFlipper;
-
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
 
@@ -45,10 +31,11 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     public ArrayList<String> bodyCategories = new ArrayList();
     DrawView drawView;
     private int width;
+    long startTime;
+    long endTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         context = getApplicationContext();
@@ -59,13 +46,14 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-
+            String value = extras.getString("cookies");
+            System.out.println("cookies" + value);
+            test.service.setUpCookies(value);
         }
         setContentView(R.layout.activity_main);
         drawView = (DrawView) findViewById(R.id.drawView);
         test.start(systemCategories, bodyCategories);
         drawView.question = test.questions.get(numberOfQuestion);
-        drawView.question.setD2T(true);
         question = drawView.question;
         getNextD2TdQuestion();
         numberOfQuestion++;
@@ -115,43 +103,46 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             }
             button.setTag(option.getIdentifier());
             button.setButtonDrawable(new StateListDrawable());
-            options.addView(button, width, 100);
+            //button.setPadding(20, 5, 5, 5);
+            options.addView(button, width, 120);
         }
         invalidateOptionsMenu();
     }
 
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
+    public void setAnswersInOptions(String identifier){
+        endTime = System.currentTimeMillis();
+        RadioGroup group = (RadioGroup) findViewById(R.id.optionsView);
+        for (Term option : question.getOptions()) {
+            if (option.getIdentifier().equals(identifier)) {
+                question.setAnswer(option);
+            }
+        }
         for (int i = 0; i < group.getChildCount(); i++) {
             RadioButton button = (RadioButton) group.getChildAt(i);
             button.setEnabled(false);
             button.setBackgroundColor(getResources().getColor(R.color.optionsBackround));
+            if (button.getTag().equals(question.getAnswer().getIdentifier())) {
+                button.setBackgroundColor(getResources().getColor(R.color.wrongAnswer));
+            }
             if (button.getTag().equals(question.getCorrectAnswer().getIdentifier())) {
                 button.setBackgroundColor(getResources().getColor(R.color.rightAnswer));
+                if (identifier.equals(button.getTag())){
+                    goodAnswers++;
+                }
             }
             if (question.isD2T()) {
-                for (Term option : question.getOptions()) {
-                    if (option.getIdentifier().equals(button.getTag())) {
-                        button.setText(option.getName());
-                    }
-                }
-            }
-        }
-        RadioButton checked = (RadioButton) findViewById(checkedId);
-        if (checked.getText().equals(question.getCorrectAnswer().getName())) {
-            question.setAnswer(question.getCorrectAnswer());
-            goodAnswers++;
-        } else {
-            checked.setBackgroundColor(getResources().getColor(R.color.wrongAnswer));
-            for (Term option : question.getOptions()) {
-                if (option.getIdentifier().equals(checked.getTag())) {
-                    question.setAnswer(option);
-                }
+                button.setText(question.getOptions().get(i).getName());
             }
         }
         drawView.mode = DrawView.Mode.FINISH;
-        drawView.selectedParts.add(new PartOfBody(null, null, checked.getTag().toString()));
+        drawView.selectedParts.add(new PartOfBody(null, null, identifier.toString()));
         drawView.invalidate();
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        RadioButton checked = (RadioButton) findViewById(checkedId);
+        setAnswersInOptions(checked.getTag().toString());
     }
 
     public void onNextClick(View v) {
@@ -176,11 +167,12 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             } else {
                 getNextt2dQuestion();
             }
-            String answer = test.postAnswer(question.getAnswer(), question.getCorrectAnswer(), question.isD2T());
+            boolean isWithoutOptions = (question.getOptions().size() == 0);
+            String answer = test.postAnswer(question.getAnswer(), question.getCorrectAnswer(), question.isD2T(), isWithoutOptions, startTime - endTime);
             numberOfQuestion++;
-
-            ServiceAsyncTask task = new ServiceAsyncTask(test);
+            PostAsyncTask task = new PostAsyncTask(test);
             task.execute(answer);
+            startTime = System.currentTimeMillis();
 
         } else {
             TextView captionView = (TextView) findViewById(R.id.captionView);
@@ -208,7 +200,13 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         Intent intent = new Intent(this, MenuActivity.class);
         startActivity(intent);
     }
-
+    public void onTestClicked(View view) {
+        test.start(systemCategories, bodyCategories);
+        drawView.question = test.questions.get(numberOfQuestion);
+        question = drawView.question;
+        getNextD2TdQuestion();
+        numberOfQuestion++;
+    }
 }
 
 
