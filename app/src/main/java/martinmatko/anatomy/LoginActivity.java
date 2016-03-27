@@ -1,23 +1,13 @@
 package martinmatko.anatomy;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
-import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.Loader;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -26,7 +16,6 @@ import android.webkit.CookieManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,11 +23,7 @@ import android.widget.EditText;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -51,36 +36,37 @@ import utils.Constants;
 public class LoginActivity extends AppCompatActivity {
 
     private UserLoginTask mAuthTask = null;
+    private HTTPService service = new HTTPService();
 
     // UI references.
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
+    private AutoCompleteTextView usernameView;
+    private EditText passwordView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String value = extras.getString("cookies");
+            service.setUpCookies(value);
+        }
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        usernameView = (AutoCompleteTextView) findViewById(R.id.email);
 
-        mPasswordView = (EditText) findViewById(R.id.password);
+        passwordView = (EditText) findViewById(R.id.password);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mEmailView.setText(preferences.getString("username", ""));
-        mPasswordView.setText(preferences.getString("password", ""));
+        usernameView.setText(preferences.getString("username", ""));
+        passwordView.setText(preferences.getString("password", ""));
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        Button signInButton = (Button) findViewById(R.id.sign_in_button);
+        signInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
             }
         });
-
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
     }
 
     public void onFacebookClicked(View v) {
@@ -93,6 +79,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void signUpClicked(View v) {
         Intent intent = new Intent(this, RegisterActivity.class);
+        intent.putExtra("cookies", service.cookieString);
         startActivity(intent);
     }
 
@@ -101,6 +88,7 @@ public class LoginActivity extends AppCompatActivity {
             WebView myWebView = new WebView(this);
             WebSettings webSettings = myWebView.getSettings();
             webSettings.setJavaScriptEnabled(true);
+
             webSettings.setBuiltInZoomControls(true);
             myWebView.setWebViewClient(new WebViewClient() {
                 @Override
@@ -118,36 +106,9 @@ public class LoginActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         String cookies = CookieManager.getInstance().getCookie(url);
-        System.out.println("///////////////" + cookies);
-
-        try {
-            WebView myWebView = new WebView(this);
-            WebSettings webSettings = myWebView.getSettings();
-            webSettings.setJavaScriptEnabled(true);
-            webSettings.setBuiltInZoomControls(true);
-            JSONObject userData;
-            myWebView.setWebViewClient(new WebViewClient() {
-                @Override
-                public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                    //finish();
-                    String url1 = view.getUrl();
-                    if (url.equals(Constants.SERVER_NAME + "user/profile/")) {
-                        JSONObject userData = new HTTPService().get(Constants.SERVER_NAME + "user/profile/");
-                        System.out.println("///////////////" + userData.toString());
-                        return true;
-                    }
-                    return false;
-                }
-
-            });
-            setContentView(myWebView);
-            myWebView.loadUrl(Constants.SERVER_NAME + "user/profile/");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         Intent intent = new Intent(this, MenuActivity.class);
         intent.putExtra("cookies", cookies);
-        //startActivity(intent);
+        startActivity(intent);
     }
 
     private void attemptLogin() {
@@ -156,34 +117,29 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         // Reset errors.
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
+        usernameView.setError(null);
+        passwordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        String username = usernameView.getText().toString();
+        String password = passwordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
+            passwordView.setError(getString(R.string.error_invalid_password));
+            focusView = passwordView;
             cancel = true;
         }
 
         // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
+        if (TextUtils.isEmpty(username)) {
+            usernameView.setError(getString(R.string.error_field_required));
+            focusView = usernameView;
             cancel = true;
         }
-//        else if (!isEmailValid(email)) {
-//            mEmailView.setError(getString(R.string.error_invalid_email));
-//            focusView = mEmailView;
-//            cancel = true;
-//        }
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -191,55 +147,21 @@ public class LoginActivity extends AppCompatActivity {
             focusView.requestFocus();
         } else {
             try {
-                URL url = new URL(Constants.SERVER_NAME + "user/session/");
-                HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-                conn.getHeaderFields();
-                List<String> cookies = conn.getHeaderFields().get("Set-Cookie");
-                String[] token = cookies.get(0).split("=");
-                conn.disconnect();
                 JSONObject loginData = new JSONObject();
-                loginData.put("username", email);
+                loginData.put("username", username);
                 loginData.put("password", password);
-                String loginDataString = "{" + "username: \"" + email.toString() + "\", password: \"" + password.toString() + "\"}";
-                url = new URL(Constants.SERVER_NAME + "user/login/");
-                conn = (HttpsURLConnection) url.openConnection();
-                conn.setDoInput(true);
-                conn.setDoOutput(true);
-                conn.setChunkedStreamingMode(0);
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Cookie", "activeType=system; csrftoken=wm25pmh5Co4QjVKKUHrc4W9dXz4v6WMB; activeType=system; sessionid=9qi3bv4ct3r9p4zxy43ebxmpj743o6t5; " + "csrftoken=" + token[1].split(";")[0]);
-                conn.setRequestProperty("X-csrftoken", token[1].split(";")[0]);
-                OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
-                writer.write(loginData.toString());
-                writer.flush();
-                writer.close();
-                int status = conn.getResponseCode();
+                int status = service.post(Constants.SERVER_NAME + "user/login/", loginData.toString());
                 BufferedReader br;
                 if (status == 200) {
-                    br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    String line;
-                    String response = "";
-                    while ((line = br.readLine()) != null) {
-                        response += line;
-                    }
-                    br.close();
-
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
                     SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString("username", email);
+                    editor.putString("username", username);
                     editor.putString("password", password);
                     editor.apply();
                     Intent intent = new Intent(this, MenuActivity.class);
-                    intent.putExtra("cookies", conn.getHeaderFields().get("Set-Cookie").toString());
+                    intent.putExtra("cookies", service.cookieString);
                     startActivity(intent);
                 } else {
-                    br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-                    String line;
-                    String response = "";
-                    while ((line = br.readLine()) != null) {
-                        response += line;
-                    }
-                    br.close();
                     buildDialog(this).show();
                     return;
                 }
@@ -279,11 +201,11 @@ public class LoginActivity extends AppCompatActivity {
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mEmail;
+        private final String username;
         private final String mPassword;
 
-        UserLoginTask(String email, String password) {
-            mEmail = email;
+        UserLoginTask(String username, String password) {
+            this.username = username;
             mPassword = password;
         }
 
@@ -308,8 +230,8 @@ public class LoginActivity extends AppCompatActivity {
             if (success) {
                 finish();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                passwordView.setError(getString(R.string.error_incorrect_password));
+                passwordView.requestFocus();
             }
         }
 

@@ -58,6 +58,8 @@
     <string name="signin">Sign in</string>
     <string name="signup">Sign up</string>
     <string name="signout">Sign out</string>
+    <string name="password">Password</string>
+    <string name="passwordAgain">Password again</string>
     <string name="profile">Profile</string>
     <string name="firstName">First name</string>
     <string name="surname">Surname</string>
@@ -86,17 +88,15 @@
     </string>
     <string name="title_activity_login">Sign in</string>
 
-    <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_email">This email address is invalid</string>//
     <string name="error_invalid_password">This password is too short</string>
+    <string name="error_passwords_do_not_match">Passwords do not match</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="withfb">with Facebook</string>
     <string name="withgoogle">with Google</string>
     <string name="failedLogin">Log in failed</string>
     <string name="failedLoginText">Password or username does not match.</string>
+    <string name="registrationFailed">Registration failed</string>
 
 </resources>
