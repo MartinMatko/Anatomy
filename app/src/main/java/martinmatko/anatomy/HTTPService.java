@@ -1,6 +1,5 @@
 package martinmatko.anatomy;
 
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -54,6 +53,7 @@ public class HTTPService {
         }
         return data;
     }
+
     public int post(String urlString, String postData) {
         String response = "";
         int status = 0;
@@ -90,8 +90,7 @@ public class HTTPService {
                 response += line;
             }
             br.close();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return status;

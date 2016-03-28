@@ -30,8 +30,8 @@ public class JSONParser {
         try {
             String directionOfQuestion = context.getString("direction");
             String nameOfCorrectAnswer = context.getJSONObject("term").getString("name");
-            String identifierOfCorrectAnswer = context.getString("description");
-            String idOfCorrectAnswer = context.getString("id");
+            String identifierOfCorrectAnswer = context.getJSONObject("term").getString("identifier");
+            String idOfCorrectAnswer = context.getJSONObject("term").getString("id");
             Term correctAnswer = new Term(nameOfCorrectAnswer, identifierOfCorrectAnswer, idOfCorrectAnswer);
             question.setCorrectAnswer(correctAnswer);
             if (context.has("options")) {
@@ -71,7 +71,7 @@ public class JSONParser {
                 String line = path.getString("d");
                 if (path.has("term")) {
                     String identifier = path.getString("term");
-                     if (isInD2TOptions(question, identifier)) {
+                    if (isInD2TOptions(question, identifier)) {
 
                         PartOfBody partOfBody = new PartOfBody(parser.doPath(line), paint, path.getString("term"));
                         for (Term option : terms) {
@@ -91,9 +91,9 @@ public class JSONParser {
                         }
                         color = toGrayScale(color);
                         paint.setColor(Color.parseColor(color));
-                         if (!question.isD2T() && partOfBody.getIdentifier().equals(question.getCorrectAnswer().getIdentifier())) {
-                             paint.setColor(Color.parseColor(Constants.COLORS.get(1)));
-                         }
+                        if (!question.isD2T() && partOfBody.getIdentifier().equals(question.getCorrectAnswer().getIdentifier())) {
+                            paint.setColor(Color.parseColor(Constants.COLORS.get(1)));
+                        }
                         partOfBody.setPaint(paint);
                         parts.add(partOfBody);
                     }

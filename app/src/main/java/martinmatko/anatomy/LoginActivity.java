@@ -81,6 +81,7 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(this, RegisterActivity.class);
         intent.putExtra("cookies", service.cookieString);
         startActivity(intent);
+        LoginActivity.this.finish();
     }
 
     private void loginWithSocialNetwork(String url) {
@@ -109,6 +110,7 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MenuActivity.class);
         intent.putExtra("cookies", cookies);
         startActivity(intent);
+        LoginActivity.this.finish();
     }
 
     private void attemptLogin() {
@@ -195,6 +197,7 @@ public class LoginActivity extends AppCompatActivity {
     private boolean isPasswordValid(String password) {
         return password.length() > 4;
     }
+
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.

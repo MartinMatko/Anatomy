@@ -5,9 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
@@ -29,6 +29,7 @@ public class RegisterActivity extends AppCompatActivity {
     private AutoCompleteTextView emailView;
     private EditText passwordView;
     private EditText passwordAgainView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,6 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
                     Intent intent = new Intent(this, MenuActivity.class);
                     intent.putExtra("cookies", service.cookieString);
                     startActivity(intent);
+                    RegisterActivity.this.finish();
                 } else {
                     buildDialog(this).show();
                     return;
@@ -144,11 +146,11 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean isPasswordValid(String password, String passwordAgain) {
-        if (password.length() < 6){
+        if (password.length() < 6) {
             passwordView.setError(getString(R.string.error_invalid_password));
             return false;
         }
-        if (!password.equals(passwordAgain)){
+        if (!password.equals(passwordAgain)) {
             passwordView.setError(getString(R.string.error_passwords_do_not_match));
             return false;
         }

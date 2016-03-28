@@ -1,6 +1,5 @@
 package martinmatko.anatomy;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -95,6 +94,7 @@ public class DrawView extends View {
 
         setFocusable(true);
         setFocusableInTouchMode(true);
+        scaleFactor = question.computeScaleFactorOfPicture(this.getWidth(), this.getHeight());
     }
 
     @Override
@@ -111,14 +111,12 @@ public class DrawView extends View {
             }
             pointOfZoomX = (bordersOfSelectedArea.right + bordersOfSelectedArea.left) / 2;
             pointOfZoomY = (bordersOfSelectedArea.top + bordersOfSelectedArea.bottom) / 2;
-            zoomScaleFactor = 1.2f;
+            zoomScaleFactor = 1.1f;
+            float heightScale = this.getWidth() / (bordersOfSelectedArea.right - bordersOfSelectedArea.left);
+            float widthScale = this.getHeight() / (bordersOfSelectedArea.bottom - bordersOfSelectedArea.top);
+            float minValue = heightScale < widthScale ? heightScale : widthScale;
 
-            float width = (bordersOfSelectedArea.right - bordersOfSelectedArea.left);
-            float height = (bordersOfSelectedArea.bottom - bordersOfSelectedArea.top);
-            this.getHeight();
-            this.getWidth();
-
-            if (totalScaleFactor < this.getWidth()/width) {
+            if (totalScaleFactor < minValue) {
                 h.postDelayed(r, FRAME_RATE);
             }
         }
@@ -154,9 +152,10 @@ public class DrawView extends View {
                 case CONFIRM:
                     //centering area of elected items
                     matrix.setTranslate(this.getWidth() / 2 - pointOfZoomX, this.getHeight() / 2 - pointOfZoomY);
+                    matrix.postScale(totalScaleFactor, totalScaleFactor, this.getWidth() / 2, this.getHeight() / 2);
                     break;
                 case DRAG:
-                    matrix.setTranslate(translateX / 5, translateY / 5);
+                    matrix.setTranslate(translateX, translateY);
                     if (question.isD2T()) {
                         mode = Mode.SELECT;
                     } else {
@@ -167,10 +166,9 @@ public class DrawView extends View {
                     break;
                 case TAPTOZOOM:
                     matrix.setScale(scaleFactor, scaleFactor, pointOfZoomX, pointOfZoomY);
-                    if (question.isD2T()){
+                    if (question.isD2T()) {
                         mode = Mode.SELECT;
-                    }
-                    else{
+                    } else {
                         mode = Mode.NOACTION;
                     }
 
@@ -179,7 +177,10 @@ public class DrawView extends View {
                     setColorOfWrongAnswer();
                     setColorOfRightAnswer();
                     matrix.setTranslate(this.getWidth() / 2 - x1, this.getHeight() / 2 - y1);
-                    //matrix.postScale(1 / totalScaleFactor, 1 / totalScaleFactor, this.getWidth() / 2, this.getHeight() / 2);
+//                    float heightScale = this.getWidth()/(question.borders.right - question.borders.left);
+//                    float widthScale = this.getHeight() / (question.borders.bottom - question.borders.top);
+//                    float minValue = heightScale > widthScale ? heightScale : widthScale;
+                    matrix.postScale(1 / totalScaleFactor, 1 / totalScaleFactor, this.getWidth() / 2, this.getHeight() / 2);
                     mode = Mode.NOACTION;
             }
             matrix.mapRect(question.borders);
@@ -191,31 +192,25 @@ public class DrawView extends View {
                 partOfBody.setBoundaries(boundaries);
                 partOfBody.setPath(path);
                 canvas.drawPath(path, partOfBody.getPaint());
-//                if (shouldDrawOriginalPaint(partOfBody)){
-//                    canvas.drawPath(path, partOfBody.getOriginalPaint());
-//                }
-//                else {
-//                    canvas.drawPath(path, partOfBody.getPaint());
-//                }
-            }//partOfBody.getOriginalPaint() != null
+            }
             if (question.getOptions().size() == 0 && mode.equals(Mode.CONFIRM)) {
                 for (PartOfBody partOfBody : selectedParts) {
-                    if (partOfBody.getOriginalPaint() != null){
+                    if (partOfBody.getOriginalPaint() != null) {
                         canvas.drawPath(partOfBody.getPath(), partOfBody.getOriginalPaint());
                     }
                 }
             }
             //used for debugging - showing path boundaries
-            for (PartOfBody partOfBody : question.getBodyParts()) {
-                if (partOfBody.getIdentifier() != null) {
-                    if (partOfBody.getIdentifier().equals(question.getCorrectAnswer().getIdentifier()) || isD2T) {
-                        Paint p = new Paint();
-                        p.setStyle(Paint.Style.STROKE);
-                        p.setStrokeWidth(1);
-                        canvas.drawRect(partOfBody.getBoundaries(), p);
-                    }
-                }
-            }
+//            for (PartOfBody partOfBody : question.getBodyParts()) {
+//                if (partOfBody.getIdentifier() != null) {
+//                    if (partOfBody.getIdentifier().equals(question.getCorrectAnswer().getIdentifier()) || isD2T) {
+//                        Paint p = new Paint();
+//                        p.setStyle(Paint.Style.STROKE);
+//                        p.setStrokeWidth(1);
+//                        canvas.drawRect(partOfBody.getBoundaries(), p);
+//                    }
+//                }
+//            }
         } catch (NullPointerException ex) {
             ex.printStackTrace();
         }
@@ -277,12 +272,11 @@ public class DrawView extends View {
             if (mode == Mode.INITIAL) {
                 showButtons();
                 if (question.isD2T()) {
-                    if (selectedParts.size()>1){
-                        scaleFactor = 3;
+                    if (selectedParts.size() > 1) {
+                        scaleFactor = 2;
                         totalScaleFactor = scaleFactor;
                         mode = Mode.SELECT;
-                    }
-                    else mode = Mode.FINISH;
+                    } else mode = Mode.FINISH;
                 } else {
                     mode = Mode.TAPTOZOOM;
                 }
@@ -296,19 +290,21 @@ public class DrawView extends View {
             pointOfZoomY = y;
             switch (mode) {
                 case PINCHTOZOOM: {
-                    if (question.isD2T()){
+                    if (question.isD2T()) {
                         mode = Mode.SELECT;
                     }
                     break;
                 }
                 case TAPTOZOOM: {
-                    scaleFactor = 3;
+                    scaleFactor = 2;
                     totalScaleFactor = scaleFactor;
                     break;
                 }
                 case SELECT: {
                     showButtons();
                     if (selectedParts.size() > 1) {
+//                        scaleFactor = 2;
+//                        totalScaleFactor += scaleFactor;
                         mode = Mode.CONFIRM;
                     } else {
                         mode = Mode.FINISH;
@@ -394,7 +390,7 @@ public class DrawView extends View {
                 question.setAnswer(question.getCorrectAnswer());
             }
         }
-        if (question.getOptions().size() == 0){
+        if (question.getOptions().size() == 0) {
             for (PartOfBody partOfBody : question.getBodyParts()) {
                 if (partOfBody.getIdentifier() != null && partOfBody.getIdentifier().equals(question.getCorrectAnswer().getIdentifier())) {
                     Paint paint = partOfBody.getPaint();

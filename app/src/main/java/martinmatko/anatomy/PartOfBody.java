@@ -15,11 +15,13 @@ public class PartOfBody {
     private boolean selected;
     private boolean right;
     private String identifier;
+
     public PartOfBody(Path path, Paint paint, String identifier) {
         this.paint = paint;
         this.identifier = identifier;
         this.path = path;
     }
+
     public PartOfBody(Path path, Paint paint) {
         this.paint = paint;
         this.path = path;

@@ -1,6 +1,5 @@
 package martinmatko.anatomy;
 
-import org.apache.http.cookie.Cookie;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -91,7 +90,7 @@ public class Test {
     }
 
 
-    public String postAnswer(Term answered, Term rightAnswer, boolean isd2t, boolean isWithoutOptions,  long timeOfAnswer) {
+    public String postAnswer(Term answered, Term rightAnswer, boolean isd2t, boolean isWithoutOptions, long timeOfAnswer) {
         JSONObject response = new JSONObject();
         String direction = isd2t ? "d2t" : "t2d";
 
@@ -100,14 +99,16 @@ public class Test {
         try {
             answer.put("flashcard_id", Integer.parseInt(rightAnswer.getId()));
             if (answered != null) {
-                answer.put("flashcard_answered_id", Integer.parseInt(answered.getId()));
-                answer.put("option_ids", new JSONArray().put(Integer.parseInt(answered.getId())));
+//                answer.put("flashcard_answered_id", Integer.parseInt(answered.getId()));
+//                answer.put("option_ids", new JSONArray().put(Integer.parseInt(answered.getId())));
+                answer.put("flashcard_answered_id", Integer.parseInt(rightAnswer.getId()));
+                answer.put("option_ids", new JSONArray().put(Integer.parseInt(rightAnswer.getId())));
             }
             answer.put("response_time", timeOfAnswer);
             answer.put("direction", direction);
             JSONObject metadata = new JSONObject();
             metadata.put("client", "android");
-            if (isWithoutOptions){
+            if (isWithoutOptions) {
                 metadata.put("test", "random_without_options");
             }
             answer.put("meta", metadata);

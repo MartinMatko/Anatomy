@@ -16,15 +16,6 @@ public class Term {
     private String identifier;
     private RectF button;
     private List<PartOfBody> partOfBodyList;
-
-    public String getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(String itemId) {
-        this.itemId = itemId;
-    }
-
     private String itemId;
 
     public Term(String name, String identifier, String id) {
@@ -33,6 +24,14 @@ public class Term {
         this.identifier = identifier;
         this.id = id;
         partOfBodyList = new ArrayList<>();
+    }
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
     }
 
     public int getColor() {

@@ -3,6 +3,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="martinmatko.myapplication.MainActivity$PlaceholderFragment">
 
     <ScrollView
@@ -11,7 +12,7 @@
         android:id="@+id/scrollView"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.13"
-        card_view:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -28,12 +29,11 @@
                         android:orientation="vertical">
                         <ImageButton
                             style="@style/imageTileButton"
-                            android:src="@drawable/s06"
-                            android:tag="06" />
+                            android:src="@drawable/b01"
+                            android:tag="A" />
                         <TextView
                             style="@style/imageTileLabel"
-                            android:text="@string/s10"
-                            android:tag="06"/>
+                            android:text="@string/A"/>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
                 <android.support.v7.widget.CardView
@@ -47,12 +47,11 @@
                         android:orientation="vertical">
                         <ImageButton
                             style="@style/imageTileButton"
-                            android:src="@drawable/s06"
-                            android:tag="06" />
+                            android:src="@drawable/b02"
+                            android:tag="B" />
                         <TextView
                             style="@style/imageTileLabel"
-                            android:text="@string/s06"
-                            android:tag="06"/>
+                            android:text="@string/B"/>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
             </TableRow>
@@ -68,12 +67,11 @@
                         android:orientation="vertical">
                         <ImageButton
                             style="@style/imageTileButton"
-                            android:src="@drawable/s06"
-                            android:tag="06" />
+                            android:src="@drawable/b03"
+                            android:tag="Hb" />
                         <TextView
                             style="@style/imageTileLabel"
-                            android:text="@string/s06"
-                            android:tag="06"/>
+                            android:text="@string/Hb"/>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
                 <android.support.v7.widget.CardView
@@ -87,12 +85,11 @@
                         android:orientation="vertical">
                         <ImageButton
                             style="@style/imageTileButton"
-                            android:src="@drawable/s06"
-                            android:tag="06" />
+                            android:src="@drawable/b04"
+                            android:tag="Hf" />
                         <TextView
                             style="@style/imageTileLabel"
-                            android:text="@string/s06"
-                            android:tag="06"/>
+                            android:text="@string/Hf"/>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
             </TableRow>
@@ -108,12 +105,11 @@
                         android:orientation="vertical">
                         <ImageButton
                             style="@style/imageTileButton"
-                            android:src="@drawable/s06"
-                            android:tag="06" />
+                            android:src="@drawable/b05"
+                            android:tag="LE" />
                         <TextView
                             style="@style/imageTileLabel"
-                            android:text="@string/s06"
-                            android:tag="06"/>
+                            android:text="@string/LE"/>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
                 <android.support.v7.widget.CardView
@@ -127,16 +123,96 @@
                         android:orientation="vertical">
                         <ImageButton
                             style="@style/imageTileButton"
-                            android:src="@drawable/s06"
-                            android:tag="06" />
+                            android:src="@drawable/b06"
+                            android:tag="N" />
                         <TextView
                             style="@style/imageTileLabel"
-                            android:text="@string/s06"
-                            android:tag="06"/>
+                            android:text="@string/N"/>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
             </TableRow>
-
-        </TableLayout></ScrollView>
+            <TableRow>
+                <android.support.v7.widget.CardView
+                    style="@style/cardView"
+                    card_view:cardElevation="5dp"
+                    card_view:cardCornerRadius="4dp"
+                    card_view:cardUseCompatPadding="true">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <ImageButton
+                            style="@style/imageTileButton"
+                            android:src="@drawable/b07"
+                            android:tag="P" />
+                        <TextView
+                            style="@style/imageTileLabel"
+                            android:text="@string/P"/>
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+                <android.support.v7.widget.CardView
+                    style="@style/cardView"
+                    card_view:cardElevation="5dp"
+                    card_view:cardCornerRadius="4dp"
+                    card_view:cardUseCompatPadding="true">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <ImageButton
+                            style="@style/imageTileButton"
+                            android:src="@drawable/b08"
+                            android:tag="T" />
+                        <TextView
+                            style="@style/imageTileLabel"
+                            android:text="@string/T"/>
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+            </TableRow>
+            <TableRow>
+                <android.support.v7.widget.CardView
+                    style="@style/cardView"
+                    card_view:cardElevation="5dp"
+                    card_view:cardCornerRadius="4dp"
+                    card_view:cardUseCompatPadding="true">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <ImageButton
+                            style="@style/imageTileButton"
+                            android:src="@drawable/b09"
+                            android:tag="UE" />
+                        <TextView
+                            style="@style/imageTileLabel"
+                            android:text="@string/UE"/>
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+                <android.support.v7.widget.CardView
+                    style="@style/cardView"
+                    card_view:cardUseCompatPadding="true">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <ImageButton
+                            style="@style/imageTileButton"
+                            android:background="@color/grey_100"
+                            android:clickable="false" />
+                        <TextView
+                            style="@style/imageTileLabel"
+                            android:background="@color/grey_100"
+                            android:text=""/>
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+            </TableRow>
+            <TableRow>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    />
+            </TableRow>
+        </TableLayout>
+    </ScrollView>
 
 </RelativeLayout>

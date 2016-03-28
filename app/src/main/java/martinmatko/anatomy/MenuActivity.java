@@ -4,10 +4,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,11 +24,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import android.widget.ViewFlipper;
-
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import utils.Constants;
 
@@ -58,6 +59,22 @@ public class MenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (preferences.getString("language", "").equals("cs")) {
+            Configuration config = new Configuration();
+            config.locale = new Locale("cs", "CZ");
+            getBaseContext().getResources().updateConfiguration(config,
+                    getBaseContext().getResources().getDisplayMetrics());
+            Constants.SERVER_NAME = "https://staging.anatom.cz/";
+        } else if (preferences.getString("language", "").equals("en")) {
+            Configuration config1 = new Configuration();
+            config1.locale = new Locale("en", "US");
+            getBaseContext().getResources().updateConfiguration(config1,
+                    getBaseContext().getResources().getDisplayMetrics());
+            Constants.SERVER_NAME = "https://staging.practiceanatomy.com/";
+        }
+
         context = getApplicationContext();
 
         if (!isNetworkStatusAvailable(getApplicationContext())) {
@@ -74,8 +91,7 @@ public class MenuActivity extends AppCompatActivity {
             test.service.setUpCookies(value);
             isUserSigned = true;
             Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show();
-        }
-        else {
+        } else {
             test.service.createSesion();
         }
     }
@@ -102,10 +118,12 @@ public class MenuActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
 
     }
+
     public void onTestClicked(View v) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("cookies", test.service.cookieString);
         startActivity(intent);
+        MenuActivity.this.finish();
     }
 
     public void onRandomTestClicked(View v) {
@@ -135,6 +153,7 @@ public class MenuActivity extends AppCompatActivity {
             }
         }
     }
+
     public AlertDialog.Builder buildDialog(Context c) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(c);
@@ -150,7 +169,6 @@ public class MenuActivity extends AppCompatActivity {
 
         return builder;
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -198,6 +216,7 @@ public class MenuActivity extends AppCompatActivity {
                 break;
         }
         startActivity(intent);
+        MenuActivity.this.finish();
         return super.onOptionsItemSelected(item);
     }
 

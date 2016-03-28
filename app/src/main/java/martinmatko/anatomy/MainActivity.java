@@ -1,6 +1,8 @@
 package martinmatko.anatomy;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -30,9 +32,9 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     public ArrayList<String> systemCategories = new ArrayList();
     public ArrayList<String> bodyCategories = new ArrayList();
     DrawView drawView;
-    private int width;
     long startTime;
     long endTime;
+    private int width;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +57,13 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         test.start(systemCategories, bodyCategories);
         drawView.question = test.questions.get(numberOfQuestion);
         question = drawView.question;
-        getNextD2TdQuestion();
+        TextView captionView = (TextView) findViewById(R.id.captionView);
+        captionView.setText(question.getCaption());
+        if (question.isD2T()) {
+            getNextD2TdQuestion();
+        } else {
+            getNextt2dQuestion();
+        }
         numberOfQuestion++;
     }
 
@@ -109,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         invalidateOptionsMenu();
     }
 
-    public void setAnswersInOptions(String identifier){
+    public void setAnswersInOptions(String identifier) {
         endTime = System.currentTimeMillis();
         RadioGroup group = (RadioGroup) findViewById(R.id.optionsView);
         for (Term option : question.getOptions()) {
@@ -126,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             }
             if (button.getTag().equals(question.getCorrectAnswer().getIdentifier())) {
                 button.setBackgroundColor(getResources().getColor(R.color.rightAnswer));
-                if (identifier.equals(button.getTag())){
+                if (identifier.equals(button.getTag())) {
                     goodAnswers++;
                 }
             }
@@ -146,11 +154,21 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     }
 
     public void onNextClick(View v) {
+        boolean isWithoutOptions = (question.getOptions().size() == 0);
+        String answer = test.postAnswer(question.getAnswer(), question.getCorrectAnswer(), question.isD2T(), isWithoutOptions, endTime - startTime);
+
+        PostAsyncTask task = new PostAsyncTask(test);
+        task.execute(answer);
         if (numberOfQuestion < 8) {
             while (numberOfQuestion + 1 != test.questions.size()) {
+                float timeout = 0;
                 try {
-                    Thread.currentThread().sleep(100);
+                    timeout += 100;
+                    if (timeout < 5000) {
+                        Thread.currentThread().sleep(100);
+                    } else throw new InterruptedException();
                 } catch (InterruptedException e) {
+                    buildDialog(this).show();
                     e.printStackTrace();
                 }
             }
@@ -167,11 +185,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             } else {
                 getNextt2dQuestion();
             }
-            boolean isWithoutOptions = (question.getOptions().size() == 0);
-            String answer = test.postAnswer(question.getAnswer(), question.getCorrectAnswer(), question.isD2T(), isWithoutOptions, startTime - endTime);
             numberOfQuestion++;
-            PostAsyncTask task = new PostAsyncTask(test);
-            task.execute(answer);
             startTime = System.currentTimeMillis();
 
         } else {
@@ -196,16 +210,35 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     public void onCaptionClick(View view) {
         Toast.makeText(context, question.getCaption(), Toast.LENGTH_LONG).show();
     }
+
     public void goToMenu(View view) {
         Intent intent = new Intent(this, MenuActivity.class);
         startActivity(intent);
+        MainActivity.this.finish();
     }
+
     public void onTestClicked(View view) {
-        test.start(systemCategories, bodyCategories);
-        drawView.question = test.questions.get(numberOfQuestion);
-        question = drawView.question;
-        getNextD2TdQuestion();
-        numberOfQuestion++;
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("cookies", test.service.cookieString);
+        startActivity(intent);
+        MainActivity.this.finish();
+    }
+
+    public AlertDialog.Builder buildDialog(Context c) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(c);
+        builder.setTitle("Connection failed.");
+        builder.setMessage("Problem with connecting to practiceanatomy.com");
+
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                onBackPressed();
+            }
+        });
+
+        return builder;
     }
 }
 
