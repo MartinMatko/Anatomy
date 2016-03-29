@@ -34,6 +34,7 @@ public class JSONParser {
             String idOfCorrectAnswer = context.getJSONObject("term").getString("id");
             Term correctAnswer = new Term(nameOfCorrectAnswer, identifierOfCorrectAnswer, idOfCorrectAnswer);
             question.setCorrectAnswer(correctAnswer);
+            question.setFlashcardId(context.getString("id"));
             if (context.has("options")) {
                 question.setD2T(directionOfQuestion.equals("d2t"));
             } else {

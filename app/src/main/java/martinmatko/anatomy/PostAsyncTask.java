@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -44,7 +45,8 @@ public class PostAsyncTask extends AsyncTask<String, Void, JSONObject> {
         String line;
         JSONObject data = null;
         try {
-            url = new URL(Constants.SERVER_NAME + "flashcards/practice/?avoid=%5B2064%5D&categories=%5B%5D&contexts=%5B%5D&limit=1&types=%5B%5D&without_contexts=1");
+            url = new URL(Constants.SERVER_NAME + "flashcards/practice/?avoid=[" + URLEncoder.encode(params[1], "UTF-8") +"]&categories=[" + test.categories + "]&contexts=[]&limit=1&types=[]&without_contexts=1");
+            System.out.println(url.toString());
             HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
             conn.setDoInput(true);
             conn.setDoOutput(true);

@@ -19,6 +19,16 @@ public class Question {
     private List<Term> options;
     private boolean isD2T;
 
+    public String getFlashcardId() {
+        return flashcardId;
+    }
+
+    public void setFlashcardId(String flashcardId) {
+        this.flashcardId = flashcardId;
+    }
+
+    private String flashcardId;
+
     public Question() {
     }
 

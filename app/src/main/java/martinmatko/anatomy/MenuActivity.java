@@ -122,6 +122,7 @@ public class MenuActivity extends AppCompatActivity {
     public void onTestClicked(View v) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("cookies", test.service.cookieString);
+        intent.putExtra("categories", test.convertCategoriesToUrl(systemCategories, bodyCategories));
         startActivity(intent);
         MenuActivity.this.finish();
     }

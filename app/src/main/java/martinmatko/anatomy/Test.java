@@ -20,15 +20,16 @@ public class Test {
     HTTPService service = new HTTPService();
     List<Question> questions = new ArrayList<>();
     boolean isPOSTCompleted = true;
+    String categories;
 
-    public void start(ArrayList systemCategories, ArrayList bodyCategories) {
-        getFirstQuestion(systemCategories, bodyCategories);
+    public void start(String categories) {
+        getFirstQuestion(categories);
 
     }
 
-    public void getFirstQuestion(ArrayList<String> systemCategories, ArrayList<String> bodyCategories) {
+    public void getFirstQuestion(String categories) {
         JSONObject context;
-        if (systemCategories.isEmpty() && bodyCategories.isEmpty()) {
+        if (categories.isEmpty()) {
             context = service.get(Constants.SERVER_NAME + "flashcards/practice/?avoid=[]&categories=[]&contexts=[]&limit=2&types=[]&without_contexts=1");
             try {
                 context = context.getJSONObject("data");
@@ -36,32 +37,8 @@ public class Test {
                 e.printStackTrace();
             }
         } else {
-            StringBuilder systemCategoriesTags = new StringBuilder();
-            for (String tag : systemCategories) {
-                systemCategoriesTags.append("\"" + tag + "\",");
-            }
-            StringBuilder bodyCategoriesTags = new StringBuilder();
-            for (String tag : bodyCategories) {
-                bodyCategoriesTags.append("\"" + tag + "\",");
-            }
-            String url = "";
-            String tags = "";
-            if (systemCategoriesTags.length() > 0) {
-                systemCategoriesTags.deleteCharAt(systemCategoriesTags.length() - 1);
-                tags = "[" + systemCategoriesTags.toString() + "]";
-            }
 
-            if (bodyCategoriesTags.length() > 0) {
-
-                bodyCategoriesTags.deleteCharAt(bodyCategoriesTags.length() - 1);
-                tags = tags + ",[" + bodyCategoriesTags.toString() + "]";
-            }
-            try {
-                url = URLEncoder.encode(tags, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            url = Constants.SERVER_NAME + "flashcards/practice/?avoid=[]&categories=[" + url + "]&contexts=[]&limit=2&types=[]&without_contexts=1";
+            String url = Constants.SERVER_NAME + "flashcards/practice/?avoid=[]&categories=[" + categories + "]&contexts=[]&limit=2&types=[]&without_contexts=1";
             context = service.get(url);
             try {
                 context = context.getJSONObject("data");
@@ -89,6 +66,40 @@ public class Test {
         }
     }
 
+    public String convertCategoriesToUrl(ArrayList<String> systemCategories, ArrayList<String> bodyCategories){
+        if (systemCategories.isEmpty() && bodyCategories.isEmpty()){
+            return "";
+        }
+        else {
+            StringBuilder systemCategoriesTags = new StringBuilder();
+            for (String tag : systemCategories) {
+                systemCategoriesTags.append("\"" + tag + "\",");
+            }
+            StringBuilder bodyCategoriesTags = new StringBuilder();
+            for (String tag : bodyCategories) {
+                bodyCategoriesTags.append("\"" + tag + "\",");
+            }
+            String url = "";
+            String tags = "";
+            if (systemCategoriesTags.length() > 0) {
+                systemCategoriesTags.deleteCharAt(systemCategoriesTags.length() - 1);
+                tags = "[" + systemCategoriesTags.toString() + "]";
+            }
+
+            if (bodyCategoriesTags.length() > 0) {
+
+                bodyCategoriesTags.deleteCharAt(bodyCategoriesTags.length() - 1);
+                tags = tags + ",[" + bodyCategoriesTags.toString() + "]";
+            }
+            try {
+                url = URLEncoder.encode(tags, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            return url;
+        }
+    }
+
 
     public String postAnswer(Term answered, Term rightAnswer, boolean isd2t, boolean isWithoutOptions, long timeOfAnswer) {
         JSONObject response = new JSONObject();
@@ -101,8 +112,8 @@ public class Test {
             if (answered != null) {
 //                answer.put("flashcard_answered_id", Integer.parseInt(answered.getId()));
 //                answer.put("option_ids", new JSONArray().put(Integer.parseInt(answered.getId())));
-                answer.put("flashcard_answered_id", Integer.parseInt(rightAnswer.getId()));
-                answer.put("option_ids", new JSONArray().put(Integer.parseInt(rightAnswer.getId())));
+                answer.put("flashcard_answered_id", Integer.parseInt(answered.getId()));
+                answer.put("option_ids", new JSONArray().put(Integer.parseInt(answered.getId())));
             }
             answer.put("response_time", timeOfAnswer);
             answer.put("direction", direction);

@@ -5,7 +5,8 @@
     tools:context=".MainActivity"
     android:id="@+id/relativeLayout"
     style="@style/Base.TextAppearance.AppCompat.Headline"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/white">
 
 
         <TextView
@@ -83,7 +84,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/buttons"
         class="martinmatko.anatomy.DrawView"
-        android:background="#ffffffff" />
+        android:background="#ffffffff"/>
 
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
