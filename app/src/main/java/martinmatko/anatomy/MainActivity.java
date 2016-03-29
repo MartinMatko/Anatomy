@@ -29,12 +29,11 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     public Test test = new Test();
     public Question question;
     public int goodAnswers = 0, numberOfQuestion = 0;
-    public ArrayList<String> systemCategories = new ArrayList();
-    public ArrayList<String> bodyCategories = new ArrayList();
     DrawView drawView;
     long startTime;
     long endTime;
     private int width;
+    public int height;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,16 +44,20 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         Point size = new Point();
         display.getSize(size);
         width = size.x;
+        height = size.y;
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
+        String categories = "";
         if (extras != null) {
             String value = extras.getString("cookies");
             System.out.println("cookies" + value);
             test.service.setUpCookies(value);
+            categories = extras.getString("categories");
         }
+        test.categories = categories;
         setContentView(R.layout.activity_main);
         drawView = (DrawView) findViewById(R.id.drawView);
-        test.start(systemCategories, bodyCategories);
+        test.start(categories);
         drawView.question = test.questions.get(numberOfQuestion);
         question = drawView.question;
         TextView captionView = (TextView) findViewById(R.id.captionView);
@@ -111,7 +114,8 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             }
             button.setTag(option.getIdentifier());
             button.setButtonDrawable(new StateListDrawable());
-            //button.setPadding(20, 5, 5, 5);
+            button.setGravity(View.TEXT_ALIGNMENT_CENTER);
+            button.setPadding(20, 5, 5, 5);
             options.addView(button, width, 120);
         }
         invalidateOptionsMenu();
@@ -158,8 +162,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         String answer = test.postAnswer(question.getAnswer(), question.getCorrectAnswer(), question.isD2T(), isWithoutOptions, endTime - startTime);
 
         PostAsyncTask task = new PostAsyncTask(test);
-        task.execute(answer);
-        if (numberOfQuestion < 8) {
+        if (numberOfQuestion < 10) {
             while (numberOfQuestion + 1 != test.questions.size()) {
                 float timeout = 0;
                 try {
@@ -173,6 +176,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                 }
             }
             question = test.questions.get(numberOfQuestion);
+            task.execute(answer, question.getFlashcardId());
             TextView captionView = (TextView) findViewById(R.id.captionView);
             captionView.setText(question.getCaption());
             RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
@@ -190,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
         } else {
             TextView captionView = (TextView) findViewById(R.id.captionView);
-            int score = goodAnswers * 25;
+            int score = goodAnswers * 5;
             captionView.setText(getString(R.string.rate) + " " + Integer.toString(score) + " %");
             View fab = findViewById(R.id.multiple_actions);
             fab.setVisibility(View.VISIBLE);
@@ -220,6 +224,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     public void onTestClicked(View view) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("cookies", test.service.cookieString);
+        intent.putExtra("categories", test.categories);
         startActivity(intent);
         MainActivity.this.finish();
     }
