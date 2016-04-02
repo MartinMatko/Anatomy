@@ -157,7 +157,6 @@ public class DrawView extends View {
                 case DRAG:
                     //matrix.postTranslate(translateX/2, translateY/2);
                     canvas.translate(translateX, translateY);
-
                     break;
                 case SELECT:
                     break;
@@ -251,22 +250,30 @@ public class DrawView extends View {
 // first finger is moving on screen  
 // update translation value to apply on Path
                 MainActivity host = (MainActivity) getContext();
-                float difference = host.height - this.getHeight();
                 previousTranslateX = translateX;
                 previousTranslateY = translateY;
-                translateX = event.getX() + startX;
-                translateY = event.getY() + startY - difference;
-                //if (Math.abs(previousTranslateX) + Math.abs(previousTranslateY) > 10 && mode != Mode.PINCHTOZOOM)
+                translateX = event.getX() - getX() + startX;
+                translateY = event.getY() - getY() + startY;
+                if (Math.abs(translateX) + Math.abs(translateY) > 10 && mode != Mode.PINCHTOZOOM)
             {
                 mode = Mode.DRAG;
-                canvas.translate(translateX, translateY);
+                //canvas.save();
+                canvas.scale(1, 1);
+                //canvas.scale(.5f, .5f);
+                //canvas.restore();
+                System.out.println("ooo");
                 invalidate();
-                break;
             }
+                else if (mode.equals(Mode.PINCHTOZOOM) ){
+                    canvas.translate(translateX, translateY);
+                    //canvas.scale(.5f, .5f);
+                    System.out.println("zooooooooooooooooooom");
+                }
+                break;
             case MotionEvent.ACTION_POINTER_DOWN:
                 mode = Mode.PINCHTOZOOM;
-//                pointOfZoomX = (x + event.getX(1)) / 2;
-//                pointOfZoomY = (y + event.getY(1)) / 2;
+                pointOfZoomX = (x + event.getX(1)) / 2;
+                pointOfZoomY = (y + event.getY(1)) / 2;
                 break;
 
             case MotionEvent.ACTION_POINTER_UP:
@@ -310,7 +317,7 @@ public class DrawView extends View {
             switch (mode) {
                 case PINCHTOZOOM: {
                     if (question.isD2T()) {
-                        mode = Mode.SELECT;
+                        //mode = Mode.SELECT;
                     }
                     break;
                 }
@@ -339,7 +346,7 @@ public class DrawView extends View {
                 return true;
             }
         }
-        //invalidate();
+        invalidate();
         return true;
     }
 

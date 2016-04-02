@@ -110,10 +110,8 @@ public class Test {
         try {
             answer.put("flashcard_id", Integer.parseInt(rightAnswer.getId()));
             if (answered != null) {
-//                answer.put("flashcard_answered_id", Integer.parseInt(answered.getId()));
-//                answer.put("option_ids", new JSONArray().put(Integer.parseInt(answered.getId())));
-                answer.put("flashcard_answered_id", Integer.parseInt(answered.getId()));
-                answer.put("option_ids", new JSONArray().put(Integer.parseInt(answered.getId())));
+                answer.put("flashcard_answered_id", Integer.parseInt(rightAnswer.getId()));
+                answer.put("option_ids", new JSONArray().put(Integer.parseInt(rightAnswer.getId())));
             }
             answer.put("response_time", timeOfAnswer);
             answer.put("direction", direction);

@@ -81,9 +81,9 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             TextView textView = (TextView) findViewById(R.id.textOfQuestionView);
             SpannableString text = new SpannableString(getString(R.string.choose) + " " + question.getCorrectAnswer().getName());
             int lengthOfFirstPart = getString(R.string.choose).length();
-            text.setSpan(new ForegroundColorSpan(Color.BLACK), 0, lengthOfFirstPart, 0);
-            text.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.grey_500)), lengthOfFirstPart + 1, text.length(), 0);
-            text.setSpan(new RelativeSizeSpan(0.8f), lengthOfFirstPart + 1, text.length(), 0);
+            text.setSpan(new RelativeSizeSpan(0.8f), 0, lengthOfFirstPart, 0);
+            text.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.grey_500)), 0, lengthOfFirstPart, 0);
+            text.setSpan(new ForegroundColorSpan(Color.BLACK), lengthOfFirstPart + 1, text.length(), 0);
             textView.setText(text, TextView.BufferType.SPANNABLE);
             setOptions(true);
         }
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             button.setButtonDrawable(new StateListDrawable());
             button.setGravity(View.TEXT_ALIGNMENT_CENTER);
             button.setPadding(20, 5, 5, 5);
-            options.addView(button, width, 120);
+            options.addView(button, width, 150);
         }
         invalidateOptionsMenu();
     }
@@ -149,6 +149,8 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         drawView.mode = DrawView.Mode.FINISH;
         drawView.selectedParts.add(new PartOfBody(null, null, identifier.toString()));
         drawView.invalidate();
+        Button v = (Button) findViewById(R.id.nextButtonView);
+        v.setText(R.string.continueToNext);
     }
 
     @Override
@@ -163,8 +165,8 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
         PostAsyncTask task = new PostAsyncTask(test);
         if (numberOfQuestion < 10) {
+            float timeout = 0;
             while (numberOfQuestion + 1 != test.questions.size()) {
-                float timeout = 0;
                 try {
                     timeout += 100;
                     if (timeout < 5000) {
@@ -181,6 +183,8 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             captionView.setText(question.getCaption());
             RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
             options.removeAllViews();
+            Button button = (Button) findViewById(R.id.nextButtonView);
+            button.setText(R.string.doNotKnow);
             drawView.clearVariables();
             drawView.question = question;
             drawView.invalidate();
@@ -194,12 +198,17 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
         } else {
             TextView captionView = (TextView) findViewById(R.id.captionView);
+            captionView.setText("Test finished");
+            Toast.makeText(this, "Test finished", Toast.LENGTH_SHORT).show();
+            TextView labelView = (TextView) findViewById(R.id.textOfQuestionView);
             int score = goodAnswers * 5;
-            captionView.setText(getString(R.string.rate) + " " + Integer.toString(score) + " %");
+            labelView.setText(getString(R.string.rate) + " " + Integer.toString(score) + " %");
             View fab = findViewById(R.id.multiple_actions);
             fab.setVisibility(View.VISIBLE);
-            View next = findViewById(R.id.nextButtonView);
-            next.setVisibility(View.GONE);
+            View button = findViewById(R.id.nextButtonView);
+            button.setVisibility(View.GONE);
+            button = findViewById(R.id.highlightButtonView);
+            button.setVisibility(View.GONE);
             numberOfQuestion = 0;
             test.questions.clear();
             goodAnswers = 0;
@@ -217,6 +226,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
     public void goToMenu(View view) {
         Intent intent = new Intent(this, MenuActivity.class);
+        intent.putExtra("cookies", test.service.cookieString);
         startActivity(intent);
         MainActivity.this.finish();
     }

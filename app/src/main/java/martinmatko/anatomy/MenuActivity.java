@@ -25,6 +25,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -39,6 +42,9 @@ public class MenuActivity extends AppCompatActivity {
     private boolean isUserSigned;
     private String cookies = "";
     private SectionsPagerAdapter mSectionsPagerAdapter;
+    private SharedPreferences preferences;
+    JSONObject userData = null;
+    Menu menu;
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -60,7 +66,7 @@ public class MenuActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
         if (preferences.getString("language", "").equals("cs")) {
             Configuration config = new Configuration();
             config.locale = new Locale("cs", "CZ");
@@ -90,9 +96,20 @@ public class MenuActivity extends AppCompatActivity {
             cookies = value;
             test.service.setUpCookies(value);
             isUserSigned = true;
-            Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show();
+            try {
+                test.service.get(Constants.SERVER_NAME);
+                userData = test.service.get(Constants.SERVER_NAME + "user/profile/").getJSONObject("data").getJSONObject("user");
+                Toast.makeText(context, "Logged as " + userData.getString("username"), Toast.LENGTH_SHORT).show();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         } else {
             test.service.createSesion();
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.putExtra("cookies", test.service.cookieString);
+            intent.putExtra("automaticLogin", "true");
+            startActivity(intent);
+            //isUserSigned = true;
         }
     }
 
@@ -175,13 +192,14 @@ public class MenuActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        if (!cookies.isEmpty()) {
+        if (isUserSigned) {
             MenuItem menuItem = menu.findItem(R.id.sign);
             menuItem.setTitle(R.string.signout);
             menuItem = menu.findItem(R.id.profile);
             menuItem.setVisible(true);
         }
         invalidateOptionsMenu();
+        this.menu = menu;
         return true;
     }
 
@@ -191,33 +209,48 @@ public class MenuActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        Intent intent = new Intent(this, MenuActivity.class);
+        Intent intent;
         switch (id) {
             case R.id.about:
                 intent = new Intent(this, AboutActivity.class);
+                startActivity(intent);
                 break;
             case R.id.language:
                 intent = new Intent(this, LanguageActivity.class);
+                startActivity(intent);
                 break;
             case R.id.profile:
                 intent = new Intent(this, ProfileActivity.class);
+                try {
+                    intent.putExtra("first_name", userData.getString("first_name"));
+                    intent.putExtra("last_name", userData.getString("last_name"));
+                    intent.putExtra("email", userData.getString("email"));
+                    intent.putExtra("username", userData.getString("username"));
+                }
+                catch (JSONException e){
+                    e.printStackTrace();
+                }
+                startActivity(intent);
                 break;
             case R.id.sign:
                 if (isUserSigned) {
                     new HTTPService().get(Constants.SERVER_NAME + "user/logout/");
                     isUserSigned = false;
                     test.service.createSesion();
+                    MenuItem menuItem = menu.findItem(R.id.sign);
+                    menuItem.setTitle(R.string.signin);
+                    menuItem = menu.findItem(R.id.profile);
+                    menuItem.setVisible(false);
+                    invalidateOptionsMenu();
+                    Toast.makeText(this, "Signed out", Toast.LENGTH_SHORT).show();
                 } else {
                     intent = new Intent(this, LoginActivity.class);
                     intent.putExtra("cookies", test.service.cookieString);
+                    startActivity(intent);
                 }
                 break;
-            default:
-                intent = new Intent(this, MenuActivity.class);
-                break;
         }
-        startActivity(intent);
-        MenuActivity.this.finish();
+        //MenuActivity.this.finish();
         return super.onOptionsItemSelected(item);
     }
 

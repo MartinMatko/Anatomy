@@ -8,6 +8,7 @@
     <color name="green">#8dc63f</color>
     <color name="black">#000000</color>
     <color name="button">#FF4279FF</color>
+    <color name="buttonPressed">#FFB3B7F5</color>
     <color name="rightAnswer">#5CA03C</color>
     <color name="wrongAnswer">#e23</color>
 	

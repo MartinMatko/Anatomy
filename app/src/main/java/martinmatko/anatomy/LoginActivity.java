@@ -47,19 +47,15 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            String value = extras.getString("cookies");
-            service.setUpCookies(value);
-        }
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
         // Set up the login form.
         usernameView = (AutoCompleteTextView) findViewById(R.id.email);
 
         passwordView = (EditText) findViewById(R.id.password);
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         usernameView.setText(preferences.getString("username", ""));
         passwordView.setText(preferences.getString("password", ""));
-
         Button signInButton = (Button) findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -67,14 +63,40 @@ public class LoginActivity extends AppCompatActivity {
                 attemptLogin();
             }
         });
+        if (extras != null) {
+            String value = extras.getString("cookies");
+            service.setUpCookies(value);
+            if (extras.getString("automaticLogin", "").equals("true")){
+                switch (preferences.getString("preferredLogin", "")) {
+                    case "google":
+                        onGoogleClicked(null);
+                        break;
+                    case "facebook":
+                        onFacebookClicked(null);
+                        break;
+                    case "email":
+                        attemptLogin();//need for sending post request with login data
+                        break;
+                }
+            }
+        }
+
     }
 
     public void onFacebookClicked(View v) {
         loginWithSocialNetwork(Constants.SERVER_NAME + "login/facebook/");
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("preferredLogin", "facebook");
+        editor.apply();
     }
 
     public void onGoogleClicked(View v) {
         loginWithSocialNetwork(Constants.SERVER_NAME + "login/google-oauth2/");
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("preferredLogin", "google");
+        editor.apply();
     }
 
     public void signUpClicked(View v) {
@@ -159,10 +181,12 @@ public class LoginActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString("username", username);
                     editor.putString("password", password);
+                    editor.putString("preferredLogin", "email");
                     editor.apply();
                     Intent intent = new Intent(this, MenuActivity.class);
                     intent.putExtra("cookies", service.cookieString);
                     startActivity(intent);
+                    LoginActivity.this.finish();
                 } else {
                     buildDialog(this).show();
                     return;
