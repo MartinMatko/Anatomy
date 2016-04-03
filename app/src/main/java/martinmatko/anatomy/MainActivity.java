@@ -1,5 +1,6 @@
 package martinmatko.anatomy;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -7,12 +8,14 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.StateListDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
 import android.widget.Button;
@@ -55,9 +58,12 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             categories = extras.getString("categories");
         }
         test.categories = categories;
+        if (!test.start(categories)){//problem with getting first question
+            buildDialog(this).show();
+            return;
+        }
         setContentView(R.layout.activity_main);
         drawView = (DrawView) findViewById(R.id.drawView);
-        test.start(categories);
         drawView.question = test.questions.get(numberOfQuestion);
         question = drawView.question;
         TextView captionView = (TextView) findViewById(R.id.captionView);
@@ -112,11 +118,13 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             } else {
                 button.setText(option.getName());
             }
+            //button.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             button.setTag(option.getIdentifier());
             button.setButtonDrawable(new StateListDrawable());
-            button.setGravity(View.TEXT_ALIGNMENT_CENTER);
-            button.setPadding(20, 5, 5, 5);
-            options.addView(button, width, 150);
+            //button.setGravity(View.TEXT_ALIGNMENT_CENTER);
+            button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
+            button.setPadding(30, 0, 0, 0);
+            options.addView(button, width, 120);
         }
         invalidateOptionsMenu();
     }
@@ -161,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
     public void onNextClick(View v) {
         boolean isWithoutOptions = (question.getOptions().size() == 0);
-        String answer = test.postAnswer(question.getAnswer(), question.getCorrectAnswer(), question.isD2T(), isWithoutOptions, endTime - startTime);
+        String answer = test.postAnswer(question, endTime - startTime);
 
         PostAsyncTask task = new PostAsyncTask(test);
         if (numberOfQuestion < 10) {
@@ -242,8 +250,8 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     public AlertDialog.Builder buildDialog(Context c) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(c);
-        builder.setTitle("Connection failed.");
-        builder.setMessage("Problem with connecting to practiceanatomy.com");
+        builder.setTitle("Error");
+        builder.setMessage("Unfortunately there has been an error in the app.");
 
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 

@@ -17,7 +17,27 @@ public class Question {
     private Term correctAnswer;
     private Term answer;
     private List<Term> options;
+
+    public List<Term> getTerms() {
+        return terms;
+    }
+
+    public void setTerms(List<Term> terms) {
+        this.terms = terms;
+    }
+
+    private List<Term> terms;
     private boolean isD2T;
+    private boolean isRandomWithoutOptions = false;
+
+    public boolean isRandomWithoutOptions() {
+        return isRandomWithoutOptions;
+    }
+
+    public void setIsRandomWithoutOptions(boolean isRandomWithoutOptions) {
+        this.isRandomWithoutOptions = isRandomWithoutOptions;
+    }
+
 
     public String getFlashcardId() {
         return flashcardId;

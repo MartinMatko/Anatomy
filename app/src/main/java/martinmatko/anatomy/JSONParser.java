@@ -29,12 +29,18 @@ public class JSONParser {
         String color = "";
         try {
             String directionOfQuestion = context.getString("direction");
-            String nameOfCorrectAnswer = context.getJSONObject("term").getString("name");
+            String nameOfCorrectAnswer = context.getJSONObject("term").getString("name").split(";")[0];;
             String identifierOfCorrectAnswer = context.getJSONObject("term").getString("identifier");
             String idOfCorrectAnswer = context.getJSONObject("term").getString("id");
             Term correctAnswer = new Term(nameOfCorrectAnswer, identifierOfCorrectAnswer, idOfCorrectAnswer);
             question.setCorrectAnswer(correctAnswer);
             question.setFlashcardId(context.getString("id"));
+            if (context.has("practice_meta")){
+                JSONObject meta = context.getJSONObject("practice_meta");
+                if (meta.has("test")){
+                    question.setIsRandomWithoutOptions(meta.getString("test").equals("random_without_options"));
+                }
+            }
             if (context.has("options")) {
                 question.setD2T(directionOfQuestion.equals("d2t"));
             } else {
@@ -52,12 +58,15 @@ public class JSONParser {
                 for (int i = 0; i < options.length(); i++) {
                     JSONObject option = options.getJSONObject(i);
                     JSONObject termJSON = option.getJSONObject("term");
-                    String name = termJSON.getString("name").split(",")[0];
+                    String name = termJSON.getString("name").split(";")[0];
                     Term term = new Term(name, termJSON.getString("identifier"), termJSON.getString("id"));
                     term.setColor(Color.parseColor(Constants.COLORS.get(i)));
                     //term.setItemId(termJSON.getString("item_id"));
                     terms.add(term);
                 }
+            }
+            else {
+
             }
             question.setOptions(terms);
             // not possible to use foreach cycle

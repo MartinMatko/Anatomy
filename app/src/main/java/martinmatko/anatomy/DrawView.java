@@ -115,10 +115,12 @@ public class DrawView extends View {
             float heightScale = this.getWidth() / (bordersOfSelectedArea.right - bordersOfSelectedArea.left);
             float widthScale = this.getHeight() / (bordersOfSelectedArea.bottom - bordersOfSelectedArea.top);
             float minValue = heightScale < widthScale ? heightScale : widthScale;
+            minValue = minValue < 2 ? minValue : 2;
 
             if (totalScaleFactor < minValue) {
                 h.postDelayed(r, FRAME_RATE);
             }
+            totalScaleFactor = 1f;
         }
         drawBodyParts();
         if (mode.equals(Mode.CONFIRM)) {
@@ -145,9 +147,9 @@ public class DrawView extends View {
                     }
                     break;
                 case NOACTION:
-                    scaleFactor = 1.f;
-                    pointOfZoomX = 0;
-                    pointOfZoomY = 0;
+//                    scaleFactor = 1.f;
+//                    pointOfZoomX = 0;
+//                    pointOfZoomY = 0;
                     break;
                 case CONFIRM:
                     //centering area of elected items
@@ -172,11 +174,10 @@ public class DrawView extends View {
                 case FINISH:
                     setColorOfWrongAnswer();
                     setColorOfRightAnswer();
+                    scaleFactor = question.computeScaleFactorOfPicture(this.getWidth(), this.getHeight());
                     matrix.setTranslate(this.getWidth() / 2 - x1, this.getHeight() / 2 - y1);
-//                    float heightScale = this.getWidth()/(question.borders.right - question.borders.left);
-//                    float widthScale = this.getHeight() / (question.borders.bottom - question.borders.top);
-//                    float minValue = heightScale > widthScale ? heightScale : widthScale;
-                    matrix.postScale(1 / totalScaleFactor, 1 / totalScaleFactor, this.getWidth() / 2, this.getHeight() / 2);
+                    matrix.postScale(scaleFactor, scaleFactor, this.getWidth() / 2, this.getHeight() / 2);
+                    scaleFactor = 1.f;
                     mode = Mode.NOACTION;
             }
             RectF originalBorders = new RectF(question.borders);
@@ -257,10 +258,8 @@ public class DrawView extends View {
                 if (Math.abs(translateX) + Math.abs(translateY) > 10 && mode != Mode.PINCHTOZOOM)
             {
                 mode = Mode.DRAG;
-                //canvas.save();
-                canvas.scale(1, 1);
-                //canvas.scale(.5f, .5f);
-                //canvas.restore();
+                canvas.translate(translateX, translateY);
+                invalidate();
                 System.out.println("ooo");
                 invalidate();
             }
@@ -293,7 +292,7 @@ public class DrawView extends View {
                 if (question.isD2T()) {
                     if (selectedParts.size() != 1) {
                         scaleFactor = 2;
-                        totalScaleFactor += scaleFactor;
+                        totalScaleFactor += scaleFactor-1;
                         mode = Mode.SELECT;
                     } else mode = Mode.FINISH;
                 } else {
@@ -304,12 +303,8 @@ public class DrawView extends View {
                 //mode = Mode.TAPTOZOOM;
             }
             if (mode == Mode.DRAG) {
-                if (question.isD2T()) {
-                    mode = Mode.SELECT;
-                } else {
-                    mode = Mode.NOACTION;
+                mode = Mode.NOACTION;
                 }
-            }
             x = event.getX();
             y = event.getY();
             pointOfZoomX = x;
@@ -346,7 +341,6 @@ public class DrawView extends View {
                 return true;
             }
         }
-        invalidate();
         return true;
     }
 
