@@ -20,6 +20,7 @@ public class JSONParser {
 
 
     public Question getQuestion(JSONObject context, JSONObject flashcard) {
+        List<Term> optionsTerms = new ArrayList<>();
         List<Term> terms = new ArrayList<>();
         Question question = new Question();
         String content;
@@ -29,22 +30,23 @@ public class JSONParser {
         String color = "";
         try {
             String directionOfQuestion = context.getString("direction");
-            String nameOfCorrectAnswer = context.getJSONObject("term").getString("name").split(";")[0];;
+            String nameOfCorrectAnswer = context.getJSONObject("term").getString("name").split(";")[0];
+            ;
             String identifierOfCorrectAnswer = context.getJSONObject("term").getString("identifier");
             String idOfCorrectAnswer = context.getJSONObject("term").getString("id");
             Term correctAnswer = new Term(nameOfCorrectAnswer, identifierOfCorrectAnswer, idOfCorrectAnswer);
             question.setCorrectAnswer(correctAnswer);
             question.setFlashcardId(context.getString("id"));
-            if (context.has("practice_meta")){
+            if (context.has("practice_meta")) {
                 JSONObject meta = context.getJSONObject("practice_meta");
-                if (meta.has("test")){
+                if (meta.has("test")) {
                     question.setIsRandomWithoutOptions(meta.getString("test").equals("random_without_options"));
                 }
             }
             if (context.has("options")) {
-                question.setD2T(directionOfQuestion.equals("d2t"));
+                question.setT2D(directionOfQuestion.equals("t2d"));
             } else {
-                question.setD2T(true);
+                question.setT2D(true);
             }
             JSONObject data = flashcard.getJSONObject("data");
             content = data.getString("content");
@@ -61,14 +63,20 @@ public class JSONParser {
                     String name = termJSON.getString("name").split(";")[0];
                     Term term = new Term(name, termJSON.getString("identifier"), termJSON.getString("id"));
                     term.setColor(Color.parseColor(Constants.COLORS.get(i)));
-                    //term.setItemId(termJSON.getString("item_id"));
+                    optionsTerms.add(term);
+                }
+            } else {
+                JSONArray options = data.getJSONArray("flashcards");
+                for (int i = 0; i < options.length(); i++) {
+                    JSONObject option = options.getJSONObject(i);
+                    JSONObject termJSON = option.getJSONObject("term");
+                    String name = termJSON.getString("name").split(";")[0];
+                    Term term = new Term(name, termJSON.getString("identifier"), termJSON.getString("id"));
                     terms.add(term);
                 }
             }
-            else {
-
-            }
-            question.setOptions(terms);
+            question.setOptions(optionsTerms);
+            question.setTerms(terms);
             // not possible to use foreach cycle
             for (int i = 0; i < paths.length(); i++) {
                 JSONObject path = paths.getJSONObject(i);
@@ -81,10 +89,10 @@ public class JSONParser {
                 String line = path.getString("d");
                 if (path.has("term")) {
                     String identifier = path.getString("term");
-                    if (isInD2TOptions(question, identifier)) {
+                    if (isInT2DOptions(question, identifier)) {
 
                         PartOfBody partOfBody = new PartOfBody(parser.doPath(line), paint, path.getString("term"));
-                        for (Term option : terms) {
+                        for (Term option : optionsTerms) {
                             if (identifier.equals(option.getIdentifier())) {
                                 option.getPartOfBodyList().add(partOfBody);
                                 partOfBody.getPaint().setColor(option.getColor());
@@ -101,7 +109,7 @@ public class JSONParser {
                         }
                         color = toGrayScale(color);
                         paint.setColor(Color.parseColor(color));
-                        if (!question.isD2T() && partOfBody.getIdentifier().equals(question.getCorrectAnswer().getIdentifier())) {
+                        if (!question.isT2D() && partOfBody.getIdentifier().equals(question.getCorrectAnswer().getIdentifier())) {
                             paint.setColor(Color.parseColor(Constants.COLORS.get(1)));
                         }
                         partOfBody.setPaint(paint);
@@ -126,8 +134,8 @@ public class JSONParser {
         return question;
     }
 
-    public boolean isInD2TOptions(Question question, String identifier) {
-        if (!question.isD2T())
+    public boolean isInT2DOptions(Question question, String identifier) {
+        if (!question.isT2D())
             return false;
         if (question.getOptions() != null) {
             for (Term option : question.getOptions()) {

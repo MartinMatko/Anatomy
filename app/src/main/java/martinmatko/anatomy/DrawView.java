@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Region;
-import android.media.Image;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -17,7 +16,6 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +37,7 @@ public class DrawView extends View {
     Mode mode = Mode.INITIAL;
     private float pointOfZoomX = 0;
     private float pointOfZoomY = 0;
-    private boolean isD2T = true;
+
     private Canvas canvas = new Canvas();
     private float scaleFactor = 1.f;
     private float zoomScaleFactor = 1.f;
@@ -115,12 +113,12 @@ public class DrawView extends View {
             float heightScale = this.getWidth() / (bordersOfSelectedArea.right - bordersOfSelectedArea.left);
             float widthScale = this.getHeight() / (bordersOfSelectedArea.bottom - bordersOfSelectedArea.top);
             float minValue = heightScale < widthScale ? heightScale : widthScale;
-            minValue = minValue < 2 ? minValue : 2;
+            minValue = minValue < 2 ? minValue : 2f;
 
             if (totalScaleFactor < minValue) {
                 h.postDelayed(r, FRAME_RATE);
             }
-            totalScaleFactor = 1f;
+            //totalScaleFactor = 1f;
         }
         drawBodyParts();
         if (mode.equals(Mode.CONFIRM)) {
@@ -164,7 +162,7 @@ public class DrawView extends View {
                     break;
                 case TAPTOZOOM:
                     matrix.setScale(scaleFactor, scaleFactor, pointOfZoomX, pointOfZoomY);
-                    if (question.isD2T()) {
+                    if (question.isT2D()) {
                         mode = Mode.SELECT;
                     } else {
                         mode = Mode.NOACTION;
@@ -182,10 +180,10 @@ public class DrawView extends View {
             }
             RectF originalBorders = new RectF(question.borders);
             matrix.mapRect(originalBorders);
-            float displayHeight = this.getHeight()/5;
-            float displayWidth = this.getWidth()/5;
+            float displayHeight = this.getHeight() / 5;
+            float displayWidth = this.getWidth() / 5;
             RectF bordersOfPicture = originalBorders;
-            if (mode != Mode.DRAG && bordersOfPicture.bottom > displayHeight && bordersOfPicture.right > displayWidth && bordersOfPicture.left < displayWidth*4 && bordersOfPicture.top < displayHeight*4){
+            if (mode != Mode.DRAG && bordersOfPicture.bottom > displayHeight && bordersOfPicture.right > displayWidth && bordersOfPicture.left < displayWidth * 4 && bordersOfPicture.top < displayHeight * 4) {
                 question.borders = originalBorders;
                 for (PartOfBody partOfBody : question.getBodyParts()) {
                     Path path = new Path();
@@ -196,8 +194,7 @@ public class DrawView extends View {
                     partOfBody.setPath(path);
                     canvas.drawPath(path, partOfBody.getPaint());
                 }
-            }
-            else {
+            } else {
                 for (PartOfBody partOfBody : question.getBodyParts()) {
                     canvas.drawPath(partOfBody.getPath(), partOfBody.getPaint());
                 }
@@ -212,7 +209,7 @@ public class DrawView extends View {
             //used for debugging - showing path boundaries
 //            for (PartOfBody partOfBody : question.getBodyParts()) {
 //                if (partOfBody.getIdentifier() != null) {
-//                    if (partOfBody.getIdentifier().equals(question.getCorrectAnswer().getIdentifier()) || isD2T) {
+//                    if (partOfBody.getIdentifier().equals(question.getCorrectAnswer().getIdentifier()) || isT2D) {
 //                        Paint p = new Paint();
 //                        p.setStyle(Paint.Style.STROKE);
 //                        p.setStrokeWidth(1);
@@ -255,15 +252,13 @@ public class DrawView extends View {
                 previousTranslateY = translateY;
                 translateX = event.getX() - getX() + startX;
                 translateY = event.getY() - getY() + startY;
-                if (Math.abs(translateX) + Math.abs(translateY) > 10 && mode != Mode.PINCHTOZOOM)
-            {
-                mode = Mode.DRAG;
-                canvas.translate(translateX, translateY);
-                invalidate();
-                System.out.println("ooo");
-                invalidate();
-            }
-                else if (mode.equals(Mode.PINCHTOZOOM) ){
+                if (Math.abs(translateX) + Math.abs(translateY) > 10 && mode != Mode.PINCHTOZOOM) {
+                    mode = Mode.DRAG;
+                    canvas.translate(translateX, translateY);
+                    invalidate();
+                    System.out.println("ooo");
+                    invalidate();
+                } else if (mode.equals(Mode.PINCHTOZOOM)) {
                     canvas.translate(translateX, translateY);
                     //canvas.scale(.5f, .5f);
                     System.out.println("zooooooooooooooooooom");
@@ -289,10 +284,10 @@ public class DrawView extends View {
         if (event.getAction() == MotionEvent.ACTION_UP) {
             if (mode == Mode.INITIAL) {
                 showButtons();
-                if (question.isD2T()) {
+                if (question.isT2D()) {
                     if (selectedParts.size() != 1) {
                         scaleFactor = 2;
-                        totalScaleFactor += scaleFactor-1;
+                        totalScaleFactor += scaleFactor - 1;
                         mode = Mode.SELECT;
                     } else mode = Mode.FINISH;
                 } else {
@@ -303,15 +298,19 @@ public class DrawView extends View {
                 //mode = Mode.TAPTOZOOM;
             }
             if (mode == Mode.DRAG) {
-                mode = Mode.NOACTION;
+                if (question.isT2D()) {
+                    mode = Mode.SELECT;
+                } else {
+                    mode = Mode.NOACTION;
                 }
+            }
             x = event.getX();
             y = event.getY();
             pointOfZoomX = x;
             pointOfZoomY = y;
             switch (mode) {
                 case PINCHTOZOOM: {
-                    if (question.isD2T()) {
+                    if (question.isT2D()) {
                         //mode = Mode.SELECT;
                     }
                     break;
@@ -341,6 +340,7 @@ public class DrawView extends View {
                 return true;
             }
         }
+        invalidate();
         return true;
     }
 
@@ -376,6 +376,25 @@ public class DrawView extends View {
         }
 
         for (Term option : question.getOptions()) {
+            //oznacena odpoved
+            RectF button = option.getButton();
+            if (button != null && button.contains(x, y)) {
+                for (PartOfBody partOfBody : question.getBodyParts()) {
+                    Paint paint = partOfBody.getPaint();
+                    if (option.getIdentifier().equals(partOfBody.getIdentifier())) {
+                        paint.setColor(getResources().getColor(R.color.wrongAnswer));
+                        question.setAnswer(option);
+                        host.setAnswersInOptions(option.getIdentifier());
+                    } else {
+//                        int color = paint.getColor();
+//                        String colorString = new JSONParser().toGrayScale(String.format("#%06X" + "\n", 0xFFFFFF & color));
+//                        paint.setColor(Color.parseColor(colorString));
+//                        partOfBody.setPaint(paint);
+                    }
+                }
+            }
+        }
+        for (Term option : question.getTerms()) {
             //oznacena odpoved
             RectF button = option.getButton();
             if (button != null && button.contains(x, y)) {
@@ -452,7 +471,6 @@ public class DrawView extends View {
         mode = Mode.INITIAL;
         pointOfZoomX = 0;
         pointOfZoomY = 0;
-        isD2T = true;
         canvas = new Canvas();
         scaleFactor = 1.f;
         zoomScaleFactor = 1.f;
@@ -497,6 +515,13 @@ public class DrawView extends View {
             for (Term term : options) {
                 if (term.getIdentifier().equals(partOfBody.getIdentifier())) {
                     term.setButton(button);
+                }
+            }
+            if (options.size() == 0) {
+                for (Term term : question.getTerms()) {
+                    if (term.getIdentifier().equals(partOfBody.getIdentifier())) {
+                        term.setButton(button);
+                    }
                 }
             }
             angle += (2 * Math.PI) / selectedParts.size();

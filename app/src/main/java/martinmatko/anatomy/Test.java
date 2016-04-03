@@ -32,7 +32,7 @@ public class Test {
         if (categories.isEmpty()) {
             context = service.get(Constants.SERVER_NAME + "flashcards/practice/?avoid=[]&categories=[]&contexts=[]&limit=2&types=[]&without_contexts=1");
             try {
-                if (context.has("error")){
+                if (context.has("error")) {
                     return false;
                 }
                 context = context.getJSONObject("data");
@@ -44,7 +44,7 @@ public class Test {
             String url = Constants.SERVER_NAME + "flashcards/practice/?avoid=[]&categories=[" + categories + "]&contexts=[]&limit=2&types=[]&without_contexts=1";
             context = service.get(url);
             try {
-                if (context.has("error")){
+                if (context.has("error")) {
                     return false;
                 }
                 context = context.getJSONObject("data");
@@ -73,11 +73,10 @@ public class Test {
         return true;
     }
 
-    public String convertCategoriesToUrl(ArrayList<String> systemCategories, ArrayList<String> bodyCategories){
-        if (systemCategories.isEmpty() && bodyCategories.isEmpty()){
+    public String convertCategoriesToUrl(ArrayList<String> systemCategories, ArrayList<String> bodyCategories) {
+        if (systemCategories.isEmpty() && bodyCategories.isEmpty()) {
             return "";
-        }
-        else {
+        } else {
             StringBuilder systemCategoriesTags = new StringBuilder();
             for (String tag : systemCategories) {
                 systemCategoriesTags.append("\"" + tag + "\",");
@@ -97,8 +96,7 @@ public class Test {
 
                 bodyCategoriesTags.deleteCharAt(bodyCategoriesTags.length() - 1);
                 tags = tags + ",[" + bodyCategoriesTags.toString() + "]";
-            }
-            else if (systemCategoriesTags.length() == 0) {
+            } else if (systemCategoriesTags.length() == 0) {
 
                 bodyCategoriesTags.deleteCharAt(bodyCategoriesTags.length() - 1);
                 tags = tags + "[" + bodyCategoriesTags.toString() + "]";
@@ -115,7 +113,7 @@ public class Test {
 
     public String postAnswer(Question question, long timeOfAnswer) {
         JSONObject response = new JSONObject();
-        String direction = question.isD2T() ? "d2t" : "t2d";
+        String direction = question.isT2D() ? "t2d" : "d2t";
 
         JSONObject answer = new JSONObject();
         JSONArray answers = new JSONArray();
@@ -124,7 +122,7 @@ public class Test {
             if (question.getAnswer() != null) {
                 answer.put("flashcard_answered_id", Integer.parseInt(question.getCorrectAnswer().getId()));
                 JSONArray optionIds = new JSONArray();
-                for (Term option : question.getOptions()){
+                for (Term option : question.getOptions()) {
                     optionIds.put(Integer.parseInt(option.getId()));
                 }
                 answer.put("option_ids", optionIds);

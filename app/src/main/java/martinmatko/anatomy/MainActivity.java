@@ -1,6 +1,5 @@
 package martinmatko.anatomy;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.StateListDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
@@ -24,19 +22,17 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
 public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
 
     private static Context context;
     public Test test = new Test();
     public Question question;
     public int goodAnswers = 0, numberOfQuestion = 0;
+    public int height;
     DrawView drawView;
     long startTime;
     long endTime;
     private int width;
-    public int height;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             categories = extras.getString("categories");
         }
         test.categories = categories;
-        if (!test.start(categories)){//problem with getting first question
+        if (!test.start(categories)) {//problem with getting first question
             buildDialog(this).show();
             return;
         }
@@ -68,16 +64,16 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         question = drawView.question;
         TextView captionView = (TextView) findViewById(R.id.captionView);
         captionView.setText(question.getCaption());
-        if (question.isD2T()) {
-            getNextD2TdQuestion();
+        if (question.isT2D()) {
+            getNextT2DQuestion();
         } else {
-            getNextt2dQuestion();
+            getNextD2TQuestion();
         }
         numberOfQuestion++;
     }
 
     //Vyber
-    public void getNextD2TdQuestion() {
+    public void getNextT2DQuestion() {
         drawView.isHighlighted = false;
         Button highlightButton = (Button) findViewById(R.id.highlightButtonView);
         highlightButton.setVisibility(View.GONE);
@@ -96,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     }
 
     //Co je zvýrazněno?
-    public void getNextt2dQuestion() {
+    public void getNextD2TQuestion() {
         Button highlightButton = (Button) findViewById(R.id.highlightButtonView);
         highlightButton.setVisibility(View.VISIBLE);
         if (question != null) {
@@ -106,14 +102,14 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         }
     }
 
-    public void setOptions(boolean isD2t) {
+    public void setOptions(boolean isT2D) {
         RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
         options.setOnCheckedChangeListener(this);
         options.setBackgroundColor(getResources().getColor(R.color.optionsBackround));
         RadioButton button;
         for (Term option : question.getOptions()) {
             button = new RadioButton(this);
-            if (isD2t) {
+            if (isT2D) {
                 button.setBackgroundColor(option.getColor());
             } else {
                 button.setText(option.getName());
@@ -126,7 +122,6 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             button.setPadding(30, 0, 0, 0);
             options.addView(button, width, 120);
         }
-        invalidateOptionsMenu();
     }
 
     public void setAnswersInOptions(String identifier) {
@@ -150,12 +145,46 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                     goodAnswers++;
                 }
             }
-            if (question.isD2T()) {
+            if (question.isT2D() && question.getOptions().size() != 0) {
                 button.setText(question.getOptions().get(i).getName());
             }
         }
         drawView.mode = DrawView.Mode.FINISH;
         drawView.selectedParts.add(new PartOfBody(null, null, identifier.toString()));
+        if (question.getOptions().size() == 0) {
+            RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
+            options.removeAllViews();
+            options.setBackgroundColor(getResources().getColor(R.color.optionsBackround));
+            RadioButton button = new RadioButton(this);
+            button.setEnabled(false);
+            button.setBackgroundColor(getResources().getColor(R.color.rightAnswer));
+            button.setText(question.getCorrectAnswer().getName());
+            button.setTag(question.getCorrectAnswer().getIdentifier());
+            button.setButtonDrawable(new StateListDrawable());
+            button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
+            button.setPadding(30, 0, 0, 0);
+            options.addView(button, width, 120);
+            question.setAnswer(question.getCorrectAnswer());
+            if (!identifier.equals(question.getCorrectAnswer().getIdentifier())) {
+                RadioButton buttonOfIncorrectAnswer = new RadioButton(this);
+                buttonOfIncorrectAnswer.setEnabled(false);
+                buttonOfIncorrectAnswer.setBackgroundColor(getResources().getColor(R.color.wrongAnswer));
+                Term answer = null;
+                for (Term term : question.getTerms()) {
+                    if (identifier.equals(term.getIdentifier())) {
+                        answer = term;
+                        break;
+                    }
+                }
+                buttonOfIncorrectAnswer.setText(answer.getName());
+                buttonOfIncorrectAnswer.setTag(answer.getIdentifier());
+                buttonOfIncorrectAnswer.setButtonDrawable(new StateListDrawable());
+                buttonOfIncorrectAnswer.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
+                buttonOfIncorrectAnswer.setPadding(30, 0, 0, 0);
+                options.addView(buttonOfIncorrectAnswer, width, 120);
+                question.setAnswer(answer);
+            }
+        }
         drawView.invalidate();
         Button v = (Button) findViewById(R.id.nextButtonView);
         v.setText(R.string.continueToNext);
@@ -182,7 +211,9 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                     } else throw new InterruptedException();
                 } catch (InterruptedException e) {
                     buildDialog(this).show();
+                    this.finish();
                     e.printStackTrace();
+                    return;
                 }
             }
             question = test.questions.get(numberOfQuestion);
@@ -196,10 +227,10 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             drawView.clearVariables();
             drawView.question = question;
             drawView.invalidate();
-            if (question.isD2T()) {
-                getNextD2TdQuestion();
+            if (question.isT2D()) {
+                getNextT2DQuestion();
             } else {
-                getNextt2dQuestion();
+                getNextD2TQuestion();
             }
             numberOfQuestion++;
             startTime = System.currentTimeMillis();

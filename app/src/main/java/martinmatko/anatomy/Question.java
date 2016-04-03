@@ -17,6 +17,12 @@ public class Question {
     private Term correctAnswer;
     private Term answer;
     private List<Term> options;
+    private List<Term> terms;
+    private boolean isT2D;
+    private boolean isRandomWithoutOptions = false;
+    private String flashcardId;
+    public Question() {
+    }
 
     public List<Term> getTerms() {
         return terms;
@@ -26,10 +32,6 @@ public class Question {
         this.terms = terms;
     }
 
-    private List<Term> terms;
-    private boolean isD2T;
-    private boolean isRandomWithoutOptions = false;
-
     public boolean isRandomWithoutOptions() {
         return isRandomWithoutOptions;
     }
@@ -38,18 +40,12 @@ public class Question {
         this.isRandomWithoutOptions = isRandomWithoutOptions;
     }
 
-
     public String getFlashcardId() {
         return flashcardId;
     }
 
     public void setFlashcardId(String flashcardId) {
         this.flashcardId = flashcardId;
-    }
-
-    private String flashcardId;
-
-    public Question() {
     }
 
     public Term getAnswer() {
@@ -68,12 +64,12 @@ public class Question {
         this.correctAnswer = correctAnswer;
     }
 
-    public boolean isD2T() {
-        return isD2T;
+    public boolean isT2D() {
+        return isT2D;
     }
 
-    public void setD2T(boolean isD2T) {
-        this.isD2T = isD2T;
+    public void setT2D(boolean isD2T) {
+        this.isT2D = isD2T;
     }
 
     public float getScaleFactorOfPicture() {
@@ -143,7 +139,7 @@ public class Question {
                 return true;
             }
         }
-        if (options.size() == 0 && isD2T && identifier != null) { // for free choice questions
+        if (options.size() == 0 && isT2D && identifier != null) { // for free choice questions
             return true;
         }
         return false;
