@@ -25,6 +25,7 @@ public class Term {
         this.id = id;
         partOfBodyList = new ArrayList<>();
     }
+
     public int getColor() {
         return color;
     }

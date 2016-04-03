@@ -1,8 +1,6 @@
 package martinmatko.anatomy;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -18,9 +16,9 @@ public class ProfileActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         String firstName = "";
-        String surname= "";
-        String email= "";
-        String userName= "";
+        String surname = "";
+        String email = "";
+        String userName = "";
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             firstName = extras.getString("first_name");
@@ -28,7 +26,7 @@ public class ProfileActivity extends AppCompatActivity {
             email = extras.getString("email");
             userName = extras.getString("username");
         }
-        if (!firstName.isEmpty()){
+        if (!firstName.isEmpty()) {
             TextView view = (TextView) findViewById(R.id.textViewFirstName);
             view.setText(firstName);
             view = (TextView) findViewById(R.id.textViewSurname);

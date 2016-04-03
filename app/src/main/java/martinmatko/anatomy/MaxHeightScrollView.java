@@ -12,8 +12,8 @@ import android.widget.ScrollView;
  */
 public class MaxHeightScrollView extends ScrollView {
 
-    private int maxHeight;
     private final int defaultHeight = 400;
+    private int maxHeight;
 
     public MaxHeightScrollView(Context context) {
         super(context);

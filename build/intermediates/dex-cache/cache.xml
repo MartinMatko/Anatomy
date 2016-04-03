@@ -30,6 +30,13 @@
         <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\classes-a5c8430278b38247d8fef396622263573a8b391f.jar" />
     </item>
     <item
+        jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.github.bluejamesbond\textjustify-android\2.1.1\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="01d40085e187622594533159e2e21990edd60837">
+        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\classes-8889a4f95c66301957e2e4985ab58bb18e0e261c.jar" />
+    </item>
+    <item
         jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.android.support\cardview-v7\22.2.0\classes.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -42,13 +49,6 @@
         revision="21.1.2"
         sha1="1ee588ff2c4daf7b97c1cbf922a6c7f027285c2f">
         <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\classes-42fa3a5146bc9ddaeee091e8c7f12b811321f642.jar" />
-    </item>
-    <item
-        jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.github.bluejamesbond\textjustify-android\2.1.1\classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="01d40085e187622594533159e2e21990edd60837">
-        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\classes-8889a4f95c66301957e2e4985ab58bb18e0e261c.jar" />
     </item>
     <item
         jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\22.2.0\classes.jar"

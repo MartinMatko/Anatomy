@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
         if (extras != null) {
             String value = extras.getString("cookies");
             service.setUpCookies(value);
-            if (extras.getString("automaticLogin", "").equals("true")){
+            if (extras.getString("automaticLogin", "").equals("true")) {
                 switch (preferences.getString("preferredLogin", "")) {
                     case "google":
                         onGoogleClicked(null);

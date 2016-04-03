@@ -39,12 +39,12 @@ public class MenuActivity extends AppCompatActivity {
     public Test test = new Test();
     public ArrayList<String> systemCategories = new ArrayList();
     public ArrayList<String> bodyCategories = new ArrayList();
+    JSONObject userData = null;
+    Menu menu;
     private boolean isUserSigned;
     private String cookies = "";
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private SharedPreferences preferences;
-    JSONObject userData = null;
-    Menu menu;
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -229,8 +229,7 @@ public class MenuActivity extends AppCompatActivity {
                     intent.putExtra("last_name", userData.getString("last_name"));
                     intent.putExtra("email", userData.getString("email"));
                     intent.putExtra("username", userData.getString("username"));
-                }
-                catch (JSONException e){
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 startActivity(intent);
