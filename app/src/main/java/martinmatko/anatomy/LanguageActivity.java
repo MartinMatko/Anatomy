@@ -37,7 +37,7 @@ public class LanguageActivity extends AppCompatActivity implements RadioGroup.On
                 config.locale = new Locale("cs", "CZ");
                 getBaseContext().getResources().updateConfiguration(config,
                         getBaseContext().getResources().getDisplayMetrics());
-                Constants.SERVER_NAME = "https://staging.anatom.cz/";
+                Constants.SERVER_NAME = Constants.SERVER_NAME_CZ;
                 editor.putString("language", "cs");
                 break;
             case R.id.english:
@@ -45,7 +45,7 @@ public class LanguageActivity extends AppCompatActivity implements RadioGroup.On
                 config1.locale = new Locale("en", "US");
                 getBaseContext().getResources().updateConfiguration(config1,
                         getBaseContext().getResources().getDisplayMetrics());
-                Constants.SERVER_NAME = "https://staging.practiceanatomy.com/";
+                Constants.SERVER_NAME = Constants.SERVER_NAME_EN;
                 editor.putString("language", "en");
                 break;
         }

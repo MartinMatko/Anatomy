@@ -28,14 +28,29 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="martinmatko.anatomy.MenuActivity" />
+        </activity>
         <activity android:name=".AboutActivity" />
         <activity android:name=".LanguageActivity" />
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".RegisterActivity"></activity>
+            android:label="@string/title_activity_login" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="martinmatko.anatomy.MenuActivity" /></activity>
+        <activity android:name=".RegisterActivity" />
+        <activity
+            android:name=".ProfileActivity"
+            android:label="@string/profile"
+            android:parentActivityName=".MenuActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="martinmatko.anatomy.MenuActivity" />
+        </activity>
     </application>
 
 </manifest>

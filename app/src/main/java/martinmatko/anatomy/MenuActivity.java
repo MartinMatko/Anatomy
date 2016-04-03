@@ -65,26 +65,28 @@ public class MenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-
+        Constants.SERVER_NAME = Constants.SERVER_NAME_EN;
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         if (preferences.getString("language", "").equals("cs")) {
             Configuration config = new Configuration();
             config.locale = new Locale("cs", "CZ");
             getBaseContext().getResources().updateConfiguration(config,
                     getBaseContext().getResources().getDisplayMetrics());
-            Constants.SERVER_NAME = "https://staging.anatom.cz/";
+            Constants.SERVER_NAME = Constants.SERVER_NAME_CZ;
         } else if (preferences.getString("language", "").equals("en")) {
             Configuration config1 = new Configuration();
             config1.locale = new Locale("en", "US");
             getBaseContext().getResources().updateConfiguration(config1,
                     getBaseContext().getResources().getDisplayMetrics());
-            Constants.SERVER_NAME = "https://staging.practiceanatomy.com/";
+            Constants.SERVER_NAME = Constants.SERVER_NAME_EN;
         }
 
         context = getApplicationContext();
 
         if (!isNetworkStatusAvailable(getApplicationContext())) {
             buildDialog(this).show();
+            this.finish();
+            return;
         }
         super.onCreate(savedInstanceState);
 
@@ -214,6 +216,7 @@ public class MenuActivity extends AppCompatActivity {
             case R.id.about:
                 intent = new Intent(this, AboutActivity.class);
                 startActivity(intent);
+                MenuActivity.this.finish();
                 break;
             case R.id.language:
                 intent = new Intent(this, LanguageActivity.class);
@@ -249,6 +252,9 @@ public class MenuActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
                 break;
+            case R.id.home:
+                this.finish();
+                return true;
         }
         //MenuActivity.this.finish();
         return super.onOptionsItemSelected(item);

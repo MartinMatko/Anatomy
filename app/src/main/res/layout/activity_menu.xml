@@ -27,7 +27,8 @@
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize" />
+            android:layout_height="?attr/actionBarSize"
+            app:tabIndicatorColor="@color/white"/>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -43,9 +44,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        app:fab_addButtonColorNormal="@color/button"
-        app:fab_addButtonColorPressed="@color/buttonPressed"
-        app:fab_addButtonPlusIconColor="@color/black"
+        app:fab_addButtonColorNormal="@color/app_primary"
+        app:fab_addButtonColorPressed="@color/app_primary_dark"
+        app:fab_colorPressed="@color/app_primary_dark"
+        app:fab_colorNormal="@color/app_primary"
         app:fab_labelStyle="@style/menu_labels_style"
         android:layout_marginBottom="16dp"
         android:layout_marginRight="16dp"
@@ -56,9 +58,10 @@
             android:onClick="onRandomTestClicked"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:fab_icon="@drawable/play"
             app:fab_title="@string/startTest"
-            app:fab_addButtonColorNormal="@color/button"
-            app:fab_addButtonColorPressed="@color/buttonPressed"
+            app:fab_colorPressed="@color/app_primary_dark"
+            app:fab_colorNormal="@color/app_primary"
             />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
@@ -67,9 +70,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:fab_title="@string/startCategoriesTest"
-            app:fab_colorPressed="@color/white_pressed"
-            app:fab_addButtonColorNormal="@color/button"
-            app:fab_addButtonColorPressed="@color/buttonPressed"/>
+            app:fab_colorPressed="@color/app_primary_dark"
+            app:fab_colorNormal="@color/app_primary" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 

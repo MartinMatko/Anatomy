@@ -22,16 +22,19 @@ public class Test {
     boolean isPOSTCompleted = true;
     String categories;
 
-    public void start(String categories) {
-        getFirstQuestion(categories);
+    public boolean start(String categories) {
+        return getFirstQuestion(categories);
 
     }
 
-    public void getFirstQuestion(String categories) {
+    public boolean getFirstQuestion(String categories) {
         JSONObject context;
         if (categories.isEmpty()) {
             context = service.get(Constants.SERVER_NAME + "flashcards/practice/?avoid=[]&categories=[]&contexts=[]&limit=2&types=[]&without_contexts=1");
             try {
+                if (context.has("error")){
+                    return false;
+                }
                 context = context.getJSONObject("data");
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -41,6 +44,9 @@ public class Test {
             String url = Constants.SERVER_NAME + "flashcards/practice/?avoid=[]&categories=[" + categories + "]&contexts=[]&limit=2&types=[]&without_contexts=1";
             context = service.get(url);
             try {
+                if (context.has("error")){
+                    return false;
+                }
                 context = context.getJSONObject("data");
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -64,6 +70,7 @@ public class Test {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return true;
     }
 
     public String convertCategoriesToUrl(ArrayList<String> systemCategories, ArrayList<String> bodyCategories){
@@ -86,10 +93,15 @@ public class Test {
                 tags = "[" + systemCategoriesTags.toString() + "]";
             }
 
-            if (bodyCategoriesTags.length() > 0) {
+            if (bodyCategoriesTags.length() > 0 && systemCategoriesTags.length() > 0) {
 
                 bodyCategoriesTags.deleteCharAt(bodyCategoriesTags.length() - 1);
                 tags = tags + ",[" + bodyCategoriesTags.toString() + "]";
+            }
+            else if (systemCategoriesTags.length() == 0) {
+
+                bodyCategoriesTags.deleteCharAt(bodyCategoriesTags.length() - 1);
+                tags = tags + "[" + bodyCategoriesTags.toString() + "]";
             }
             try {
                 url = URLEncoder.encode(tags, "UTF-8");
@@ -101,23 +113,27 @@ public class Test {
     }
 
 
-    public String postAnswer(Term answered, Term rightAnswer, boolean isd2t, boolean isWithoutOptions, long timeOfAnswer) {
+    public String postAnswer(Question question, long timeOfAnswer) {
         JSONObject response = new JSONObject();
-        String direction = isd2t ? "d2t" : "t2d";
+        String direction = question.isD2T() ? "d2t" : "t2d";
 
         JSONObject answer = new JSONObject();
         JSONArray answers = new JSONArray();
         try {
-            answer.put("flashcard_id", Integer.parseInt(rightAnswer.getId()));
-            if (answered != null) {
-                answer.put("flashcard_answered_id", Integer.parseInt(rightAnswer.getId()));
-                answer.put("option_ids", new JSONArray().put(Integer.parseInt(rightAnswer.getId())));
+            answer.put("flashcard_id", Integer.parseInt(question.getCorrectAnswer().getId()));
+            if (question.getAnswer() != null) {
+                answer.put("flashcard_answered_id", Integer.parseInt(question.getCorrectAnswer().getId()));
+                JSONArray optionIds = new JSONArray();
+                for (Term option : question.getOptions()){
+                    optionIds.put(Integer.parseInt(option.getId()));
+                }
+                answer.put("option_ids", optionIds);
             }
             answer.put("response_time", timeOfAnswer);
             answer.put("direction", direction);
             JSONObject metadata = new JSONObject();
             metadata.put("client", "android");
-            if (isWithoutOptions) {
+            if (question.isRandomWithoutOptions()) {
                 metadata.put("test", "random_without_options");
             }
             answer.put("meta", metadata);

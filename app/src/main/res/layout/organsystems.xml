@@ -3,7 +3,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp"
+    android:padding="5sp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="martinmatko.myapplication.MainActivity$PlaceholderFragment">
 
@@ -25,7 +25,7 @@
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
                     card_view:cardElevation="5dp"
-                    card_view:cardCornerRadius="4dp"
+                    card_view:cardCornerRadius="2dp"
                     card_view:cardUseCompatPadding="true">
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -43,7 +43,7 @@
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
                     card_view:cardElevation="5dp"
-                    card_view:cardCornerRadius="4dp"
+                    card_view:cardCornerRadius="2dp"
                     card_view:cardUseCompatPadding="true">
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -65,7 +65,7 @@
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
                     card_view:cardElevation="5dp"
-                    card_view:cardCornerRadius="4dp"
+                    card_view:cardCornerRadius="2dp"
                     card_view:cardUseCompatPadding="true">
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -83,7 +83,7 @@
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
                     card_view:cardElevation="5dp"
-                    card_view:cardCornerRadius="4dp"
+                    card_view:cardCornerRadius="2dp"
                     card_view:cardUseCompatPadding="true">
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -105,7 +105,7 @@
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
                     card_view:cardElevation="5dp"
-                    card_view:cardCornerRadius="4dp"
+                    card_view:cardCornerRadius="2dp"
                     card_view:cardUseCompatPadding="true">
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -123,7 +123,7 @@
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
                     card_view:cardElevation="5dp"
-                    card_view:cardCornerRadius="4dp"
+                    card_view:cardCornerRadius="2dp"
                     card_view:cardUseCompatPadding="true">
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -145,7 +145,7 @@
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
                     card_view:cardElevation="5dp"
-                    card_view:cardCornerRadius="4dp"
+                    card_view:cardCornerRadius="2dp"
                     card_view:cardUseCompatPadding="true">
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -163,7 +163,7 @@
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
                     card_view:cardElevation="5dp"
-                    card_view:cardCornerRadius="4dp"
+                    card_view:cardCornerRadius="2dp"
                     card_view:cardUseCompatPadding="true">
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -185,7 +185,7 @@
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
                     card_view:cardElevation="5dp"
-                    card_view:cardCornerRadius="4dp"
+                    card_view:cardCornerRadius="2dp"
                     card_view:cardUseCompatPadding="true">
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -203,7 +203,7 @@
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
                     card_view:cardElevation="5dp"
-                    card_view:cardCornerRadius="4dp"
+                    card_view:cardCornerRadius="2dp"
                     card_view:cardUseCompatPadding="true">
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -225,7 +225,7 @@
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
                     card_view:cardElevation="5dp"
-                    card_view:cardCornerRadius="4dp"
+                    card_view:cardCornerRadius="2dp"
                     card_view:cardUseCompatPadding="true">
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -243,7 +243,7 @@
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
                     card_view:cardElevation="5dp"
-                    card_view:cardCornerRadius="4dp"
+                    card_view:cardCornerRadius="2dp"
                     card_view:cardUseCompatPadding="true">
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -265,7 +265,7 @@
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
                     card_view:cardElevation="5dp"
-                    card_view:cardCornerRadius="4dp"
+                    card_view:cardCornerRadius="2dp"
                     card_view:cardUseCompatPadding="true">
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -283,7 +283,7 @@
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
                     card_view:cardElevation="5dp"
-                    card_view:cardCornerRadius="4dp"
+                    card_view:cardCornerRadius="2dp"
                     card_view:cardUseCompatPadding="true">
                     <LinearLayout
                         android:layout_width="match_parent"

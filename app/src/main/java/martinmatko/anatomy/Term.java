@@ -25,15 +25,6 @@ public class Term {
         this.id = id;
         partOfBodyList = new ArrayList<>();
     }
-
-    public String getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(String itemId) {
-        this.itemId = itemId;
-    }
-
     public int getColor() {
         return color;
     }
