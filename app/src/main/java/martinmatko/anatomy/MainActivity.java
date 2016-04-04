@@ -22,6 +22,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import utils.Constants;
+
 public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
 
     private static Context context;
@@ -120,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             //button.setGravity(View.TEXT_ALIGNMENT_CENTER);
             button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
             button.setPadding(30, 0, 0, 0);
-            options.addView(button, width, 120);
+            options.addView(button, width, height / Constants.RADIO_BUTTON_HEIGHT);
         }
     }
 
@@ -153,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         drawView.selectedParts.add(new PartOfBody(null, null, identifier.toString()));
         if (question.getOptions().size() == 0) {
             RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
-            options.removeAllViews();
+            //options.removeAllViews();
             options.setBackgroundColor(getResources().getColor(R.color.optionsBackround));
             RadioButton button = new RadioButton(this);
             button.setEnabled(false);
@@ -163,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             button.setButtonDrawable(new StateListDrawable());
             button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
             button.setPadding(30, 0, 0, 0);
-            options.addView(button, width, 120);
+            options.addView(button, width, height / Constants.RADIO_BUTTON_HEIGHT);
             question.setAnswer(question.getCorrectAnswer());
             if (!identifier.equals(question.getCorrectAnswer().getIdentifier())) {
                 RadioButton buttonOfIncorrectAnswer = new RadioButton(this);
@@ -181,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                 buttonOfIncorrectAnswer.setButtonDrawable(new StateListDrawable());
                 buttonOfIncorrectAnswer.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
                 buttonOfIncorrectAnswer.setPadding(30, 0, 0, 0);
-                options.addView(buttonOfIncorrectAnswer, width, 120);
+                options.addView(buttonOfIncorrectAnswer, width, height / Constants.RADIO_BUTTON_HEIGHT);
                 question.setAnswer(answer);
             }
         }
@@ -281,8 +283,8 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     public AlertDialog.Builder buildDialog(Context c) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(c);
-        builder.setTitle("Error");
-        builder.setMessage("Unfortunately there has been an error in the app.");
+        builder.setTitle(getResources().getString(R.string.error));
+        builder.setMessage(getResources().getString(R.string.errorMessage));
 
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 

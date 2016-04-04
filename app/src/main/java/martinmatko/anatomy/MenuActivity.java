@@ -83,11 +83,6 @@ public class MenuActivity extends AppCompatActivity {
 
         context = getApplicationContext();
 
-        if (!isNetworkStatusAvailable(getApplicationContext())) {
-            buildDialog(this).show();
-            this.finish();
-            return;
-        }
         super.onCreate(savedInstanceState);
 
         setCategoriesMenu();
@@ -101,10 +96,12 @@ public class MenuActivity extends AppCompatActivity {
             try {
                 test.service.get(Constants.SERVER_NAME);
                 userData = test.service.get(Constants.SERVER_NAME + "user/profile/").getJSONObject("data").getJSONObject("user");
-                Toast.makeText(context, "Logged as " + userData.getString("username"), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, getResources().getString(R.string.loggedAs) + " " + userData.getString("username"), Toast.LENGTH_SHORT).show();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        } else if (!isNetworkStatusAvailable(getApplicationContext())) {
+            buildDialog(this).show();
         } else {
             test.service.createSesion();
             Intent intent = new Intent(this, LoginActivity.class);
@@ -177,8 +174,8 @@ public class MenuActivity extends AppCompatActivity {
     public AlertDialog.Builder buildDialog(Context c) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(c);
-        builder.setTitle("No Internet connection.");
-        builder.setMessage("You have no internet connection");
+        builder.setTitle(getResources().getString(R.string.internetNotAvailable));
+        builder.setMessage(getResources().getString(R.string.internetNotAvailable));
 
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 
@@ -244,7 +241,7 @@ public class MenuActivity extends AppCompatActivity {
                     menuItem = menu.findItem(R.id.profile);
                     menuItem.setVisible(false);
                     invalidateOptionsMenu();
-                    Toast.makeText(this, "Signed out", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.signedOut), Toast.LENGTH_SHORT).show();
                 } else {
                     intent = new Intent(this, LoginActivity.class);
                     intent.putExtra("cookies", test.service.cookieString);

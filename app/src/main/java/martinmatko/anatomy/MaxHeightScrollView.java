@@ -3,9 +3,13 @@ package martinmatko.anatomy;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Point;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.Display;
 import android.widget.ScrollView;
+
+import utils.Constants;
 
 /**
  * Created by Martin on 2.4.2016.
@@ -45,7 +49,13 @@ public class MaxHeightScrollView extends ScrollView {
         if (attrs != null) {
             TypedArray styledAttrs = context.obtainStyledAttributes(attrs, R.styleable.MaxHeightScrollView);
             //200 is a defualt value
-            maxHeight = styledAttrs.getDimensionPixelSize(R.styleable.MaxHeightScrollView_maxHeight, defaultHeight);
+            MainActivity host = (MainActivity) getContext();
+            Display display = host.getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            float height = size.y;
+            int heightOfView = (int) ((height / Constants.RADIO_BUTTON_HEIGHT) * 3.5);
+            maxHeight = styledAttrs.getDimensionPixelSize(R.styleable.MaxHeightScrollView_maxHeight, heightOfView);
 
             styledAttrs.recycle();
         }

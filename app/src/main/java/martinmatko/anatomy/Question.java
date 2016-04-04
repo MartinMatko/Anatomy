@@ -21,6 +21,7 @@ public class Question {
     private boolean isT2D;
     private boolean isRandomWithoutOptions = false;
     private String flashcardId;
+
     public Question() {
     }
 

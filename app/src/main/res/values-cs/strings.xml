@@ -14,8 +14,8 @@
     <string name="doNotKnow">Nevím</string>
     <string name="exercise">Procvičování anatomie člověka na míru tvým znalostem.</string>
     <string name="exit">Ukončit</string>
-    <string name="internetAvailable">Internet je dostupný..</string>
-    <string name="internetNotAvailable">Internet není dostupný.</string>
+    <string name="internetAvailable">Internet je dostupný</string>
+    <string name="internetNotAvailable">Internet není dostupný</string>
 
     <string name="s01">Obecn\u00e1 anatomie</string>
     <string name="s02">Kosti</string>
@@ -40,4 +40,49 @@
     <string name="P">P\u00e1nev</string>
     <string name="T">Hrudn\u00edk</string>
     <string name="UE">Horn\u00ed kon\u010detina</string>
+
+    <string name="language">Jazyk</string>
+    <string name="czech">Česky</string>
+    <string name="english">Anglicky</string>
+    <string name="signin">Přihlásit se</string>
+    <string name="signup">Zaregistrovat se</string>
+    <string name="signout">Odhlásit se</string>
+    <string name="password">Heslo</string>
+    <string name="passwordAgain">Heslo znovu</string>
+    <string name="profile">Můj profil</string>
+    <string name="firstName">Jméno</string>
+    <string name="surname">Příjmení</string>
+    <string name="email">E-mail</string>
+    <string name="username">Uživatelské jméno</string>
+    <string name="about">O projektu</string>
+    <string name="aboutus">O projektu</string>
+    <string name="aboutustext">
+        Projekt Anatom.cz vznikl ve spolupráci skupiny Adaptive learning z FI MU a Memorix týmu zahrnující lékaře a studenty LF MU v Brně.
+    </string>
+    <string name="mission">Cíle</string>
+    <string name="missionText">
+        Primárním cílem projektu Anatom.cz je usnadnit studentům medicíny, antropologie a dalším zájemcům o anatomii procvičování svých znalostí. Opakováním přehledných schémat z Memorixu Anatomie si každý může pohodlně upevňovat své vědomosti. Sekundárním cílem je vyzkoušet přínos inovativního softwarového modelu, který se na základě Vašich předchozích odpovědí snaží vybrat Vám následující otázku adekvátní obtížnosti.
+    </string>
+    <string name="development">Kdo stojí za vývojem</string>
+    <string name="developmentText">Anatom.cz je vyvíjen na Fakultě informatiky Masarykovy univerzity, konkrétně v rámci skupiny Adaptive Learning.</string>
+    <string name="privacy">Soukromí</string>
+    <string name="privacyText">
+    Data o odpovědích jsou ukládána a jsou využívána pro výběr vhodných otázek a pro výzkumné účely. Všechna tato data jsou zpracovávána anonymně. Přihlašovací údaje (Facebook, Google) jsou použity pouze pro určení identity při opakovaných návštěvách, jinak se s nimi nepracuje.
+     </string>
+    <string name="title_activity_login">Přihlásit se</string>
+
+    <string name="error_invalid_email">Tenhle e-mail je neplatný</string>//
+    <string name="error_invalid_password">Heslo je příliš krátke</string>
+    <string name="error_passwords_do_not_match">Hesla se neshodují</string>
+    <string name="error_incorrect_password">Heslo je špatné</string>
+    <string name="error_field_required">Povinné pole</string>
+    <string name="withfb">přes Facebook</string>
+    <string name="withgoogle">přes Google</string>
+    <string name="failedLogin">Přihlášení neúspešné</string>
+    <string name="failedLoginText">Heslo nebo jméno se neshodují</string>
+    <string name="registrationFailed">Registrace zlyhala</string>
+    <string name="signedOut">Odhlášen</string>
+    <string name="loggedAs">Přihlášen jako </string>
+    <string name="error">Chyba</string>
+    <string name="errorMessage">Bohužel, v aplikaci nastala chyba</string>
 </resources>

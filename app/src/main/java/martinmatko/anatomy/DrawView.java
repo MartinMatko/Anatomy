@@ -118,7 +118,6 @@ public class DrawView extends View {
             if (totalScaleFactor < minValue) {
                 h.postDelayed(r, FRAME_RATE);
             }
-            //totalScaleFactor = 1f;
         }
         drawBodyParts();
         if (mode.equals(Mode.CONFIRM)) {
@@ -285,11 +284,15 @@ public class DrawView extends View {
             if (mode == Mode.INITIAL) {
                 showButtons();
                 if (question.isT2D()) {
-                    if (selectedParts.size() != 1) {
+                    if (selectedParts.size() > 1) {
                         scaleFactor = 2;
                         totalScaleFactor += scaleFactor - 1;
                         mode = Mode.SELECT;
-                    } else mode = Mode.FINISH;
+                    } else if (selectedParts.size() == 1) {
+                        mode = Mode.FINISH;
+                    } else {
+                        mode = Mode.INITIAL;
+                    }
                 } else {
                     mode = Mode.TAPTOZOOM;
                 }
@@ -299,7 +302,7 @@ public class DrawView extends View {
             }
             if (mode == Mode.DRAG) {
                 if (question.isT2D()) {
-                    mode = Mode.SELECT;
+                    mode = Mode.INITIAL;
                 } else {
                     mode = Mode.NOACTION;
                 }
@@ -349,13 +352,9 @@ public class DrawView extends View {
 
         if (selectedParts.size() == 1) {
             String identifierOfAnswer = selectedParts.get(0).getIdentifier();
-            for (Term option : question.getOptions()) {
-                if (option.getIdentifier().equals(identifierOfAnswer)) {
-                    question.setAnswer(option);
-                }
+            if (question.getAnswer() == null) {
+                host.setAnswersInOptions(identifierOfAnswer);
             }
-
-            host.setAnswersInOptions(identifierOfAnswer);
             for (PartOfBody partOfBody : question.getBodyParts()) {
                 Paint paint = partOfBody.getPaint();
                 if (identifierOfAnswer.equals(partOfBody.getIdentifier())) {
@@ -367,7 +366,6 @@ public class DrawView extends View {
                     try {
                         paint.setColor(Color.parseColor(colorString));
                     } catch (Exception ex) {
-                        System.out.println("Zla farba: " + colorString);
                     }
                     partOfBody.setPaint(paint);
                 }
@@ -383,13 +381,10 @@ public class DrawView extends View {
                     Paint paint = partOfBody.getPaint();
                     if (option.getIdentifier().equals(partOfBody.getIdentifier())) {
                         paint.setColor(getResources().getColor(R.color.wrongAnswer));
-                        question.setAnswer(option);
-                        host.setAnswersInOptions(option.getIdentifier());
-                    } else {
-//                        int color = paint.getColor();
-//                        String colorString = new JSONParser().toGrayScale(String.format("#%06X" + "\n", 0xFFFFFF & color));
-//                        paint.setColor(Color.parseColor(colorString));
-//                        partOfBody.setPaint(paint);
+
+                        if (question.getAnswer() == null) {
+                            host.setAnswersInOptions(option.getIdentifier());
+                        }
                     }
                 }
             }
@@ -402,13 +397,9 @@ public class DrawView extends View {
                     Paint paint = partOfBody.getPaint();
                     if (option.getIdentifier().equals(partOfBody.getIdentifier())) {
                         paint.setColor(getResources().getColor(R.color.wrongAnswer));
-                        question.setAnswer(option);
-                        host.setAnswersInOptions(option.getIdentifier());
-                    } else {
-//                        int color = paint.getColor();
-//                        String colorString = new JSONParser().toGrayScale(String.format("#%06X" + "\n", 0xFFFFFF & color));
-//                        paint.setColor(Color.parseColor(colorString));
-//                        partOfBody.setPaint(paint);
+                        if (question.getAnswer() == null) {
+                            host.setAnswersInOptions(option.getIdentifier());
+                        }
                     }
                 }
             }
@@ -424,9 +415,6 @@ public class DrawView extends View {
                         paint.setColor(getResources().getColor(R.color.rightAnswer));
                     }
                 }
-            }
-            if (question.getAnswer() == null) {
-                question.setAnswer(question.getCorrectAnswer());
             }
         }
         if (question.getOptions().size() == 0) {
