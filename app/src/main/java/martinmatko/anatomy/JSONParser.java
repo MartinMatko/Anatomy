@@ -33,7 +33,7 @@ public class JSONParser {
             String nameOfCorrectAnswer = context.getJSONObject("term").getString("name").split(";")[0];
             ;
             String identifierOfCorrectAnswer = context.getJSONObject("term").getString("identifier");
-            String idOfCorrectAnswer = context.getJSONObject("term").getString("id");
+            String idOfCorrectAnswer = context.getString("id");
             Term correctAnswer = new Term(nameOfCorrectAnswer, identifierOfCorrectAnswer, idOfCorrectAnswer);
             question.setCorrectAnswer(correctAnswer);
             question.setFlashcardId(context.getString("id"));
@@ -61,7 +61,7 @@ public class JSONParser {
                     JSONObject option = options.getJSONObject(i);
                     JSONObject termJSON = option.getJSONObject("term");
                     String name = termJSON.getString("name").split(";")[0];
-                    Term term = new Term(name, termJSON.getString("identifier"), termJSON.getString("id"));
+                    Term term = new Term(name, termJSON.getString("identifier"), option.getString("id"));
                     term.setColor(Color.parseColor(Constants.COLORS.get(i)));
                     optionsTerms.add(term);
                 }
@@ -71,7 +71,7 @@ public class JSONParser {
                     JSONObject option = options.getJSONObject(i);
                     JSONObject termJSON = option.getJSONObject("term");
                     String name = termJSON.getString("name").split(";")[0];
-                    Term term = new Term(name, termJSON.getString("identifier"), termJSON.getString("id"));
+                    Term term = new Term(name, termJSON.getString("identifier"), option.getString("id"));
                     terms.add(term);
                 }
             }
@@ -116,8 +116,13 @@ public class JSONParser {
                         parts.add(partOfBody);
                     }
                 } else {
-                    color = toGrayScale(color);
-                    paint.setColor(Color.parseColor(color));
+                    if (color != ""){
+                        color = toGrayScale(color);
+                        paint.setColor(Color.parseColor(color));
+                    }
+                    else {
+                        paint.setColor(Color.TRANSPARENT);
+                    }
                     parts.add(new PartOfBody(parser.doPath(line), paint));
                 }
                 RectF boundaries = new RectF();

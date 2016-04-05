@@ -50,6 +50,7 @@ public class HTTPService {
             data = new JSONObject(response);
         } catch (Exception e) {
             e.printStackTrace();
+            return new JSONObject();
         }
         return data;
     }

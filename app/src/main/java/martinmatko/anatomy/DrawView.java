@@ -27,14 +27,32 @@ public class DrawView extends View {
     private static float MIN_ZOOM = -5f;
     private static float MAX_ZOOM = 5f;
     private final int FRAME_RATE = 30;
-    public float totalScaleFactor = 1.f;
-    public List<PartOfBody> selectedParts = new ArrayList<>();
-    Context ctx;
+    private float totalScaleFactor = 1.f;
+    private List<PartOfBody> selectedParts = new ArrayList<>();
+    private Context ctx;
     Question question = new Question();
-    Matrix matrix;
-    Matrix oldMatrix = new Matrix();
+    private Matrix matrix;
+    private Matrix oldMatrix = new Matrix();
     boolean isHighlighted = false;
-    Mode mode = Mode.INITIAL;
+    private boolean isHighlightFinished = false;
+
+    public Mode getMode() {
+        return mode;
+    }
+
+    public void setMode(Mode mode) {
+        this.mode = mode;
+    }
+
+    public List<PartOfBody> getSelectedParts() {
+        return selectedParts;
+    }
+
+    public void setSelectedParts(List<PartOfBody> selectedParts) {
+        this.selectedParts = selectedParts;
+    }
+
+    private Mode mode = Mode.INITIAL;
     private float pointOfZoomX = 0;
     private float pointOfZoomY = 0;
 
@@ -50,10 +68,6 @@ public class DrawView extends View {
     //and the Y coordinate
     private float translateX = 0f;
     private float translateY = 0f;
-    //These two variables keep track of the amount we translated the X and Y coordinates, the last time we
-    //panned.
-    private float previousTranslateX = 0f;
-    private float previousTranslateY = 0f;
     private float x = 0f;
     private float y = 0f;
     private Handler h = new Handler();
@@ -63,6 +77,7 @@ public class DrawView extends View {
             invalidate();
         }
     };
+    private boolean isZoomed = false;
 
     public DrawView(Context context) {
         super(context);
@@ -77,22 +92,11 @@ public class DrawView extends View {
     public DrawView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context);
-
     }
-
-
     private void init(Context context) {
         ctx = context;
-
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-
-        DisplayMetrics metrics = new DisplayMetrics();
-
-        display.getMetrics(metrics);
         setFocusable(true);
         setFocusableInTouchMode(true);
-        scaleFactor = question.computeScaleFactorOfPicture(this.getWidth(), this.getHeight());
     }
 
     @Override
@@ -101,6 +105,7 @@ public class DrawView extends View {
         this.canvas = canvas;
 
         if (isHighlighted) {
+            isZoomed = true;
             RectF bordersOfSelectedArea = new RectF(Float.MAX_VALUE, Float.MAX_VALUE, 0, 0);
             for (PartOfBody partOfBody : question.getBodyParts()) {
                 if (partOfBody.getIdentifier() != null && partOfBody.getIdentifier().equals(question.getCorrectAnswer().getIdentifier())) {
@@ -137,36 +142,42 @@ public class DrawView extends View {
                     matrix.setTranslate(this.getWidth() / 2 - x1, this.getHeight() / 2 - y1);
                     matrix.postScale(scaleFactor, scaleFactor, this.getWidth() / 2, this.getHeight() / 2);
                     scaleFactor = 1.f;
-                    //mode = Mode.NOACTION;
-                    if (isHighlighted) {
+                    if (isHighlighted && ! isHighlightFinished) {
                         matrix.setScale(zoomScaleFactor, zoomScaleFactor, pointOfZoomX, pointOfZoomY);
                         totalScaleFactor += (zoomScaleFactor - 1);
                     }
                     break;
-                case NOACTION:
-//                    scaleFactor = 1.f;
-//                    pointOfZoomX = 0;
-//                    pointOfZoomY = 0;
-                    break;
                 case CONFIRM:
-                    //centering area of elected items
+                    //centering area of selected items
                     matrix.setTranslate(this.getWidth() / 2 - pointOfZoomX, this.getHeight() / 2 - pointOfZoomY);
                     matrix.postScale(scaleFactor, scaleFactor, this.getWidth() / 2, this.getHeight() / 2);
+                    isZoomed = true;
                     break;
                 case DRAG:
-                    //matrix.postTranslate(translateX/2, translateY/2);
+
+//                    float displayHeight = this.getHeight();
+//                    float displayWidth = this.getWidth();
+//                    RectF bordersOfPicture = new RectF(question.borders);
+//                    //(bordersOfPicture.bottom > displayHeight && bordersOfPicture.right > displayWidth);
+//                    if (bordersOfPicture.right < displayHeight){
+//                        translateX = 0;
+//                    }
+//                    if (bordersOfPicture.bottom < displayHeight){
+//                        translateY = 0;
+//                    }
                     canvas.translate(translateX, translateY);
+                    for (PartOfBody partOfBody : question.getBodyParts()) {
+                        canvas.drawPath(partOfBody.getPath(), partOfBody.getPaint());
+                    }
                     break;
-                case SELECT:
-                    break;
-                case TAPTOZOOM:
-                    matrix.setScale(scaleFactor, scaleFactor, pointOfZoomX, pointOfZoomY);
-                    if (question.isT2D()) {
-                        mode = Mode.SELECT;
-                    } else {
+                case DRAGFINISHED:
+                    matrix.setTranslate(translateX, translateY);
+                    if (question.isT2D()){
+                        mode = Mode.CONFIRM;
+                    }
+                    else {
                         mode = Mode.NOACTION;
                     }
-
                     break;
                 case FINISH:
                     setColorOfWrongAnswer();
@@ -177,13 +188,8 @@ public class DrawView extends View {
                     scaleFactor = 1.f;
                     mode = Mode.NOACTION;
             }
-            RectF originalBorders = new RectF(question.borders);
-            matrix.mapRect(originalBorders);
-            float displayHeight = this.getHeight() / 5;
-            float displayWidth = this.getWidth() / 5;
-            RectF bordersOfPicture = originalBorders;
-            if (mode != Mode.DRAG && bordersOfPicture.bottom > displayHeight && bordersOfPicture.right > displayWidth && bordersOfPicture.left < displayWidth * 4 && bordersOfPicture.top < displayHeight * 4) {
-                question.borders = originalBorders;
+            matrix.mapRect(question.borders);
+            if (mode != Mode.DRAG) {
                 for (PartOfBody partOfBody : question.getBodyParts()) {
                     Path path = new Path();
                     partOfBody.getPath().transform(matrix, path);
@@ -193,10 +199,6 @@ public class DrawView extends View {
                     partOfBody.setPath(path);
                     canvas.drawPath(path, partOfBody.getPaint());
                 }
-            } else {
-                for (PartOfBody partOfBody : question.getBodyParts()) {
-                    canvas.drawPath(partOfBody.getPath(), partOfBody.getPaint());
-                }
             }
             if (question.getOptions().size() == 0 && mode.equals(Mode.CONFIRM)) {
                 for (PartOfBody partOfBody : selectedParts) {
@@ -205,17 +207,6 @@ public class DrawView extends View {
                     }
                 }
             }
-            //used for debugging - showing path boundaries
-//            for (PartOfBody partOfBody : question.getBodyParts()) {
-//                if (partOfBody.getIdentifier() != null) {
-//                    if (partOfBody.getIdentifier().equals(question.getCorrectAnswer().getIdentifier()) || isT2D) {
-//                        Paint p = new Paint();
-//                        p.setStyle(Paint.Style.STROKE);
-//                        p.setStrokeWidth(1);
-//                        canvas.drawRect(partOfBody.getBoundaries(), p);
-//                    }
-//                }
-//            }
         } catch (NullPointerException ex) {
             ex.printStackTrace();
         }
@@ -246,39 +237,15 @@ public class DrawView extends View {
 
 // first finger is moving on screen  
 // update translation value to apply on Path
-                MainActivity host = (MainActivity) getContext();
-                previousTranslateX = translateX;
-                previousTranslateY = translateY;
                 translateX = event.getX() - getX() + startX;
                 translateY = event.getY() - getY() + startY;
-                if (Math.abs(translateX) + Math.abs(translateY) > 10 && mode != Mode.PINCHTOZOOM) {
+                if (isZoomed && (Math.abs(translateX) + Math.abs(translateY) > 5)) {
                     mode = Mode.DRAG;
-                    canvas.translate(translateX, translateY);
-                    invalidate();
-                    System.out.println("ooo");
-                    invalidate();
-                } else if (mode.equals(Mode.PINCHTOZOOM)) {
-                    canvas.translate(translateX, translateY);
-                    //canvas.scale(.5f, .5f);
-                    System.out.println("zooooooooooooooooooom");
+                }
+                else {
+                    return false;
                 }
                 break;
-            case MotionEvent.ACTION_POINTER_DOWN:
-                mode = Mode.PINCHTOZOOM;
-                pointOfZoomX = (x + event.getX(1)) / 2;
-                pointOfZoomY = (y + event.getY(1)) / 2;
-                break;
-
-            case MotionEvent.ACTION_POINTER_UP:
-
-// No more fingers on screen
-                // All fingers went up, so let's save the value of translateX and translateY into previousTranslateX and
-                //previousTranslate
-                previousTranslateX = translateX;
-                previousTranslateY = translateY;
-                //mode = Mode.PINCHTOZOOM;
-                return true;
-
         }
         if (event.getAction() == MotionEvent.ACTION_UP) {
             if (mode == Mode.INITIAL) {
@@ -293,36 +260,19 @@ public class DrawView extends View {
                     } else {
                         mode = Mode.INITIAL;
                     }
-                } else {
-                    mode = Mode.TAPTOZOOM;
                 }
             }
             if (mode == Mode.NOACTION) {
                 //mode = Mode.TAPTOZOOM;
             }
             if (mode == Mode.DRAG) {
-                if (question.isT2D()) {
-                    mode = Mode.INITIAL;
-                } else {
-                    mode = Mode.NOACTION;
-                }
+                mode = Mode.DRAGFINISHED;
             }
             x = event.getX();
             y = event.getY();
             pointOfZoomX = x;
             pointOfZoomY = y;
             switch (mode) {
-                case PINCHTOZOOM: {
-                    if (question.isT2D()) {
-                        //mode = Mode.SELECT;
-                    }
-                    break;
-                }
-                case TAPTOZOOM: {
-                    scaleFactor = 2;
-                    totalScaleFactor += scaleFactor;
-                    break;
-                }
                 case SELECT: {
                     showButtons();
                     if (selectedParts.size() != 1) {
@@ -466,10 +416,9 @@ public class DrawView extends View {
         startY = 0f;
         translateX = 0f;
         translateY = 0f;
-        previousTranslateX = 0f;
-        previousTranslateY = 0f;
         x = 0f;
         y = 0f;
+        isZoomed = false;
     }
 
     public void drawButtons() {
@@ -517,6 +466,6 @@ public class DrawView extends View {
     }
 
     public enum Mode {
-        INITIAL, DRAG, PINCHTOZOOM, TAPTOZOOM, SELECT, CONFIRM, NOACTION, FINISH
+        INITIAL, DRAG, SELECT, CONFIRM, NOACTION, FINISH, DRAGFINISHED
     }
 }

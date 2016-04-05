@@ -46,8 +46,6 @@
         android:layout_gravity="end|bottom"
         app:fab_addButtonColorNormal="@color/app_primary"
         app:fab_addButtonColorPressed="@color/app_primary_dark"
-        app:fab_colorPressed="@color/app_primary_dark"
-        app:fab_colorNormal="@color/app_primary"
         app:fab_labelStyle="@style/menu_labels_style"
         android:layout_marginBottom="16dp"
         android:layout_marginRight="16dp"

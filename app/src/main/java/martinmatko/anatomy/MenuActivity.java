@@ -89,16 +89,21 @@ public class MenuActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             String value = extras.getString("cookies");
-            System.out.println("cookies" + value);
-            cookies = value;
-            test.service.setUpCookies(value);
-            isUserSigned = true;
-            try {
-                test.service.get(Constants.SERVER_NAME);
-                userData = test.service.get(Constants.SERVER_NAME + "user/profile/").getJSONObject("data").getJSONObject("user");
-                Toast.makeText(context, getResources().getString(R.string.loggedAs) + " " + userData.getString("username"), Toast.LENGTH_SHORT).show();
-            } catch (JSONException e) {
-                e.printStackTrace();
+            if (value != null  && value.contains("csrftoken")){
+                System.out.println("cookies" + value);
+                cookies = value;
+                test.service.setUpCookies(value);
+                isUserSigned = true;
+                try {
+                    test.service.get(Constants.SERVER_NAME);
+                    userData = test.service.get(Constants.SERVER_NAME + "user/profile/").getJSONObject("data").getJSONObject("user");
+                    Toast.makeText(context, getResources().getString(R.string.loggedAs) + " " + userData.getString("username"), Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            else {
+                test.service.createSesion();
             }
         } else if (!isNetworkStatusAvailable(getApplicationContext())) {
             buildDialog(this).show();
@@ -140,7 +145,7 @@ public class MenuActivity extends AppCompatActivity {
         intent.putExtra("cookies", test.service.cookieString);
         intent.putExtra("categories", test.convertCategoriesToUrl(systemCategories, bodyCategories));
         startActivity(intent);
-        MenuActivity.this.finish();
+        //MenuActivity.this.finish();
     }
 
     public void onRandomTestClicked(View v) {

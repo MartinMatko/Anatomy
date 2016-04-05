@@ -16,25 +16,18 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/aboutus"
-                android:paddingTop="5sp" />
-
-            <com.bluejamesbond.text.DocumentView xmlns:ext="http://schemas.android.com/apk/res-auto"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                ext:documentView_antialias="true"
-                ext:documentView_cacheConfig="auto_quality"
-                ext:documentView_maxLines="100"
-                ext:documentView_reverse="false"
-                ext:documentView_text="@string/aboutustext"
-                ext:documentView_textAlignment="justified"
-                ext:documentView_textColor="@color/grey_700"
-                ext:documentView_textFormat="plain"
-                ext:documentView_textSize="15sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/aboutus"
+                    android:paddingTop="5sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/aboutustext"
+                    android:paddingTop="5sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -43,16 +36,12 @@
                 android:text="@string/mission"
                 android:paddingTop="5sp"/>
 
-            <com.bluejamesbond.text.DocumentView xmlns:ext="http://schemas.android.com/apk/res-auto"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                ext:documentView_maxLines="100"
-                ext:documentView_reverse="false"
-                ext:documentView_text="@string/missionText"
-                ext:documentView_textAlignment="justified"
-                ext:documentView_textColor="@color/grey_700"
-                ext:documentView_textFormat="plain"
-                ext:documentView_textSize="15sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/missionText"
+                    android:paddingTop="5sp" />
 
             <TextView
             android:layout_width="wrap_content"
@@ -61,16 +50,12 @@
             android:text="@string/development"
             android:paddingTop="5sp" />
 
-            <com.bluejamesbond.text.DocumentView xmlns:ext="http://schemas.android.com/apk/res-auto"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                ext:documentView_maxLines="100"
-                ext:documentView_reverse="false"
-                ext:documentView_text="@string/developmentText"
-                ext:documentView_textAlignment="justified"
-                ext:documentView_textColor="@color/grey_700"
-                ext:documentView_textFormat="plain"
-                ext:documentView_textSize="15sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/developmentText"
+                    android:paddingTop="5sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -79,16 +64,12 @@
                 android:text="@string/privacy"
                 android:paddingTop="5sp"/>
 
-            <com.bluejamesbond.text.DocumentView xmlns:ext="http://schemas.android.com/apk/res-auto"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                ext:documentView_maxLines="100"
-                ext:documentView_reverse="false"
-                ext:documentView_text="@string/privacyText"
-                ext:documentView_textAlignment="justified"
-                ext:documentView_textColor="@color/grey_700"
-                ext:documentView_textFormat="plain"
-                ext:documentView_textSize="15sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/privacyText"
+                    android:paddingTop="5sp" />
             </LinearLayout>
         </ScrollView>
 

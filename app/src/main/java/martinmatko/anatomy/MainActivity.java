@@ -27,13 +27,13 @@ import utils.Constants;
 public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
 
     private static Context context;
-    public Test test = new Test();
-    public Question question;
-    public int goodAnswers = 0, numberOfQuestion = 0;
-    public int height;
-    DrawView drawView;
-    long startTime;
-    long endTime;
+    private Test test = new Test();
+    private Question question;
+    private int goodAnswers = 0, numberOfQuestion = 0;
+    private int height;
+    private DrawView drawView;
+    private long startTime;
+    private long endTime;
     private int width;
 
     @Override
@@ -76,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
     //Vyber
     public void getNextT2DQuestion() {
-        drawView.isHighlighted = false;
         Button highlightButton = (Button) findViewById(R.id.highlightButtonView);
         highlightButton.setVisibility(View.GONE);
         highlightButton.invalidate();
@@ -151,8 +150,8 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                 button.setText(question.getOptions().get(i).getName());
             }
         }
-        drawView.mode = DrawView.Mode.FINISH;
-        drawView.selectedParts.add(new PartOfBody(null, null, identifier.toString()));
+        drawView.setMode(DrawView.Mode.FINISH);
+        drawView.getSelectedParts().add(new PartOfBody(null, null, identifier.toString()));
         if (question.getOptions().size() == 0) {
             RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
             //options.removeAllViews();
@@ -166,7 +165,6 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
             button.setPadding(30, 0, 0, 0);
             options.addView(button, width, height / Constants.RADIO_BUTTON_HEIGHT);
-            question.setAnswer(question.getCorrectAnswer());
             if (!identifier.equals(question.getCorrectAnswer().getIdentifier())) {
                 RadioButton buttonOfIncorrectAnswer = new RadioButton(this);
                 buttonOfIncorrectAnswer.setEnabled(false);
@@ -185,6 +183,10 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                 buttonOfIncorrectAnswer.setPadding(30, 0, 0, 0);
                 options.addView(buttonOfIncorrectAnswer, width, height / Constants.RADIO_BUTTON_HEIGHT);
                 question.setAnswer(answer);
+            }
+            else {
+                question.setAnswer(question.getCorrectAnswer());
+                goodAnswers++;
             }
         }
         drawView.invalidate();
@@ -242,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             captionView.setText("Test finished");
             Toast.makeText(this, "Test finished", Toast.LENGTH_SHORT).show();
             TextView labelView = (TextView) findViewById(R.id.textOfQuestionView);
-            int score = goodAnswers * 5;
+            int score = goodAnswers * 10;
             labelView.setText(getString(R.string.rate) + " " + Integer.toString(score) + " %");
             View fab = findViewById(R.id.multiple_actions);
             fab.setVisibility(View.VISIBLE);
@@ -257,6 +259,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     }
 
     public void onHighlightClick(View v) {
+        drawView.setMode(DrawView.Mode.INITIAL);
         drawView.isHighlighted = !drawView.isHighlighted;
         drawView.invalidate();
     }
@@ -266,9 +269,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     }
 
     public void goToMenu(View view) {
-        Intent intent = new Intent(this, MenuActivity.class);
-        intent.putExtra("cookies", test.service.cookieString);
-        startActivity(intent);
+        onBackPressed();
         MainActivity.this.finish();
     }
 

@@ -125,7 +125,9 @@ public class Test {
                 for (Term option : question.getOptions()) {
                     optionIds.put(Integer.parseInt(option.getId()));
                 }
-                answer.put("option_ids", optionIds);
+                if (optionIds.length() != 0 ){
+                    answer.put("option_ids", optionIds);
+                }
             }
             answer.put("response_time", timeOfAnswer);
             answer.put("direction", direction);

@@ -84,19 +84,31 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onFacebookClicked(View v) {
-        loginWithSocialNetwork(Constants.SERVER_NAME + "login/facebook/");
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("preferredLogin", "facebook");
-        editor.apply();
+        String cookies = loginWithSocialNetwork(Constants.SERVER_NAME + "login/facebook/");
+        if (cookies != null){
+            Intent intent = new Intent(this, MenuActivity.class);
+            intent.putExtra("cookies", cookies);
+            startActivity(intent);
+            LoginActivity.this.finish();
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("preferredLogin", "facebook");
+            editor.apply();
+        }
     }
 
     public void onGoogleClicked(View v) {
-        loginWithSocialNetwork(Constants.SERVER_NAME + "login/google-oauth2/");
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("preferredLogin", "google");
-        editor.apply();
+        String cookies = loginWithSocialNetwork(Constants.SERVER_NAME + "login/google-oauth2/");
+        if (cookies != null){
+            Intent intent = new Intent(this, MenuActivity.class);
+            intent.putExtra("cookies", cookies);
+            startActivity(intent);
+            LoginActivity.this.finish();
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("preferredLogin", "google");
+            editor.apply();
+        }
     }
 
     public void signUpClicked(View v) {
@@ -106,7 +118,7 @@ public class LoginActivity extends AppCompatActivity {
         LoginActivity.this.finish();
     }
 
-    private void loginWithSocialNetwork(String url) {
+    private String loginWithSocialNetwork(String url) {
         try {
             WebView myWebView = new WebView(this);
             WebSettings webSettings = myWebView.getSettings();
@@ -121,7 +133,6 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     return false;
                 }
-
             });
             setContentView(myWebView);
             myWebView.loadUrl(url);
@@ -129,10 +140,7 @@ public class LoginActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         String cookies = CookieManager.getInstance().getCookie(url);
-        Intent intent = new Intent(this, MenuActivity.class);
-        intent.putExtra("cookies", cookies);
-        startActivity(intent);
-        LoginActivity.this.finish();
+        return cookies;
     }
 
     private void attemptLogin() {
