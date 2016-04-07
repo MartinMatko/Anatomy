@@ -53,7 +53,7 @@ public class Test {
             }
         }
 
-        JSONObject flashcard = null;
+        JSONObject flashcard;
         try {
             JSONObject context1 = context.getJSONArray("flashcards").getJSONObject(0);
             flashcard = service.get(Constants.SERVER_NAME + "flashcards/context/" + context1.getString("context_id"));
@@ -79,11 +79,11 @@ public class Test {
         } else {
             StringBuilder systemCategoriesTags = new StringBuilder();
             for (String tag : systemCategories) {
-                systemCategoriesTags.append("\"" + tag + "\",");
+                systemCategoriesTags.append("\"").append(tag).append("\",");
             }
             StringBuilder bodyCategoriesTags = new StringBuilder();
             for (String tag : bodyCategories) {
-                bodyCategoriesTags.append("\"" + tag + "\",");
+                bodyCategoriesTags.append("\"").append(tag).append("\",");
             }
             String url = "";
             String tags = "";
@@ -120,7 +120,7 @@ public class Test {
         try {
             answer.put("flashcard_id", Integer.parseInt(question.getCorrectAnswer().getId()));
             if (question.getAnswer() != null) {
-                answer.put("flashcard_answered_id", Integer.parseInt(question.getCorrectAnswer().getId()));
+                answer.put("flashcard_answered_id", Integer.parseInt(question.getAnswer().getId()));
                 JSONArray optionIds = new JSONArray();
                 for (Term option : question.getOptions()) {
                     optionIds.put(Integer.parseInt(option.getId()));

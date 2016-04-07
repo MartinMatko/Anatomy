@@ -73,8 +73,8 @@
      </string>
     <string name="title_activity_login">Přihlásit se</string>
 
-    <string name="error_invalid_email">Tenhle e-mail je neplatný</string>//
-    <string name="error_invalid_password">Heslo je příliš krátke</string>
+    <string name="error_invalid_email">Tento e-mail je neplatný</string>//
+    <string name="error_invalid_password">Heslo je příliš krátké</string>
     <string name="error_passwords_do_not_match">Hesla se neshodují</string>
     <string name="error_incorrect_password">Heslo je špatné</string>
     <string name="error_field_required">Povinné pole</string>
@@ -82,7 +82,7 @@
     <string name="withgoogle">přes Google</string>
     <string name="failedLogin">Přihlášení neúspešné</string>
     <string name="failedLoginText">Heslo nebo jméno se neshodují</string>
-    <string name="registrationFailed">Registrace zlyhala</string>
+    <string name="registrationFailed">Registrace selhala</string>
     <string name="signedOut">Odhlášen</string>
     <string name="loggedAs">Přihlášen jako </string>
     <string name="error">Chyba</string>

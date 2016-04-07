@@ -20,6 +20,8 @@ import android.view.WindowManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import utils.Constants;
+
 public class DrawView extends View {
 
     static final String TAG = "DrawView";
@@ -149,9 +151,11 @@ public class DrawView extends View {
                     break;
                 case CONFIRM:
                     //centering area of selected items
-                    matrix.setTranslate(this.getWidth() / 2 - pointOfZoomX, this.getHeight() / 2 - pointOfZoomY);
-                    matrix.postScale(scaleFactor, scaleFactor, this.getWidth() / 2, this.getHeight() / 2);
-                    isZoomed = true;
+                    if (!isZoomed){
+                        matrix.setTranslate(this.getWidth() / 2 - pointOfZoomX, this.getHeight() / 2 - pointOfZoomY);
+                        matrix.postScale(scaleFactor, scaleFactor, this.getWidth() / 2, this.getHeight() / 2);
+                        isZoomed = true;
+                    }
                     break;
                 case DRAG:
 
@@ -173,7 +177,7 @@ public class DrawView extends View {
                 case DRAGFINISHED:
                     matrix.setTranslate(translateX, translateY);
                     if (question.isT2D()){
-                        mode = Mode.CONFIRM;
+                        mode = Mode.NOACTION;
                     }
                     else {
                         mode = Mode.NOACTION;
@@ -201,10 +205,11 @@ public class DrawView extends View {
                 }
             }
             if (question.getOptions().size() == 0 && mode.equals(Mode.CONFIRM)) {
-                for (PartOfBody partOfBody : selectedParts) {
-                    if (partOfBody.getOriginalPaint() != null) {
-                        canvas.drawPath(partOfBody.getPath(), partOfBody.getOriginalPaint());
-                    }
+                for (int i = 0; i < selectedParts.size(); i++) {
+                    int color = Color.parseColor(Constants.COLORS.get(i));
+                    Paint paint = new Paint(selectedParts.get(i).getPaint());
+                    paint.setColor(color);
+                        canvas.drawPath(selectedParts.get(i).getPath(), paint);
                 }
             }
         } catch (NullPointerException ex) {
@@ -239,8 +244,9 @@ public class DrawView extends View {
 // update translation value to apply on Path
                 translateX = event.getX() - getX() + startX;
                 translateY = event.getY() - getY() + startY;
-                if (isZoomed && (Math.abs(translateX) + Math.abs(translateY) > 5)) {
+                if (isZoomed && (Math.abs(translateX) + Math.abs(translateY) > 10)) {
                     mode = Mode.DRAG;
+                    invalidate();
                 }
                 else {
                     return false;
@@ -248,7 +254,7 @@ public class DrawView extends View {
                 break;
         }
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            if (mode == Mode.INITIAL) {
+            if (mode == Mode.INITIAL || (mode == Mode.NOACTION && question.getAnswer() == null)) {
                 showButtons();
                 if (question.isT2D()) {
                     if (selectedParts.size() > 1) {
@@ -261,12 +267,11 @@ public class DrawView extends View {
                         mode = Mode.INITIAL;
                     }
                 }
-            }
-            if (mode == Mode.NOACTION) {
-                //mode = Mode.TAPTOZOOM;
+                invalidate();
             }
             if (mode == Mode.DRAG) {
                 mode = Mode.DRAGFINISHED;
+                invalidate();
             }
             x = event.getX();
             y = event.getY();
@@ -275,25 +280,31 @@ public class DrawView extends View {
             switch (mode) {
                 case SELECT: {
                     showButtons();
-                    if (selectedParts.size() != 1) {
+                    if (selectedParts.size() > 1) {
 //                        scaleFactor = 2;
 //                        totalScaleFactor += scaleFactor;
                         mode = Mode.CONFIRM;
-                    } else {
+                    } else if (selectedParts.size() == 1){
                         mode = Mode.FINISH;
+                    }
+                    else {
+                        mode = Mode.INITIAL;
                     }
                     invalidate();
                     return true;
                 }
                 case CONFIRM: {
-                    mode = Mode.FINISH;
-
+                    if (isButtonPressed()){
+                        mode = Mode.FINISH;
+                    }
+                    else {
+                        mode = Mode.SELECT;
+                    }
                 }
                 invalidate();
                 return true;
             }
         }
-        invalidate();
         return true;
     }
 
@@ -316,6 +327,8 @@ public class DrawView extends View {
                     try {
                         paint.setColor(Color.parseColor(colorString));
                     } catch (Exception ex) {
+                        ex.printStackTrace();
+                        System.out.println(colorString);
                     }
                     partOfBody.setPaint(paint);
                 }
@@ -377,6 +390,24 @@ public class DrawView extends View {
         }
     }
 
+    private boolean isButtonPressed(){
+        for (Term option : question.getTerms()) {
+            //oznacena odpoved
+            RectF button = option.getButton();
+            if (button != null && button.contains(x, y)) {
+                return true;
+            }
+        }
+        for (Term option : question.getOptions()) {
+            //oznacena odpoved
+            RectF button = option.getButton();
+            if (button != null && button.contains(x, y)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void showButtons() {
         selectedParts.clear();
         for (PartOfBody partOfBody : question.getBodyParts()) {
@@ -424,7 +455,7 @@ public class DrawView extends View {
     public void drawButtons() {
 
         float angle = 0f;
-        for (PartOfBody partOfBody : selectedParts) {
+        for (int i = 0; i < selectedParts.size(); i++) {
             Paint p = new Paint();
             p.setColor(Color.BLACK);
             float radiusOfButtons = Math.min(this.getHeight(), this.getWidth());
@@ -436,10 +467,13 @@ public class DrawView extends View {
             p.setStyle(Paint.Style.STROKE);
             p.setStrokeWidth(3);
             canvas.drawCircle(xCenter, yCenter, radius, p);
-            if (question.getOptions().size() == 0 && partOfBody.getOriginalPaint() != null) {
-                p = partOfBody.getOriginalPaint();
+            if (question.getOptions().size() == 0) {
+                    int color = Color.parseColor(Constants.COLORS.get(i));
+                    Paint paint = new Paint(selectedParts.get(i).getPaint());
+                    paint.setColor(color);
+                p = paint;
             } else {
-                p = partOfBody.getPaint();
+                p = selectedParts.get(i).getPaint();
             }
             p.setStyle(Paint.Style.FILL);
             RectF button = new RectF();
@@ -450,13 +484,13 @@ public class DrawView extends View {
             canvas.drawCircle(xCenter, yCenter, radius, p);
             List<Term> options = question.getOptions();
             for (Term term : options) {
-                if (term.getIdentifier().equals(partOfBody.getIdentifier())) {
+                if (term.getIdentifier().equals(selectedParts.get(i).getIdentifier())) {
                     term.setButton(button);
                 }
             }
             if (options.size() == 0) {
                 for (Term term : question.getTerms()) {
-                    if (term.getIdentifier().equals(partOfBody.getIdentifier())) {
+                    if (term.getIdentifier().equals(selectedParts.get(i).getIdentifier())) {
                         term.setButton(button);
                     }
                 }

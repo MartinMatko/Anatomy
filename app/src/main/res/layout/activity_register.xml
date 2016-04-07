@@ -97,7 +97,7 @@
                 android:id="@+id/sign_up_button"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
-                android:text="@string/signin"
+                android:text="@string/signup"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:textStyle="bold" />

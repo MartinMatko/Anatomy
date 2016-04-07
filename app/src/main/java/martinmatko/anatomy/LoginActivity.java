@@ -84,30 +84,32 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onFacebookClicked(View v) {
-        String cookies = loginWithSocialNetwork(Constants.SERVER_NAME + "login/facebook/");
-        if (cookies != null){
-            Intent intent = new Intent(this, MenuActivity.class);
-            intent.putExtra("cookies", cookies);
-            startActivity(intent);
-            LoginActivity.this.finish();
+        String cookies = "";
+        loginWithSocialNetwork(Constants.SERVER_NAME + "login/facebook/");
+        if (cookies != null && cookies.contains("csrftoken")){
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString("preferredLogin", "facebook");
             editor.apply();
-        }
-    }
-
-    public void onGoogleClicked(View v) {
-        String cookies = loginWithSocialNetwork(Constants.SERVER_NAME + "login/google-oauth2/");
-        if (cookies != null){
             Intent intent = new Intent(this, MenuActivity.class);
             intent.putExtra("cookies", cookies);
             startActivity(intent);
             LoginActivity.this.finish();
+        }
+    }
+
+    public void onGoogleClicked(View v) {
+        String cookies = "";
+        loginWithSocialNetwork(Constants.SERVER_NAME + "login/google-oauth2/");
+        if (cookies != null && cookies.contains("csrftoken")){
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString("preferredLogin", "google");
             editor.apply();
+            Intent intent = new Intent(this, MenuActivity.class);
+            intent.putExtra("cookies", cookies);
+            startActivity(intent);
+            LoginActivity.this.finish();
         }
     }
 
@@ -118,29 +120,53 @@ public class LoginActivity extends AppCompatActivity {
         LoginActivity.this.finish();
     }
 
-    private String loginWithSocialNetwork(String url) {
+    private void loginWithSocialNetwork(String url) {
+        CookieManager cookieManager = CookieManager.getInstance();
+        //cookieManager.acceptCookie();
         try {
             WebView myWebView = new WebView(this);
             WebSettings webSettings = myWebView.getSettings();
             webSettings.setJavaScriptEnabled(true);
-
-            webSettings.setBuiltInZoomControls(true);
-            myWebView.setWebViewClient(new WebViewClient() {
+            WebViewClient webViewClient = new WebViewClient() {
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                    if (url.equals(Constants.SERVER_NAME + "overview/#_=_")) {
+                    if (url.equals("https://anatom.cz/overview/#_=_") || url.equals("https://anatom.cz/overview/#")) {
+                        System.out.println("weeeeeeeeeeb");
+                        finish();
+                        LoginActivity host = (LoginActivity) view.getContext();
+                        Intent intent = new Intent(view.getContext(), MainActivity.class);
+                        host.startActivity(intent);
+                        host.finish();
+                        System.out.println("weeeeeeeeeeb");
                         return true;
+                    }
+                    else {
+                        System.out.println("uuuuuuuuu" + view.getUrl());
                     }
                     return false;
                 }
-            });
+            };
+            webSettings.setBuiltInZoomControls(true);
+            myWebView.setWebViewClient(webViewClient);
             setContentView(myWebView);
             myWebView.loadUrl(url);
+            //webViewClient.onPageStarted(myWebView, "https://anatom.cz/overview/#", null);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        String cookies = CookieManager.getInstance().getCookie(url);
-        return cookies;
+//        String cookiesString = cookieManager.getCookie(url);
+//        if (cookiesString != null){
+//            String[] cookies = cookiesString.split("; ");
+//            StringBuilder sb = new StringBuilder();
+//            for (int i = 0; i < cookies.length; i++){
+//                if (cookies[i].startsWith("csrftoken") || cookies[i].startsWith("sessionid")){//no need for other cookies
+//                    sb.append(cookies[i] + "; ");
+//                }
+//            }
+//            sb.delete((sb.length() -2), sb.length());
+//            return sb.toString();
+//        }
+//        return "";
     }
 
     private void attemptLogin() {

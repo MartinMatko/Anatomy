@@ -31,7 +31,6 @@ public class JSONParser {
         try {
             String directionOfQuestion = context.getString("direction");
             String nameOfCorrectAnswer = context.getJSONObject("term").getString("name").split(";")[0];
-            ;
             String identifierOfCorrectAnswer = context.getJSONObject("term").getString("identifier");
             String idOfCorrectAnswer = context.getString("id");
             Term correctAnswer = new Term(nameOfCorrectAnswer, identifierOfCorrectAnswer, idOfCorrectAnswer);
@@ -54,7 +53,6 @@ public class JSONParser {
             caption = data.getString("name");
             question.setCaption(caption);
             paths = JSONContent.getJSONArray("paths");
-            SVGParser parser = new SVGParser();
             if (context.has("options")) {
                 JSONArray options = context.getJSONArray("options");
                 for (int i = 0; i < options.length(); i++) {
@@ -83,7 +81,7 @@ public class JSONParser {
                 Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
                 paint.setStyle(Paint.Style.FILL_AND_STROKE);
                 color = path.getString("color");
-                if (color.charAt(0) == '#') {
+                if (color.length() > 1) {
                     paint.setColor(Color.parseColor(color));
                 }
                 String line = path.getString("d");
@@ -91,7 +89,7 @@ public class JSONParser {
                     String identifier = path.getString("term");
                     if (isInT2DOptions(question, identifier)) {
 
-                        PartOfBody partOfBody = new PartOfBody(parser.doPath(line), paint, path.getString("term"));
+                        PartOfBody partOfBody = new PartOfBody(SVGParser.doPath(line), paint, path.getString("term"));
                         for (Term option : optionsTerms) {
                             if (identifier.equals(option.getIdentifier())) {
                                 option.getPartOfBodyList().add(partOfBody);
@@ -100,13 +98,7 @@ public class JSONParser {
                         }
                         parts.add(partOfBody);
                     } else {
-                        PartOfBody partOfBody = new PartOfBody(parser.doPath(line), paint, path.getString("term"));
-                        if (question.getOptions().size() == 0) {
-                            Paint originalPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                            originalPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-                            originalPaint.setColor(Color.parseColor(color));
-                            partOfBody.setOriginalPaint(originalPaint);
-                        }
+                        PartOfBody partOfBody = new PartOfBody(SVGParser.doPath(line), paint, path.getString("term"));
                         color = toGrayScale(color);
                         paint.setColor(Color.parseColor(color));
                         if (!question.isT2D() && partOfBody.getIdentifier().equals(question.getCorrectAnswer().getIdentifier())) {
@@ -116,14 +108,14 @@ public class JSONParser {
                         parts.add(partOfBody);
                     }
                 } else {
-                    if (color != ""){
+                    if (!color.equals("")){
                         color = toGrayScale(color);
                         paint.setColor(Color.parseColor(color));
                     }
                     else {
                         paint.setColor(Color.TRANSPARENT);
                     }
-                    parts.add(new PartOfBody(parser.doPath(line), paint));
+                    parts.add(new PartOfBody(SVGParser.doPath(line), paint));
                 }
                 RectF boundaries = new RectF();
                 parts.get(i).getPath().computeBounds(boundaries, true);
@@ -154,8 +146,8 @@ public class JSONParser {
 
     public String rgbToHex(Integer[] rgb) {
         String ret = "#";
-        for (int i = 0; i < rgb.length; i++) {
-            ret += Integer.toHexString(rgb[i]);
+        for (int color : rgb) {
+            ret += Integer.toHexString(color);
         }
         return ret;
     }
@@ -173,8 +165,7 @@ public class JSONParser {
             System.out.println(colorStr);
             ex.printStackTrace();
         }
-        Integer[] rgb = new Integer[]{r, g, b};
-        return rgb;
+        return new Integer[]{r, g, b};
     }
 
     public boolean isGray(String colorStr) {
@@ -183,7 +174,7 @@ public class JSONParser {
     }
 
     public String toGrayScale(String colorStr) {
-        if (colorStr == "none" || colorStr.length() < 5) {
+        if (colorStr.equals("none") || colorStr.length() < 5) {
             return "#000000";
         }
         if (isGray(colorStr)) {
@@ -198,7 +189,7 @@ public class JSONParser {
         }
         double grayAverage = Math.min(235, Math.round(lowerContrast(graySum / 3)));
         String grayAverageHex = Double.toHexString(grayAverage);
-        if (grayAverageHex == "NaN") {
+        if (grayAverageHex.equals("NaN")) {
             return "#000000";
         }
         for (int i = 0; i < rgb.length; i++) {

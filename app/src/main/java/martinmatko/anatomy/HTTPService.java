@@ -25,7 +25,7 @@ public class HTTPService {
         URL url;
         String response = "";
         String line;
-        JSONObject data = null;
+        JSONObject data;
         try {
             url = new URL(urlString);
             HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
@@ -77,7 +77,7 @@ public class HTTPService {
             conn.connect();
             status = conn.getResponseCode();
             BufferedReader br;
-            String line = "";
+            String line;
             if (status == 200) {
                 br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 List<String> cookies = conn.getHeaderFields().get("Set-Cookie");
@@ -133,7 +133,7 @@ public class HTTPService {
     }
 
     public Map<String, String> setUpCookies(String cookieString) {
-        String[] cookiesArray = cookieString.split("; ");//sesionid and csrftoken
+        String[] cookiesArray = cookieString.split("; ");//sessionid and csrftoken
         String[] cookie1 = cookiesArray[0].split("=");
         String[] cookie2 = cookiesArray[1].split("=");
         cookies.put(cookie1[0], cookie1[1]);

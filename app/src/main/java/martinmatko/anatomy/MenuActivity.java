@@ -37,8 +37,8 @@ public class MenuActivity extends AppCompatActivity {
 
     private static Context context;
     public Test test = new Test();
-    public ArrayList<String> systemCategories = new ArrayList();
-    public ArrayList<String> bodyCategories = new ArrayList();
+    public ArrayList<String> systemCategories = new ArrayList<>();
+    public ArrayList<String> bodyCategories = new ArrayList<>();
     JSONObject userData = null;
     Menu menu;
     private boolean isUserSigned;
@@ -92,7 +92,7 @@ public class MenuActivity extends AppCompatActivity {
             if (value != null  && value.contains("csrftoken")){
                 System.out.println("cookies" + value);
                 cookies = value;
-                test.service.setUpCookies(value);
+                 test.service.setUpCookies(value);
                 isUserSigned = true;
                 try {
                     test.service.get(Constants.SERVER_NAME);
@@ -218,7 +218,6 @@ public class MenuActivity extends AppCompatActivity {
             case R.id.about:
                 intent = new Intent(this, AboutActivity.class);
                 startActivity(intent);
-                MenuActivity.this.finish();
                 break;
             case R.id.language:
                 intent = new Intent(this, LanguageActivity.class);
