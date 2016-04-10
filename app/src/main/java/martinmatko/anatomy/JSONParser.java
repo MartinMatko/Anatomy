@@ -108,11 +108,10 @@ public class JSONParser {
                         parts.add(partOfBody);
                     }
                 } else {
-                    if (!color.equals("")){
+                    if (!color.equals("")) {
                         color = toGrayScale(color);
                         paint.setColor(Color.parseColor(color));
-                    }
-                    else {
+                    } else {
                         paint.setColor(Color.TRANSPARENT);
                     }
                     parts.add(new PartOfBody(SVGParser.doPath(line), paint));
@@ -120,12 +119,11 @@ public class JSONParser {
                 RectF boundaries = new RectF();
                 parts.get(i).getPath().computeBounds(boundaries, true);
                 parts.get(i).setBoundaries(boundaries);
-                question.setBounds(boundaries, question.borders);
+                question.setBounds(boundaries, question.getBorders());
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            System.out.println(color);
-
+            //System.out.println(color);
         }
         question.setBodyParts(parts);
         return question;
@@ -159,10 +157,8 @@ public class JSONParser {
             g = Integer.valueOf(colorStr.substring(3, 5), 16);
             b = Integer.valueOf(colorStr.substring(5, 7), 16);
         } catch (NumberFormatException ex) {
-            System.out.println(colorStr);
             return new Integer[]{0, 0, 0};
         } catch (StringIndexOutOfBoundsException ex) {
-            System.out.println(colorStr);
             ex.printStackTrace();
         }
         return new Integer[]{r, g, b};

@@ -12,7 +12,6 @@ import android.graphics.Picture;
 import android.graphics.RadialGradient;
 import android.graphics.RectF;
 import android.graphics.Shader;
-import android.util.Log;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -612,7 +611,6 @@ public class SVGParser {
             if (v.endsWith("px")) {
                 v = v.substring(0, v.length() - 2);
             }
-//            Log.d(TAG, "Float parsing '" + name + "=" + v + "'");
             return Float.parseFloat(v);
         }
     }
@@ -1186,8 +1184,6 @@ public class SVGParser {
                     canvas.drawPath(p, paint);
                 }
                 popTransform();
-            } else if (!hidden) {
-                Log.d(TAG, "UNRECOGNIZED SVG COMMAND: " + localName);
             }
         }
 
@@ -1216,9 +1212,6 @@ public class SVGParser {
                     float[] positions = new float[gradient.positions.size()];
                     for (int i = 0; i < positions.length; i++) {
                         positions[i] = gradient.positions.get(i);
-                    }
-                    if (colors.length == 0) {
-                        Log.d("BAD", "BAD");
                     }
                     LinearGradient g = new LinearGradient(gradient.x1, gradient.y1, gradient.x2, gradient.y2, colors, positions, Shader.TileMode.CLAMP);
                     if (gradient.matrix != null) {

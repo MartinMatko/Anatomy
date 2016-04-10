@@ -16,11 +16,51 @@ import utils.Constants;
  */
 public class Test {
 
-    JSONParser parser = new JSONParser();
-    HTTPService service = new HTTPService();
-    List<Question> questions = new ArrayList<>();
-    boolean isPOSTCompleted = true;
-    String categories;
+    private JSONParser parser = new JSONParser();
+    private HTTPService service = new HTTPService();
+    private List<Question> questions = new ArrayList<>();
+    private boolean isPOSTCompleted = true;
+    private String categories;
+
+    public JSONParser getParser() {
+        return parser;
+    }
+
+    public void setParser(JSONParser parser) {
+        this.parser = parser;
+    }
+
+    public HTTPService getService() {
+        return service;
+    }
+
+    public void setService(HTTPService service) {
+        this.service = service;
+    }
+
+    public List<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
+    }
+
+    public boolean isPOSTCompleted() {
+        return isPOSTCompleted;
+    }
+
+    public void setIsPOSTCompleted(boolean isPOSTCompleted) {
+        this.isPOSTCompleted = isPOSTCompleted;
+    }
+
+    public String getCategories() {
+        return categories;
+    }
+
+    public void setCategories(String categories) {
+        this.categories = categories;
+    }
 
     public boolean start(String categories) {
         return getFirstQuestion(categories);
@@ -125,7 +165,7 @@ public class Test {
                 for (Term option : question.getOptions()) {
                     optionIds.put(Integer.parseInt(option.getId()));
                 }
-                if (optionIds.length() != 0 ){
+                if (optionIds.length() != 0) {
                     answer.put("option_ids", optionIds);
                 }
             }
@@ -143,7 +183,7 @@ public class Test {
         } catch (JSONException ex) {
             ex.printStackTrace();
         }
-        System.out.println(response.toString());
+        //System.out.println(response.toString());
         return response.toString();
     }
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Anatomy</string>
+    <string name="title_activity_main">Anatom</string>
+    <string name="app_name">Anatom</string>
     <string name="startTest">Začít procvičovat vše</string>
     <string name="selectSystem">Vybrat orgánový systém</string>
     <string name="selectBody">Vybrat část těla</string>
@@ -87,4 +88,5 @@
     <string name="loggedAs">Přihlášen jako </string>
     <string name="error">Chyba</string>
     <string name="errorMessage">Bohužel, v aplikaci nastala chyba</string>
+    <string name="loading">Prihlašování</string>
 </resources>

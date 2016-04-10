@@ -26,8 +26,8 @@ public class PostAsyncTask extends AsyncTask<String, Void, JSONObject> {
 
     public PostAsyncTask(Test test) {
         this.test = test;
-        cookies = test.service.cookies;
-        cookieString = test.service.cookieString;
+        cookies = test.getService().getCookies();
+        cookieString = test.getService().getCookieString();
     }
 
 
@@ -39,14 +39,14 @@ public class PostAsyncTask extends AsyncTask<String, Void, JSONObject> {
     @Override
     protected JSONObject doInBackground(String... params) {
         //Debug.waitForDebugger();
-        test.isPOSTCompleted = false;
+        test.setIsPOSTCompleted(false);
         URL url;
         String response = "";
         String line;
         JSONObject data = null;
         try {
-            url = new URL(Constants.SERVER_NAME + "flashcards/practice/?avoid=[" + URLEncoder.encode(params[1], "UTF-8") + "]&categories=[" + test.categories + "]&contexts=[]&limit=1&types=[]&without_contexts=1");
-            System.out.println(url.toString());
+            url = new URL(Constants.SERVER_NAME + "flashcards/practice/?avoid=[" + URLEncoder.encode(params[1], "UTF-8") +
+                    "]&categories=[" + test.getCategories() + "]&contexts=[]&limit=1&types=[]&without_contexts=1");
             HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
             conn.setDoInput(true);
             conn.setDoOutput(true);
@@ -76,16 +76,12 @@ public class PostAsyncTask extends AsyncTask<String, Void, JSONObject> {
             JSONObject context = null;
             JSONObject flashcard = null;
             try {
-                System.out.println(response);
                 JSONObject question = new JSONObject(response);
                 context = question.getJSONObject("data").getJSONArray("flashcards").getJSONObject(0);
-                flashcard = test.service.get(Constants.SERVER_NAME + "flashcards/context/" + context.getString("context_id"));
-                test.questions.add(new JSONParser().getQuestion(context, flashcard));
-                test.isPOSTCompleted = true;
+                flashcard = test.getService().get(Constants.SERVER_NAME + "flashcards/context/" + context.getString("context_id"));
+                test.getQuestions().add(new JSONParser().getQuestion(context, flashcard));
+                test.setIsPOSTCompleted(true);
             } catch (Exception e) {
-                System.out.println(context);
-                System.out.println(flashcard);
-                System.out.println(e.getMessage() + e.toString());
                 e.printStackTrace();
             }
         } catch (Exception e) {

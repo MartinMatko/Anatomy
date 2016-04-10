@@ -111,7 +111,7 @@ public class RegisterActivity extends AppCompatActivity {
                     editor.putString("password", password);
                     editor.apply();
                     Intent intent = new Intent(this, MenuActivity.class);
-                    intent.putExtra("cookies", service.cookieString);
+                    intent.putExtra("cookies", service.getCookieString());
                     startActivity(intent);
                     RegisterActivity.this.finish();
                 } else {

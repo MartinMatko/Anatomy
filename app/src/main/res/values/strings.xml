@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="title_activity_main">Anatom</string>
-    <string name="title_activity_register">RegisterActivity</string>
-    <string name="title_activity_forgot">ForgotPassActivity</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="app_name">Anatom</string>
     <string name="startTest">Start practicing all</string>
     <string name="selectSystem">Select an organ system</string>
     <string name="selectBody">Select a body part</string>
     <string name="startCategoriesTest">Practice selected</string>
-    <string name="action_settings">Settings</string>
     <string name="organSystems">Organ systems</string>
     <string name="bodyParts">Body parts</string>
     <string name="choose">Choose </string>
@@ -100,5 +94,6 @@
     <string name="loggedAs">Logged as </string>
     <string name="error">Error</string>
     <string name="errorMessage">Unfortunately, there has been an error in the app</string>
+    <string name="loading">Logging in</string>
 
 </resources>

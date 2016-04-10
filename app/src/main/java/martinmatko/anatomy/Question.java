@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class Question {
 
-    RectF borders = new RectF(Float.MAX_VALUE, Float.MAX_VALUE, 0, 0);
+    private RectF borders = new RectF(Float.MAX_VALUE, Float.MAX_VALUE, 0, 0);
     private List<PartOfBody> bodyParts;
     private String caption;
     private String text;
@@ -21,8 +21,15 @@ public class Question {
     private boolean isT2D;
     private boolean isRandomWithoutOptions = false;
     private String flashcardId;
-
     public Question() {
+    }
+
+    public RectF getBorders() {
+        return borders;
+    }
+
+    public void setBorders(RectF borders) {
+        this.borders = borders;
     }
 
     public List<Term> getTerms() {

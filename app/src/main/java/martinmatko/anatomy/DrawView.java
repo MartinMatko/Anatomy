@@ -10,12 +10,9 @@ import android.graphics.RectF;
 import android.graphics.Region;
 import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
-import android.view.WindowManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,41 +20,16 @@ import java.util.List;
 import utils.Constants;
 
 public class DrawView extends View {
-
-    static final String TAG = "DrawView";
-    //These two constants specify the minimum and maximum zoom
-    private static float MIN_ZOOM = -5f;
-    private static float MAX_ZOOM = 5f;
     private final int FRAME_RATE = 30;
+    private Question question = new Question();
+    private boolean isHighlighted = false;
     private float totalScaleFactor = 1.f;
     private List<PartOfBody> selectedParts = new ArrayList<>();
-    private Context ctx;
-    Question question = new Question();
     private Matrix matrix;
-    private Matrix oldMatrix = new Matrix();
-    boolean isHighlighted = false;
     private boolean isHighlightFinished = false;
-
-    public Mode getMode() {
-        return mode;
-    }
-
-    public void setMode(Mode mode) {
-        this.mode = mode;
-    }
-
-    public List<PartOfBody> getSelectedParts() {
-        return selectedParts;
-    }
-
-    public void setSelectedParts(List<PartOfBody> selectedParts) {
-        this.selectedParts = selectedParts;
-    }
-
     private Mode mode = Mode.INITIAL;
     private float pointOfZoomX = 0;
     private float pointOfZoomY = 0;
-
     private Canvas canvas = new Canvas();
     private float scaleFactor = 1.f;
     private float zoomScaleFactor = 1.f;
@@ -80,23 +52,44 @@ public class DrawView extends View {
         }
     };
     private boolean isZoomed = false;
-
     public DrawView(Context context) {
         super(context);
         init(context);
     }
-
     public DrawView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
-
     public DrawView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context);
     }
+
+    public Question getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
+    }
+
+    public boolean isHighlighted() {
+        return isHighlighted;
+    }
+
+    public void setIsHighlighted(boolean isHighlighted) {
+        this.isHighlighted = isHighlighted;
+    }
+
+    public void setMode(Mode mode) {
+        this.mode = mode;
+    }
+
+    public List<PartOfBody> getSelectedParts() {
+        return selectedParts;
+    }
+
     private void init(Context context) {
-        ctx = context;
         setFocusable(true);
         setFocusableInTouchMode(true);
     }
@@ -135,8 +128,8 @@ public class DrawView extends View {
     public void drawBodyParts() {
         try {
             matrix = new Matrix();
-            float x1 = (question.borders.right + question.borders.left) / 2;
-            float y1 = (question.borders.bottom + question.borders.top) / 2;
+            float x1 = (question.getBorders().right + question.getBorders().left) / 2;
+            float y1 = (question.getBorders().bottom + question.getBorders().top) / 2;
             switch (mode) {
                 case INITIAL:
                     //centering picture
@@ -144,31 +137,20 @@ public class DrawView extends View {
                     matrix.setTranslate(this.getWidth() / 2 - x1, this.getHeight() / 2 - y1);
                     matrix.postScale(scaleFactor, scaleFactor, this.getWidth() / 2, this.getHeight() / 2);
                     scaleFactor = 1.f;
-                    if (isHighlighted && ! isHighlightFinished) {
+                    if (isHighlighted && !isHighlightFinished) {
                         matrix.setScale(zoomScaleFactor, zoomScaleFactor, pointOfZoomX, pointOfZoomY);
                         totalScaleFactor += (zoomScaleFactor - 1);
                     }
                     break;
                 case CONFIRM:
                     //centering area of selected items
-                    if (!isZoomed){
+                    if (!isZoomed) {
                         matrix.setTranslate(this.getWidth() / 2 - pointOfZoomX, this.getHeight() / 2 - pointOfZoomY);
                         matrix.postScale(scaleFactor, scaleFactor, this.getWidth() / 2, this.getHeight() / 2);
                         isZoomed = true;
                     }
                     break;
                 case DRAG:
-
-//                    float displayHeight = this.getHeight();
-//                    float displayWidth = this.getWidth();
-//                    RectF bordersOfPicture = new RectF(question.borders);
-//                    //(bordersOfPicture.bottom > displayHeight && bordersOfPicture.right > displayWidth);
-//                    if (bordersOfPicture.right < displayHeight){
-//                        translateX = 0;
-//                    }
-//                    if (bordersOfPicture.bottom < displayHeight){
-//                        translateY = 0;
-//                    }
                     canvas.translate(translateX, translateY);
                     for (PartOfBody partOfBody : question.getBodyParts()) {
                         canvas.drawPath(partOfBody.getPath(), partOfBody.getPaint());
@@ -176,10 +158,9 @@ public class DrawView extends View {
                     break;
                 case DRAGFINISHED:
                     matrix.setTranslate(translateX, translateY);
-                    if (question.isT2D()){
+                    if (question.isT2D()) {
                         mode = Mode.NOACTION;
-                    }
-                    else {
+                    } else {
                         mode = Mode.NOACTION;
                     }
                     break;
@@ -192,7 +173,7 @@ public class DrawView extends View {
                     scaleFactor = 1.f;
                     mode = Mode.NOACTION;
             }
-            matrix.mapRect(question.borders);
+            matrix.mapRect(question.getBorders());
             if (mode != Mode.DRAG) {
                 for (PartOfBody partOfBody : question.getBodyParts()) {
                     Path path = new Path();
@@ -209,7 +190,7 @@ public class DrawView extends View {
                     int color = Color.parseColor(Constants.COLORS.get(i));
                     Paint paint = new Paint(selectedParts.get(i).getPaint());
                     paint.setColor(color);
-                        canvas.drawPath(selectedParts.get(i).getPath(), paint);
+                    canvas.drawPath(selectedParts.get(i).getPath(), paint);
                 }
             }
         } catch (NullPointerException ex) {
@@ -247,8 +228,7 @@ public class DrawView extends View {
                 if (isZoomed && (Math.abs(translateX) + Math.abs(translateY) > 10)) {
                     mode = Mode.DRAG;
                     invalidate();
-                }
-                else {
+                } else {
                     return false;
                 }
                 break;
@@ -281,23 +261,19 @@ public class DrawView extends View {
                 case SELECT: {
                     showButtons();
                     if (selectedParts.size() > 1) {
-//                        scaleFactor = 2;
-//                        totalScaleFactor += scaleFactor;
                         mode = Mode.CONFIRM;
-                    } else if (selectedParts.size() == 1){
+                    } else if (selectedParts.size() == 1) {
                         mode = Mode.FINISH;
-                    }
-                    else {
+                    } else {
                         mode = Mode.INITIAL;
                     }
                     invalidate();
                     return true;
                 }
                 case CONFIRM: {
-                    if (isButtonPressed()){
+                    if (isButtonPressed()) {
                         mode = Mode.FINISH;
-                    }
-                    else {
+                    } else {
                         mode = Mode.SELECT;
                     }
                 }
@@ -328,7 +304,7 @@ public class DrawView extends View {
                         paint.setColor(Color.parseColor(colorString));
                     } catch (Exception ex) {
                         ex.printStackTrace();
-                        System.out.println(colorString);
+                        //System.out.println(colorString);
                     }
                     partOfBody.setPaint(paint);
                 }
@@ -337,7 +313,6 @@ public class DrawView extends View {
         }
 
         for (Term option : question.getOptions()) {
-            //oznacena odpoved
             RectF button = option.getButton();
             if (button != null && button.contains(x, y)) {
                 for (PartOfBody partOfBody : question.getBodyParts()) {
@@ -353,7 +328,6 @@ public class DrawView extends View {
             }
         }
         for (Term option : question.getTerms()) {
-            //oznacena odpoved
             RectF button = option.getButton();
             if (button != null && button.contains(x, y)) {
                 for (PartOfBody partOfBody : question.getBodyParts()) {
@@ -390,16 +364,14 @@ public class DrawView extends View {
         }
     }
 
-    private boolean isButtonPressed(){
+    private boolean isButtonPressed() {
         for (Term option : question.getTerms()) {
-            //oznacena odpoved
             RectF button = option.getButton();
             if (button != null && button.contains(x, y)) {
                 return true;
             }
         }
         for (Term option : question.getOptions()) {
-            //oznacena odpoved
             RectF button = option.getButton();
             if (button != null && button.contains(x, y)) {
                 return true;
@@ -468,9 +440,9 @@ public class DrawView extends View {
             p.setStrokeWidth(3);
             canvas.drawCircle(xCenter, yCenter, radius, p);
             if (question.getOptions().size() == 0) {
-                    int color = Color.parseColor(Constants.COLORS.get(i));
-                    Paint paint = new Paint(selectedParts.get(i).getPaint());
-                    paint.setColor(color);
+                int color = Color.parseColor(Constants.COLORS.get(i));
+                Paint paint = new Paint(selectedParts.get(i).getPaint());
+                paint.setColor(color);
                 p = paint;
             } else {
                 p = selectedParts.get(i).getPaint();

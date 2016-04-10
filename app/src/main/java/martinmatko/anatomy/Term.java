@@ -10,13 +10,11 @@ import java.util.List;
  */
 public class Term {
     private int color;
-    private int originalColor;
     private String id;
     private String name;
     private String identifier;
     private RectF button;
     private List<PartOfBody> partOfBodyList;
-    private String itemId;
 
     public Term(String name, String identifier, String id) {
 
@@ -40,14 +38,6 @@ public class Term {
 
     public void setPartOfBodyList(List<PartOfBody> partOfBodyList) {
         this.partOfBodyList = partOfBodyList;
-    }
-
-    public int getOriginalColor() {
-        return originalColor;
-    }
-
-    public void setOriginalColor(int originalColor) {
-        this.originalColor = originalColor;
     }
 
     public String getId() {

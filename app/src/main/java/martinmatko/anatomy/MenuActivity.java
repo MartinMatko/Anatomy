@@ -63,57 +63,60 @@ public class MenuActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-        Constants.SERVER_NAME = Constants.SERVER_NAME_EN;
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if (preferences.getString("language", "").equals("cs")) {
-            Configuration config = new Configuration();
-            config.locale = new Locale("cs", "CZ");
-            getBaseContext().getResources().updateConfiguration(config,
-                    getBaseContext().getResources().getDisplayMetrics());
-            Constants.SERVER_NAME = Constants.SERVER_NAME_CZ;
-        } else if (preferences.getString("language", "").equals("en")) {
-            Configuration config1 = new Configuration();
-            config1.locale = new Locale("en", "US");
-            getBaseContext().getResources().updateConfiguration(config1,
-                    getBaseContext().getResources().getDisplayMetrics());
+        try {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
             Constants.SERVER_NAME = Constants.SERVER_NAME_EN;
-        }
+            preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            if (preferences.getString("language", "").equals("cs")) {
+                Configuration config = new Configuration();
+                config.locale = new Locale("cs", "CZ");
+                getBaseContext().getResources().updateConfiguration(config,
+                        getBaseContext().getResources().getDisplayMetrics());
+                Constants.SERVER_NAME = Constants.SERVER_NAME_CZ;
+            } else if (preferences.getString("language", "").equals("en")) {
+                Configuration config1 = new Configuration();
+                config1.locale = new Locale("en", "US");
+                getBaseContext().getResources().updateConfiguration(config1,
+                        getBaseContext().getResources().getDisplayMetrics());
+                Constants.SERVER_NAME = Constants.SERVER_NAME_EN;
+            }
 
-        context = getApplicationContext();
+            context = getApplicationContext();
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.splash);
 
-        super.onCreate(savedInstanceState);
-
-        setCategoriesMenu();
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            String value = extras.getString("cookies");
-            if (value != null  && value.contains("csrftoken")){
-                System.out.println("cookies" + value);
-                cookies = value;
-                 test.service.setUpCookies(value);
-                isUserSigned = true;
-                try {
-                    test.service.get(Constants.SERVER_NAME);
-                    userData = test.service.get(Constants.SERVER_NAME + "user/profile/").getJSONObject("data").getJSONObject("user");
-                    Toast.makeText(context, getResources().getString(R.string.loggedAs) + " " + userData.getString("username"), Toast.LENGTH_SHORT).show();
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            Bundle extras = getIntent().getExtras();
+            if (extras != null) {
+                String value = extras.getString("cookies");
+                if (value != null && value.contains("csrftoken")) {
+                    //System.out.println("cookies" + value);
+                    cookies = value;
+                    test.getService().setUpCookies(value);
+                    isUserSigned = true;
+                    try {
+                        test.getService().get(Constants.SERVER_NAME);
+                        userData = test.getService().get(Constants.SERVER_NAME + "user/profile/").getJSONObject("data").getJSONObject("user");
+                        Toast.makeText(context, getResources().getString(R.string.loggedAs) + " " + userData.getString("username"), Toast.LENGTH_SHORT).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    test.getService().createSesion();
                 }
+            } else if (!isNetworkStatusAvailable(getApplicationContext())) {
+                buildDialog(this).show();
+            } else {
+                test.getService().createSesion();
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.putExtra("cookies", test.getService().getCookieString());
+                intent.putExtra("automaticLogin", "true");
+                startActivity(intent);
+                this.finish();
             }
-            else {
-                test.service.createSesion();
-            }
-        } else if (!isNetworkStatusAvailable(getApplicationContext())) {
-            buildDialog(this).show();
-        } else {
-            test.service.createSesion();
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.putExtra("cookies", test.service.cookieString);
-            intent.putExtra("automaticLogin", "true");
-            startActivity(intent);
-            //isUserSigned = true;
+            setCategoriesMenu();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -142,7 +145,7 @@ public class MenuActivity extends AppCompatActivity {
 
     public void onTestClicked(View v) {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("cookies", test.service.cookieString);
+        intent.putExtra("cookies", test.getService().getCookieString());
         intent.putExtra("categories", test.convertCategoriesToUrl(systemCategories, bodyCategories));
         startActivity(intent);
         //MenuActivity.this.finish();
@@ -237,9 +240,9 @@ public class MenuActivity extends AppCompatActivity {
                 break;
             case R.id.sign:
                 if (isUserSigned) {
-                    new HTTPService().get(Constants.SERVER_NAME + "user/logout/");
+                    test.getService().get(Constants.SERVER_NAME + "user/logout/");
                     isUserSigned = false;
-                    test.service.createSesion();
+                    test.getService().createSesion();
                     MenuItem menuItem = menu.findItem(R.id.sign);
                     menuItem.setTitle(R.string.signin);
                     menuItem = menu.findItem(R.id.profile);
@@ -248,16 +251,22 @@ public class MenuActivity extends AppCompatActivity {
                     Toast.makeText(this, getResources().getString(R.string.signedOut), Toast.LENGTH_SHORT).show();
                 } else {
                     intent = new Intent(this, LoginActivity.class);
-                    intent.putExtra("cookies", test.service.cookieString);
+                    intent.putExtra("cookies", test.getService().getCookieString());
                     startActivity(intent);
+                    this.finish();
                 }
                 break;
-            case R.id.home:
+            case android.R.id.home:
+                test.getService().get(Constants.SERVER_NAME + "user/logout/");
                 this.finish();
                 return true;
         }
-        //MenuActivity.this.finish();
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public void onBackPressed(){
+        test.getService().get(Constants.SERVER_NAME + "user/logout/");
+        super.onBackPressed();
     }
 
     /**

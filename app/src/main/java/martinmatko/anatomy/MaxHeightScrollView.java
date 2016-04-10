@@ -15,8 +15,6 @@ import utils.Constants;
  * Created by Martin on 2.4.2016.
  */
 public class MaxHeightScrollView extends ScrollView {
-
-    private final int defaultHeight = 400;
     private int maxHeight;
 
     public MaxHeightScrollView(Context context) {

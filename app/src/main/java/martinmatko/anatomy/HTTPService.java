@@ -18,8 +18,24 @@ import utils.Constants;
  * Created by Martin on 7.11.2015.
  */
 public class HTTPService {
-    Map<String, String> cookies = new HashMap<>();
-    String cookieString = "";
+    private Map<String, String> cookies = new HashMap<>();
+    private String cookieString = "";
+
+    public Map<String, String> getCookies() {
+        return cookies;
+    }
+
+    public void setCookies(Map<String, String> cookies) {
+        this.cookies = cookies;
+    }
+
+    public String getCookieString() {
+        return cookieString;
+    }
+
+    public void setCookieString(String cookieString) {
+        this.cookieString = cookieString;
+    }
 
     public JSONObject get(String urlString) {
         URL url;
@@ -34,19 +50,20 @@ public class HTTPService {
             conn.setRequestProperty("X-" + "sessionid", cookies.get("sessionid"));
             conn.setDoInput(true);
             BufferedReader br;
-            if (conn.getResponseCode() == 200) {
+            int code = conn.getResponseCode();
+            if (code == 200 || code == 202) {
                 br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 while ((line = br.readLine()) != null) {
                     response += line;
                 }
-            } else {
+                br.close();
+            } else if (code != -1) {
                 br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
                 while ((line = br.readLine()) != null) {
                     response += line;
                 }
-                System.out.println(response);
+                br.close();
             }
-            br.close();
             data = new JSONObject(response);
         } catch (Exception e) {
             e.printStackTrace();
@@ -119,7 +136,7 @@ public class HTTPService {
                 while ((line = br.readLine()) != null) {
                     response += line;
                 }
-                System.out.println(response);
+                //System.out.println(response);
             }
             br.close();
             List<String> cookies = conn.getHeaderFields().get("Set-Cookie");

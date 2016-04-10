@@ -12,8 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AutoCompleteTextView;
@@ -84,89 +84,101 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onFacebookClicked(View v) {
-        String cookies = "";
-        loginWithSocialNetwork(Constants.SERVER_NAME + "login/facebook/");
-        if (cookies != null && cookies.contains("csrftoken")){
+        try {
+            View view = this.getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+            WebView myWebView = new WebView(this);
+            WebViewClient webViewClient = new WebViewClient() {
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    if (url.equals(Constants.SERVER_NAME + "overview/#_=_") || url.equals("https://anatom.cz/overview/#_=_")) {
+                        CookieManager cookieManager = CookieManager.getInstance();
+                        String cookiesString = cookieManager.getCookie(url);
+                        String[] cookies = cookiesString.split("; ");
+                        StringBuilder sb = new StringBuilder();
+                        for (String cookie : cookies) {
+                            if (cookie.startsWith("sessionid") || cookie.startsWith("csrftoken")) {
+                                sb.append(cookie).append("; ");
+                            }
+                        }
+                        sb.deleteCharAt(sb.length() - 1);
+                        sb.deleteCharAt(sb.length() - 1);
+                        LoginActivity host = (LoginActivity) view.getContext();
+                        Intent intent = new Intent(view.getContext(), MenuActivity.class);
+                        intent.putExtra("cookies", sb.toString());
+                        host.startActivity(intent);
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(host);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString("preferredLogin", "facebook");
+                        editor.apply();
+                        host.finish();
+                        return true;
+                    }
+                    return false;
+                }
+            };
+            myWebView.setWebViewClient(webViewClient);
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putString("preferredLogin", "facebook");
-            editor.apply();
-            Intent intent = new Intent(this, MenuActivity.class);
-            intent.putExtra("cookies", cookies);
-            startActivity(intent);
-            LoginActivity.this.finish();
+            if (!preferences.getString("preferredLogin", "").equals("facebook")) {
+                setContentView(myWebView);
+            } else {
+                setContentView(R.layout.splash);
+            }
+            myWebView.loadUrl(Constants.SERVER_NAME + "login/facebook/");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     public void onGoogleClicked(View v) {
-        String cookies = "";
-        loginWithSocialNetwork(Constants.SERVER_NAME + "login/google-oauth2/");
-        if (cookies != null && cookies.contains("csrftoken")){
+        try {
+            View view = this.getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+            WebView myWebView = new WebView(this);
+            WebViewClient webViewClient = new WebViewClient() {
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    if (url.equals("https://anatom.cz/overview/#")) {
+                        CookieManager cookieManager = CookieManager.getInstance();
+                        String cookiesString = cookieManager.getCookie(url);
+                        LoginActivity host = (LoginActivity) view.getContext();
+                        Intent intent = new Intent(view.getContext(), MenuActivity.class);
+                        intent.putExtra("cookies", cookiesString);
+                        host.startActivity(intent);
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(host);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString("preferredLogin", "google");
+                        editor.apply();
+                        host.finish();
+                        return true;
+                    }
+                    return false;
+                }
+            };
+            myWebView.setWebViewClient(webViewClient);
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putString("preferredLogin", "google");
-            editor.apply();
-            Intent intent = new Intent(this, MenuActivity.class);
-            intent.putExtra("cookies", cookies);
-            startActivity(intent);
-            LoginActivity.this.finish();
+            if (!preferences.getString("preferredLogin", "").equals("google")) {
+                setContentView(myWebView);
+            } else {
+                setContentView(R.layout.splash);
+            }
+            myWebView.loadUrl(Constants.SERVER_NAME + "login/google-oauth2/");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     public void signUpClicked(View v) {
         Intent intent = new Intent(this, RegisterActivity.class);
-        intent.putExtra("cookies", service.cookieString);
+        intent.putExtra("cookies", service.getCookieString());
         startActivity(intent);
         LoginActivity.this.finish();
-    }
-
-    private void loginWithSocialNetwork(String url) {
-        CookieManager cookieManager = CookieManager.getInstance();
-        //cookieManager.acceptCookie();
-        try {
-            WebView myWebView = new WebView(this);
-            WebSettings webSettings = myWebView.getSettings();
-            webSettings.setJavaScriptEnabled(true);
-            WebViewClient webViewClient = new WebViewClient() {
-                @Override
-                public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                    if (url.equals("https://anatom.cz/overview/#_=_") || url.equals("https://anatom.cz/overview/#")) {
-                        System.out.println("weeeeeeeeeeb");
-                        finish();
-                        LoginActivity host = (LoginActivity) view.getContext();
-                        Intent intent = new Intent(view.getContext(), MainActivity.class);
-                        host.startActivity(intent);
-                        host.finish();
-                        System.out.println("weeeeeeeeeeb");
-                        return true;
-                    }
-                    else {
-                        System.out.println("uuuuuuuuu" + view.getUrl());
-                    }
-                    return false;
-                }
-            };
-            webSettings.setBuiltInZoomControls(true);
-            myWebView.setWebViewClient(webViewClient);
-            setContentView(myWebView);
-            myWebView.loadUrl(url);
-            //webViewClient.onPageStarted(myWebView, "https://anatom.cz/overview/#", null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-//        String cookiesString = cookieManager.getCookie(url);
-//        if (cookiesString != null){
-//            String[] cookies = cookiesString.split("; ");
-//            StringBuilder sb = new StringBuilder();
-//            for (int i = 0; i < cookies.length; i++){
-//                if (cookies[i].startsWith("csrftoken") || cookies[i].startsWith("sessionid")){//no need for other cookies
-//                    sb.append(cookies[i] + "; ");
-//                }
-//            }
-//            sb.delete((sb.length() -2), sb.length());
-//            return sb.toString();
-//        }
-//        return "";
     }
 
     private void attemptLogin() {
@@ -218,7 +230,7 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString("preferredLogin", "email");
                     editor.apply();
                     Intent intent = new Intent(this, MenuActivity.class);
-                    intent.putExtra("cookies", service.cookieString);
+                    intent.putExtra("cookies", service.getCookieString());
                     startActivity(intent);
                     LoginActivity.this.finish();
                 } else {

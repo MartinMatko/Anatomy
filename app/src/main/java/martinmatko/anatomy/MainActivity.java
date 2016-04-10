@@ -51,19 +51,19 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         String categories = "";
         if (extras != null) {
             String value = extras.getString("cookies");
-            System.out.println("cookies" + value);
-            test.service.setUpCookies(value);
+            //System.out.println("cookies" + value);
+            test.getService().setUpCookies(value);
             categories = extras.getString("categories");
         }
-        test.categories = categories;
+        test.setCategories(categories);
         if (!test.start(categories)) {//problem with getting first question
             buildDialog(this).show();
             return;
         }
         setContentView(R.layout.activity_main);
         drawView = (DrawView) findViewById(R.id.drawView);
-        drawView.question = test.questions.get(numberOfQuestion);
-        question = drawView.question;
+        drawView.setQuestion(test.getQuestions().get(numberOfQuestion));
+        question = drawView.getQuestion();
         TextView captionView = (TextView) findViewById(R.id.captionView);
         captionView.setText(question.getCaption());
         if (question.isT2D()) {
@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             getNextD2TQuestion();
         }
         numberOfQuestion++;
+        startTime = System.currentTimeMillis();
     }
 
     //Vyber
@@ -183,8 +184,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                 buttonOfIncorrectAnswer.setPadding(30, 0, 0, 0);
                 options.addView(buttonOfIncorrectAnswer, width, height / Constants.RADIO_BUTTON_HEIGHT);
                 question.setAnswer(answer);
-            }
-            else {
+            } else {
                 question.setAnswer(question.getCorrectAnswer());
                 goodAnswers++;
             }
@@ -207,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         PostAsyncTask task = new PostAsyncTask(test);
         if (numberOfQuestion < 10) {
             float timeout = 0;
-            while (numberOfQuestion + 1 != test.questions.size()) {
+            while (numberOfQuestion + 1 != test.getQuestions().size()) {
                 try {
                     timeout += 100;
                     if (timeout < 5000) {
@@ -220,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                     return;
                 }
             }
-            question = test.questions.get(numberOfQuestion);
+            question = test.getQuestions().get(numberOfQuestion);
             task.execute(answer, question.getFlashcardId());
             TextView captionView = (TextView) findViewById(R.id.captionView);
             captionView.setText(question.getCaption());
@@ -229,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             Button button = (Button) findViewById(R.id.nextButtonView);
             button.setText(R.string.doNotKnow);
             drawView.clearVariables();
-            drawView.question = question;
+            drawView.setQuestion(question);
             drawView.invalidate();
             if (question.isT2D()) {
                 getNextT2DQuestion();
@@ -253,14 +253,14 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             button = findViewById(R.id.highlightButtonView);
             button.setVisibility(View.GONE);
             numberOfQuestion = 0;
-            test.questions.clear();
+            test.getQuestions().clear();
             goodAnswers = 0;
         }
     }
 
     public void onHighlightClick(View v) {
         drawView.setMode(DrawView.Mode.INITIAL);
-        drawView.isHighlighted = !drawView.isHighlighted;
+        drawView.setIsHighlighted(!drawView.isHighlighted());
         drawView.invalidate();
     }
 
@@ -275,8 +275,8 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
     public void onTestClicked(View view) {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("cookies", test.service.cookieString);
-        intent.putExtra("categories", test.categories);
+        intent.putExtra("cookies", test.getService().getCookieString());
+        intent.putExtra("categories", test.getCategories());
         startActivity(intent);
         MainActivity.this.finish();
     }
