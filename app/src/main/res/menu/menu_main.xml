@@ -1,13 +1,26 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
-    <item android:id="@+id/sign" android:title="@string/signin"
-        android:orderInCategory="100" app:showAsAction="never" />
-    <item android:id="@+id/language" android:title="@string/language"
-        android:orderInCategory="100" app:showAsAction="never" />
-    <item android:id="@+id/about" android:title="@string/about"
-        android:orderInCategory="100" app:showAsAction="never" />
-    <item android:id="@+id/profile" android:title="@string/profile"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+    <item
+        android:id="@+id/sign"
+        android:orderInCategory="100"
+        android:title="@string/signin"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/language"
+        android:orderInCategory="100"
+        android:title="@string/language"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/about"
+        android:orderInCategory="100"
+        android:title="@string/about"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/profile"
+        android:orderInCategory="100"
+        android:title="@string/profile"
         android:visible="false"
-        android:orderInCategory="100" app:showAsAction="never" />
+        app:showAsAction="never" />
 </menu>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="martinmatko.anatomy">
+
     <uses-permission android:name="android.permission.NETWORK" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -27,25 +28,31 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="martinmatko.anatomy.MenuActivity" />
         </activity>
-        <activity android:name=".AboutActivity" />
-        <activity android:name=".LanguageActivity" />
+        <activity
+            android:name=".AboutActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".LanguageActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login" >
+            android:label="@string/title_activity_login"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="martinmatko.anatomy.MenuActivity" /></activity>
+                android:value="martinmatko.anatomy.MenuActivity" />
+        </activity>
         <activity android:name=".RegisterActivity" />
         <activity
             android:name=".ProfileActivity"
             android:label="@string/profile"
-            android:parentActivityName=".MenuActivity"
-            android:theme="@style/AppTheme">
+            android:parentActivityName=".MenuActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="martinmatko.anatomy.MenuActivity" />

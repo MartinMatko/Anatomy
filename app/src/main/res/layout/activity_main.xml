@@ -1,110 +1,111 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-
-    android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relativeLayout"
+
     style="@style/Base.TextAppearance.AppCompat.Headline"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical"
-    android:background="@color/white">
+    tools:context=".MainActivity">
 
-
-        <TextView
-            android:layout_weight="1.0"
-            android:textSize="25sp"
-            android:id="@+id/captionView"
-            android:textColor="#fffaffff"
-            android:background="?attr/colorPrimary"
-            android:textAlignment="viewStart"
-            android:gravity="start"
-            android:clickable="true"
-            android:onClick="onCaptionClick"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:scrollHorizontally="true"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:padding="5sp" />
 
     <TextView
+        android:id="@+id/captionView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:background="?attr/colorPrimary"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="start"
+        android:onClick="onCaptionClick"
+        android:padding="5sp"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textAlignment="viewStart"
+        android:textColor="#fffaffff"
+        android:textSize="25sp" />
+
+    <TextView
+        android:id="@+id/textOfQuestionView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textOfQuestionView"
-        android:layout_below="@+id/captionView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="false"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="false"
-        android:textSize="25sp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="false"
+        android:layout_below="@+id/captionView"
         android:background="#ffd2e6ff"
+        android:padding="5sp"
         android:textColor="#ff000000"
-        android:padding="5sp" />
+        android:textSize="25sp" />
 
     <martinmatko.anatomy.DrawView
         android:id="@+id/drawView"
+        class="martinmatko.anatomy.DrawView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        class="martinmatko.anatomy.DrawView"
-        android:background="#ffffffff"
-        android:layout_below="@+id/textOfQuestionView"
+        android:layout_above="@+id/optionsScrollView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/optionsScrollView" />
+        android:layout_below="@+id/textOfQuestionView"
+        android:background="#ffffffff" />
 
-        <martinmatko.anatomy.MaxHeightScrollView
+    <martinmatko.anatomy.MaxHeightScrollView
+        android:id="@+id/optionsScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttons"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/optionsBackround"
+        android:button="@null"
+        android:fadeScrollbars="false"
+        android:scrollbarThumbVertical="@color/black_semi_transparent">
+
+        <RadioGroup
+            android:id="@+id/optionsView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fadeScrollbars="false"
-            android:id="@+id/optionsScrollView"
-            android:background="@color/optionsBackround"
-            android:button="@null"
             android:layout_above="@+id/buttons"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:scrollbarThumbVertical="@color/black_semi_transparent"
-            >
-
-            <RadioGroup
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/optionsView"
-                android:background="@color/optionsBackround"
-                android:button="@null"
-                android:layout_above="@+id/buttons"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-        </martinmatko.anatomy.MaxHeightScrollView>
+            android:layout_below="@+id/drawView"
+            android:background="@color/optionsBackround"
+            android:button="@null" />
+    </martinmatko.anatomy.MaxHeightScrollView>
 
     <LinearLayout
+        android:id="@+id/buttons"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/buttons"
-        android:weightSum="2"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:orientation="horizontal"
+        android:weightSum="2">
 
         <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/highlighted"
             android:id="@+id/highlightButtonView"
-            android:onClick="onHighlightClick"
-            android:background="@color/grey_200"
-            android:layout_weight="1"/>
-        <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/doNotKnow"
+            android:layout_weight="1"
+            android:background="@color/grey_200"
+            android:onClick="onHighlightClick"
+            android:text="@string/highlighted" />
+
+        <Button
             android:id="@+id/nextButtonView"
-            android:onClick="onNextClick"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@color/button"
-            android:textColor="@color/white"
-            android:layout_weight="1"/>
+            android:onClick="onNextClick"
+            android:text="@string/doNotKnow"
+            android:textColor="@color/white" />
     </LinearLayout>
 
 
@@ -114,37 +115,37 @@
 
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:visibility="gone"
         app:fab_addButtonColorNormal="@color/app_primary"
         app:fab_addButtonColorPressed="@color/app_primary_dark"
         app:fab_addButtonPlusIconColor="@color/white"
-        app:fab_labelStyle="@style/menu_labels_style"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp"
-        android:visibility="gone"
-        android:layout_alignParentLeft="true">
+        app:fab_labelStyle="@style/menu_labels_style">
+
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/action_b"
-            android:onClick="onTestClicked"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:fab_colorPressed="@color/app_primary_dark"
+            android:onClick="onTestClicked"
             app:fab_colorNormal="@color/app_primary"
-            app:fab_title="@string/continuePracticing"
-            app:fab_icon="@drawable/play"/>
+            app:fab_colorPressed="@color/app_primary_dark"
+            app:fab_icon="@drawable/play"
+            app:fab_title="@string/continuePracticing" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/action_a"
-            android:onClick="goToMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:fab_title="@string/selectChapter"
+            android:onClick="goToMenu"
+            app:fab_colorNormal="@color/app_primary"
             app:fab_colorPressed="@color/app_primary_dark"
-            app:fab_colorNormal="@color/app_primary"/>
+            app:fab_title="@string/selectChapter" />
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
-
 
 
 </RelativeLayout>

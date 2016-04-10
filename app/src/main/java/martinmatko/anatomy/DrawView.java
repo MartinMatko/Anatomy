@@ -52,17 +52,28 @@ public class DrawView extends View {
         }
     };
     private boolean isZoomed = false;
+
     public DrawView(Context context) {
         super(context);
         init(context);
     }
+
     public DrawView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
+
     public DrawView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context);
+    }
+
+    public Mode getMode() {
+        return mode;
+    }
+
+    public void setMode(Mode mode) {
+        this.mode = mode;
     }
 
     public Question getQuestion() {
@@ -79,10 +90,6 @@ public class DrawView extends View {
 
     public void setIsHighlighted(boolean isHighlighted) {
         this.isHighlighted = isHighlighted;
-    }
-
-    public void setMode(Mode mode) {
-        this.mode = mode;
     }
 
     public List<PartOfBody> getSelectedParts() {
@@ -172,6 +179,9 @@ public class DrawView extends View {
                     matrix.postScale(scaleFactor, scaleFactor, this.getWidth() / 2, this.getHeight() / 2);
                     scaleFactor = 1.f;
                     mode = Mode.NOACTION;
+                    if (question.getOptions().size() == 0) {
+                        isZoomed = true;
+                    }
             }
             matrix.mapRect(question.getBorders());
             if (mode != Mode.DRAG) {

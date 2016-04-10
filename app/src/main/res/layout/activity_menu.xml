@@ -7,28 +7,21 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context="martinmatko.myapplication.MainActivity">
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="8dp"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        android:background="?attr/colorPrimary">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
-
-        </android.support.v7.widget.Toolbar>
+        android:layout_margin="0dp"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:tabIndicatorColor="@color/white"/>
+            android:layout_height="@dimen/abc_action_bar_default_height_material"
+            android:layout_margin="0dp"
+            app:tabIndicatorColor="@color/white" />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -44,32 +37,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         app:fab_addButtonColorNormal="@color/app_primary"
         app:fab_addButtonColorPressed="@color/app_primary_dark"
-        app:fab_labelStyle="@style/menu_labels_style"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp">
+        app:fab_labelStyle="@style/menu_labels_style">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/action_a"
-            android:onClick="onRandomTestClicked"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:fab_icon="@drawable/play"
-            app:fab_title="@string/startTest"
-            app:fab_colorPressed="@color/app_primary_dark"
+            android:onClick="onRandomTestClicked"
             app:fab_colorNormal="@color/app_primary"
-            />
+            app:fab_colorPressed="@color/app_primary_dark"
+            app:fab_icon="@drawable/play"
+            app:fab_title="@string/startTest" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/action_b"
-            android:onClick="onTestClicked"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:fab_title="@string/startCategoriesTest"
+            android:onClick="onTestClicked"
+            app:fab_colorNormal="@color/app_primary"
             app:fab_colorPressed="@color/app_primary_dark"
-            app:fab_colorNormal="@color/app_primary" />
+            app:fab_title="@string/startCategoriesTest" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 

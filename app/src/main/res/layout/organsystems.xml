@@ -1,309 +1,367 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="5sp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="martinmatko.myapplication.MainActivity$PlaceholderFragment">
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:fillViewport="true"
-        android:id="@+id/scrollView"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.13"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal">
+
             <TableRow
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent">
+
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
-                    card_view:cardElevation="5dp"
                     card_view:cardCornerRadius="2dp"
+                    card_view:cardElevation="5dp"
                     card_view:cardUseCompatPadding="true">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">
+
                         <ImageButton
                             style="@style/imageTileButton"
                             android:src="@drawable/s01"
                             android:tag="01" />
+
                         <TextView
                             style="@style/imageTileLabel"
-                            android:text="@string/s01"/>
+                            android:text="@string/s01" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
+
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
-                    card_view:cardElevation="5dp"
                     card_view:cardCornerRadius="2dp"
+                    card_view:cardElevation="5dp"
                     card_view:cardUseCompatPadding="true">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">
+
                         <ImageButton
                             style="@style/imageTileButton"
                             android:src="@drawable/s02"
                             android:tag="02" />
+
                         <TextView
                             style="@style/imageTileLabel"
-                            android:text="@string/s02"/>
+                            android:text="@string/s02" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
             </TableRow>
+
             <TableRow
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent">
+
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
-                    card_view:cardElevation="5dp"
                     card_view:cardCornerRadius="2dp"
+                    card_view:cardElevation="5dp"
                     card_view:cardUseCompatPadding="true">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">
+
                         <ImageButton
                             style="@style/imageTileButton"
                             android:src="@drawable/s03"
                             android:tag="03" />
+
                         <TextView
                             style="@style/imageTileLabel"
-                            android:text="@string/s03"/>
+                            android:text="@string/s03" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
+
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
-                    card_view:cardElevation="5dp"
                     card_view:cardCornerRadius="2dp"
+                    card_view:cardElevation="5dp"
                     card_view:cardUseCompatPadding="true">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">
+
                         <ImageButton
                             style="@style/imageTileButton"
                             android:src="@drawable/s04"
                             android:tag="04" />
+
                         <TextView
                             style="@style/imageTileLabel"
-                            android:text="@string/s04"/>
+                            android:text="@string/s04" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
             </TableRow>
+
             <TableRow
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent">
+
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
-                    card_view:cardElevation="5dp"
                     card_view:cardCornerRadius="2dp"
+                    card_view:cardElevation="5dp"
                     card_view:cardUseCompatPadding="true">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">
+
                         <ImageButton
                             style="@style/imageTileButton"
                             android:src="@drawable/s05"
                             android:tag="05" />
+
                         <TextView
                             style="@style/imageTileLabel"
-                            android:text="@string/s05"/>
+                            android:text="@string/s05" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
+
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
-                    card_view:cardElevation="5dp"
                     card_view:cardCornerRadius="2dp"
+                    card_view:cardElevation="5dp"
                     card_view:cardUseCompatPadding="true">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">
+
                         <ImageButton
                             style="@style/imageTileButton"
                             android:src="@drawable/s06"
                             android:tag="06" />
+
                         <TextView
                             style="@style/imageTileLabel"
-                            android:text="@string/s06"/>
+                            android:text="@string/s06" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
             </TableRow>
+
             <TableRow
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent">
+
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
-                    card_view:cardElevation="5dp"
                     card_view:cardCornerRadius="2dp"
+                    card_view:cardElevation="5dp"
                     card_view:cardUseCompatPadding="true">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">
+
                         <ImageButton
                             style="@style/imageTileButton"
                             android:src="@drawable/s07"
                             android:tag="07" />
+
                         <TextView
                             style="@style/imageTileLabel"
-                            android:text="@string/s07"/>
+                            android:text="@string/s07" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
+
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
-                    card_view:cardElevation="5dp"
                     card_view:cardCornerRadius="2dp"
+                    card_view:cardElevation="5dp"
                     card_view:cardUseCompatPadding="true">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">
+
                         <ImageButton
                             style="@style/imageTileButton"
                             android:src="@drawable/s08"
                             android:tag="08" />
+
                         <TextView
                             style="@style/imageTileLabel"
-                            android:text="@string/s08"/>
+                            android:text="@string/s08" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
             </TableRow>
+
             <TableRow
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent">
+
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
-                    card_view:cardElevation="5dp"
                     card_view:cardCornerRadius="2dp"
+                    card_view:cardElevation="5dp"
                     card_view:cardUseCompatPadding="true">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">
+
                         <ImageButton
                             style="@style/imageTileButton"
                             android:src="@drawable/s09"
                             android:tag="09" />
+
                         <TextView
                             style="@style/imageTileLabel"
-                            android:text="@string/s09"/>
+                            android:text="@string/s09" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
+
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
-                    card_view:cardElevation="5dp"
                     card_view:cardCornerRadius="2dp"
+                    card_view:cardElevation="5dp"
                     card_view:cardUseCompatPadding="true">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">
+
                         <ImageButton
                             style="@style/imageTileButton"
                             android:src="@drawable/s10"
                             android:tag="10" />
+
                         <TextView
                             style="@style/imageTileLabel"
-                            android:text="@string/s10"/>
+                            android:text="@string/s10" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
             </TableRow>
+
             <TableRow
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent">
+
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
-                    card_view:cardElevation="5dp"
                     card_view:cardCornerRadius="2dp"
+                    card_view:cardElevation="5dp"
                     card_view:cardUseCompatPadding="true">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">
+
                         <ImageButton
                             style="@style/imageTileButton"
                             android:src="@drawable/s11"
                             android:tag="11" />
+
                         <TextView
                             style="@style/imageTileLabel"
-                            android:text="@string/s11"/>
+                            android:text="@string/s11" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
+
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
-                    card_view:cardElevation="5dp"
                     card_view:cardCornerRadius="2dp"
+                    card_view:cardElevation="5dp"
                     card_view:cardUseCompatPadding="true">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">
+
                         <ImageButton
                             style="@style/imageTileButton"
                             android:src="@drawable/s12"
                             android:tag="12" />
+
                         <TextView
                             style="@style/imageTileLabel"
-                            android:text="@string/s12"/>
+                            android:text="@string/s12" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
             </TableRow>
+
             <TableRow
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content">
+
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
-                    card_view:cardElevation="5dp"
                     card_view:cardCornerRadius="2dp"
+                    card_view:cardElevation="5dp"
                     card_view:cardUseCompatPadding="true">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
+
                         <ImageButton
                             style="@style/imageTileButton"
                             android:src="@drawable/s13"
                             android:tag="13" />
+
                         <TextView
                             style="@style/imageTileLabel"
-                            android:text="@string/s13"/>
+                            android:text="@string/s13" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
+
                 <android.support.v7.widget.CardView
                     style="@style/cardView"
-                    card_view:cardElevation="5dp"
                     card_view:cardCornerRadius="2dp"
+                    card_view:cardElevation="5dp"
                     card_view:cardUseCompatPadding="true">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
+
                         <ImageButton
                             style="@style/imageTileButton"
                             android:src="@drawable/s15"
                             android:tag="15" />
+
                         <TextView
                             style="@style/imageTileLabel"
-                            android:text="@string/s15"/>
+                            android:text="@string/s15" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
-            </TableRow>
-            <TableRow>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    />
             </TableRow>
         </TableLayout>
     </ScrollView>

@@ -19,6 +19,7 @@
     <string name="internetNotAvailable">Internet is not available</string>
     <string name="continuePracticing">Continue to practice</string>
     <string name="selectChapter">Select a chapter</string>
+    <string name="testFinished">Test finished</string>
 
     <string name="s01">General anatomy</string>
     <string name="s02">Bones</string>

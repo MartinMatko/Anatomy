@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     private long startTime;
     private long endTime;
     private int width;
+    private boolean isAnswered = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     }
 
     public void setAnswersInOptions(String identifier) {
+        isAnswered = true;
         endTime = System.currentTimeMillis();
         RadioGroup group = (RadioGroup) findViewById(R.id.optionsView);
         for (Term option : question.getOptions()) {
@@ -138,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             RadioButton button = (RadioButton) group.getChildAt(i);
             button.setEnabled(false);
             button.setBackgroundColor(getResources().getColor(R.color.optionsBackround));
-            if (button.getTag().equals(question.getAnswer().getIdentifier())) {
+            if (button.getTag().equals(identifier)) {
                 button.setBackgroundColor(getResources().getColor(R.color.wrongAnswer));
             }
             if (button.getTag().equals(question.getCorrectAnswer().getIdentifier())) {
@@ -151,9 +153,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                 button.setText(question.getOptions().get(i).getName());
             }
         }
-        drawView.setMode(DrawView.Mode.FINISH);
-        drawView.getSelectedParts().add(new PartOfBody(null, null, identifier.toString()));
-        if (question.getOptions().size() == 0) {
+        if (question.getOptions().size() == 0 && drawView.getMode().equals(DrawView.Mode.FINISH)) {
             RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
             //options.removeAllViews();
             options.setBackgroundColor(getResources().getColor(R.color.optionsBackround));
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
             button.setPadding(30, 0, 0, 0);
             options.addView(button, width, height / Constants.RADIO_BUTTON_HEIGHT);
-            if (!identifier.equals(question.getCorrectAnswer().getIdentifier())) {
+            if (!identifier.isEmpty() && !identifier.equals(question.getCorrectAnswer().getIdentifier())) {
                 RadioButton buttonOfIncorrectAnswer = new RadioButton(this);
                 buttonOfIncorrectAnswer.setEnabled(false);
                 buttonOfIncorrectAnswer.setBackgroundColor(getResources().getColor(R.color.wrongAnswer));
@@ -184,14 +184,16 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                 buttonOfIncorrectAnswer.setPadding(30, 0, 0, 0);
                 options.addView(buttonOfIncorrectAnswer, width, height / Constants.RADIO_BUTTON_HEIGHT);
                 question.setAnswer(answer);
-            } else {
+            } else if (!identifier.isEmpty()) {
                 question.setAnswer(question.getCorrectAnswer());
                 goodAnswers++;
             }
         }
+        drawView.setMode(DrawView.Mode.FINISH);
+        drawView.getSelectedParts().add(new PartOfBody(null, null, identifier.toString()));
         drawView.invalidate();
-        Button v = (Button) findViewById(R.id.nextButtonView);
-        v.setText(R.string.continueToNext);
+        Button button = (Button) findViewById(R.id.nextButtonView);
+        button.setText(R.string.continueToNext);
     }
 
     @Override
@@ -201,60 +203,64 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     }
 
     public void onNextClick(View v) {
-        boolean isWithoutOptions = (question.getOptions().size() == 0);
-        String answer = test.postAnswer(question, endTime - startTime);
-
-        PostAsyncTask task = new PostAsyncTask(test);
-        if (numberOfQuestion < 10) {
-            float timeout = 0;
-            while (numberOfQuestion + 1 != test.getQuestions().size()) {
-                try {
-                    timeout += 100;
-                    if (timeout < 5000) {
-                        Thread.currentThread().sleep(100);
-                    } else throw new InterruptedException();
-                } catch (InterruptedException e) {
-                    buildDialog(this).show();
-                    this.finish();
-                    e.printStackTrace();
-                    return;
-                }
-            }
-            question = test.getQuestions().get(numberOfQuestion);
-            task.execute(answer, question.getFlashcardId());
-            TextView captionView = (TextView) findViewById(R.id.captionView);
-            captionView.setText(question.getCaption());
-            RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
-            options.removeAllViews();
-            Button button = (Button) findViewById(R.id.nextButtonView);
-            button.setText(R.string.doNotKnow);
-            drawView.clearVariables();
-            drawView.setQuestion(question);
-            drawView.invalidate();
-            if (question.isT2D()) {
-                getNextT2DQuestion();
-            } else {
-                getNextD2TQuestion();
-            }
-            numberOfQuestion++;
-            startTime = System.currentTimeMillis();
-
+        if (!isAnswered) {
+            setAnswersInOptions("");
+            question.setAnswer(new Term("", "", ""));
         } else {
-            TextView captionView = (TextView) findViewById(R.id.captionView);
-            captionView.setText("Test finished");
-            Toast.makeText(this, "Test finished", Toast.LENGTH_SHORT).show();
-            TextView labelView = (TextView) findViewById(R.id.textOfQuestionView);
-            int score = goodAnswers * 10;
-            labelView.setText(getString(R.string.rate) + " " + Integer.toString(score) + " %");
-            View fab = findViewById(R.id.multiple_actions);
-            fab.setVisibility(View.VISIBLE);
-            View button = findViewById(R.id.nextButtonView);
-            button.setVisibility(View.GONE);
-            button = findViewById(R.id.highlightButtonView);
-            button.setVisibility(View.GONE);
-            numberOfQuestion = 0;
-            test.getQuestions().clear();
-            goodAnswers = 0;
+            isAnswered = false;
+            String answer = test.postAnswer(question, endTime - startTime);
+            PostAsyncTask task = new PostAsyncTask(test);
+            if (numberOfQuestion < 10) {
+                float timeout = 0;
+                while (numberOfQuestion + 1 != test.getQuestions().size()) {
+                    try {
+                        timeout += 100;
+                        if (timeout < 5000) {
+                            Thread.currentThread().sleep(100);
+                        } else throw new InterruptedException();
+                    } catch (InterruptedException e) {
+                        buildDialog(this).show();
+                        this.finish();
+                        e.printStackTrace();
+                        return;
+                    }
+                }
+                question = test.getQuestions().get(numberOfQuestion);
+                task.execute(answer, question.getFlashcardId());
+                TextView captionView = (TextView) findViewById(R.id.captionView);
+                captionView.setText(question.getCaption());
+                RadioGroup options = (RadioGroup) findViewById(R.id.optionsView);
+                options.removeAllViews();
+                Button button = (Button) findViewById(R.id.nextButtonView);
+                button.setText(R.string.doNotKnow);
+                drawView.clearVariables();
+                drawView.setQuestion(question);
+                drawView.invalidate();
+                if (question.isT2D()) {
+                    getNextT2DQuestion();
+                } else {
+                    getNextD2TQuestion();
+                }
+                numberOfQuestion++;
+                startTime = System.currentTimeMillis();
+
+            } else {
+                TextView captionView = (TextView) findViewById(R.id.captionView);
+                captionView.setText("Test finished");
+                Toast.makeText(this, "Test finished", Toast.LENGTH_SHORT).show();
+                TextView labelView = (TextView) findViewById(R.id.textOfQuestionView);
+                int score = goodAnswers * 10;
+                labelView.setText(getString(R.string.rate) + " " + Integer.toString(score) + " %");
+                View fab = findViewById(R.id.multiple_actions);
+                fab.setVisibility(View.VISIBLE);
+                View button = findViewById(R.id.nextButtonView);
+                button.setVisibility(View.GONE);
+                button = findViewById(R.id.highlightButtonView);
+                button.setVisibility(View.GONE);
+                numberOfQuestion = 0;
+                test.getQuestions().clear();
+                goodAnswers = 0;
+            }
         }
     }
 

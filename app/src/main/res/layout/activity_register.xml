@@ -43,6 +43,7 @@
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -75,6 +76,7 @@
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -97,9 +99,9 @@
                 android:id="@+id/sign_up_button"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
-                android:text="@string/signup"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:text="@string/signup"
                 android:textStyle="bold" />
         </LinearLayout>
     </ScrollView>

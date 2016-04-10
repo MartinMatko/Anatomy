@@ -66,41 +66,42 @@
                 android:id="@+id/sign_in_button"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
-                android:text="@string/signin"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:text="@string/signin"
                 android:textStyle="bold" />
 
             <Button
                 android:id="@+id/google_sign_in_button"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
-                android:text="@string/withgoogle"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:textStyle="bold"
                 android:backgroundTint="#d9534f"
-                android:onClick="onGoogleClicked" />
+                android:onClick="onGoogleClicked"
+                android:text="@string/withgoogle"
+                android:textStyle="bold" />
+
             <Button
                 android:id="@+id/fb_sign_in_button"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
-                android:text="@string/withfb"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:textStyle="bold"
                 android:backgroundTint="#428BCA"
-                android:onClick="onFacebookClicked"/>
+                android:onClick="onFacebookClicked"
+                android:text="@string/withfb"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/signup"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
-                android:text="@string/signup"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:textStyle="bold"
-                android:onClick="signUpClicked" />
+                android:onClick="signUpClicked"
+                android:text="@string/signup"
+                android:textStyle="bold" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

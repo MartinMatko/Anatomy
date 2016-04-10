@@ -19,6 +19,7 @@
     <string name="internetNotAvailable">Internet není dostupný</string>
     <string name="continuePracticing">Pokračovat v procvičování</string>
     <string name="selectChapter">Vybrat kapitolu</string>
+    <string name="testFinished">Test ukončen</string>
 
     <string name="s01">Obecn\u00e1 anatomie</string>
     <string name="s02">Kosti</string>

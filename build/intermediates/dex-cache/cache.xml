@@ -2,18 +2,32 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\Martin\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\22.2.0\support-annotations-22.2.0.jar"
+        jar="C:\Users\Martin\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.2.0\support-annotations-23.2.0.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="66b42a1f3eb7676070b7ef7f14b603483aecbee1">
-        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\support-annotations-22.2.0-c8618e10c7c24a6d948168cfb47bedcdc92cb2b5.jar" />
+        sha1="c5bf571bb10462bd90e5419ade67793f71acbc87">
+        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\support-annotations-23.2.0-cee0594ac0aac1e699521635a2b7fe03c0508ef4.jar" />
     </item>
     <item
-        jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.2.0\libs\internal_impl-22.2.0.jar"
+        jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.android.support\cardview-v7\23.2.0\classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="57f2ab85c164ff1676ec64dee787981c046fab79">
-        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\internal_impl-22.2.0-746ade51116a9ddf778d5a33a7c9d43760f78b5a.jar" />
+        sha1="bc599eb9531da9d18bc58ec4eb0b1a1d895f6839">
+        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\classes-c7368126e73429ea97483ad10fa5074acf2e6c05.jar" />
+    </item>
+    <item
+        jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.2.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="6e3578f92f7462d1a935a1d36173e3bdd1234976">
+        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\classes-540ad42f805655dbb30370d011da7eba534053a2.jar" />
+    </item>
+    <item
+        jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.2.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="e5f32fa48a3eb2de0c987025c11b6e3864b634d9">
+        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\classes-052ba9afc1f3915eeac6d188fd3c5f75db08be6b.jar" />
     </item>
     <item
         jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.getbase\floatingactionbutton\1.10.1\classes.jar"
@@ -23,13 +37,6 @@
         <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\classes-a2dd7fae475939f65f2b95b70a57927412cc2d4f.jar" />
     </item>
     <item
-        jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.android.support\design\22.2.0\classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="fc63b820d54c8a27a3a614bdd93920e0076581c2">
-        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\classes-a5c8430278b38247d8fef396622263573a8b391f.jar" />
-    </item>
-    <item
         jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.github.bluejamesbond\textjustify-android\2.1.1\classes.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -37,25 +44,39 @@
         <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\classes-8889a4f95c66301957e2e4985ab58bb18e0e261c.jar" />
     </item>
     <item
-        jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.android.support\cardview-v7\22.2.0\classes.jar"
+        jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\23.2.0\classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="97f7e239e86ef994de894818fdd8a71d2e89d6aa">
-        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\classes-096a18fa2b2ed55c4c95fde109ffcc36d01d16d2.jar" />
+        sha1="292a9fa091757208efa65e77eef63088247e51f3">
+        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\classes-e8c8affddffe23c9751606e0dc0bf178fc789e06.jar" />
     </item>
     <item
-        jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.2.0\classes.jar"
+        jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.2.0\libs\internal_impl-23.2.0.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="1ee588ff2c4daf7b97c1cbf922a6c7f027285c2f">
-        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\classes-42fa3a5146bc9ddaeee091e8c7f12b811321f642.jar" />
+        sha1="6e239441500605809818997dd63b62a947195f8c">
+        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\internal_impl-23.2.0-c0246eac6e936035a6402cb2d38b46b98987c9a8.jar" />
     </item>
     <item
-        jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\22.2.0\classes.jar"
+        jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.android.support\animated-vector-drawable\23.2.0\classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="73753982da6bde518f3a4c6b372749981d14d1a0">
-        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\classes-c64eac4a4c5e63bd794563e92e2f1bb87f059616.jar" />
+        sha1="8c108c22c99e794eff255bb34d2a461200c4cbb0">
+        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\classes-f31433c8325a0fba361a796b4653b888af367990.jar" />
+    </item>
+    <item
+        jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\23.2.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="d4c936aa8c7d2522c82e3f1829c791d9e367f009">
+        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\classes-b0d70bb41f55d5d52b91999724513657d6e01899.jar" />
+    </item>
+    <item
+        jar="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\exploded-aar\com.android.support\design\23.2.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="1aa5b025efe97f5006f5be16d6ca67c6c3c0c0d8">
+        <dex dex="C:\Users\Martin\Documents\GitHub\Anatomy\app\build\intermediates\pre-dexed\debug\classes-79cedf3b8ca09a42ef914dc2fc40c3d3d8ed2706.jar" />
     </item>
 
 </items>

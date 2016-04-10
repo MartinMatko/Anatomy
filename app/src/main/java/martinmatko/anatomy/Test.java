@@ -159,7 +159,7 @@ public class Test {
         JSONArray answers = new JSONArray();
         try {
             answer.put("flashcard_id", Integer.parseInt(question.getCorrectAnswer().getId()));
-            if (question.getAnswer() != null) {
+            if (!question.getAnswer().getIdentifier().isEmpty()) {
                 answer.put("flashcard_answered_id", Integer.parseInt(question.getAnswer().getId()));
                 JSONArray optionIds = new JSONArray();
                 for (Term option : question.getOptions()) {
@@ -183,7 +183,7 @@ public class Test {
         } catch (JSONException ex) {
             ex.printStackTrace();
         }
-        //System.out.println(response.toString());
+        System.out.println(response.toString());
         return response.toString();
     }
 }
