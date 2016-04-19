@@ -39,7 +39,7 @@ public class HTTPService {
 
     public JSONObject get(String urlString) {
         URL url;
-        String response = "";
+        StringBuilder response = new StringBuilder();
         String line;
         JSONObject data;
         try {
@@ -54,17 +54,17 @@ public class HTTPService {
             if (code == 200 || code == 202) {
                 br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 while ((line = br.readLine()) != null) {
-                    response += line;
+                    response.append(line);
                 }
                 br.close();
             } else if (code != -1) {
                 br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
                 while ((line = br.readLine()) != null) {
-                    response += line;
+                    response.append(line);
                 }
                 br.close();
             }
-            data = new JSONObject(response);
+            data = new JSONObject(response.toString());
         } catch (Exception e) {
             e.printStackTrace();
             return new JSONObject();

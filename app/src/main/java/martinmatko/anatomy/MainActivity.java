@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                 while (numberOfQuestion + 1 != test.getQuestions().size()) {
                     try {
                         timeout += 100;
-                        if (timeout < 5000) {
+                        if (timeout < 7000) {
                             Thread.currentThread().sleep(100);
                         } else throw new InterruptedException();
                     } catch (InterruptedException e) {
@@ -246,8 +246,8 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
             } else {
                 TextView captionView = (TextView) findViewById(R.id.captionView);
-                captionView.setText("Test finished");
-                Toast.makeText(this, "Test finished", Toast.LENGTH_SHORT).show();
+                captionView.setText(getString(R.string.testFinished));
+                Toast.makeText(this, getString(R.string.testFinished), Toast.LENGTH_SHORT).show();
                 TextView labelView = (TextView) findViewById(R.id.textOfQuestionView);
                 int score = goodAnswers * 10;
                 labelView.setText(getString(R.string.rate) + " " + Integer.toString(score) + " %");

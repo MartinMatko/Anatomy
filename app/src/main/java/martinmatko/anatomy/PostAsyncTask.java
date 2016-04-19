@@ -41,7 +41,7 @@ public class PostAsyncTask extends AsyncTask<String, Void, JSONObject> {
         //Debug.waitForDebugger();
         test.setIsPOSTCompleted(false);
         URL url;
-        String response = "";
+        StringBuilder response = new StringBuilder();
         String line;
         JSONObject data = null;
         try {
@@ -70,13 +70,13 @@ public class PostAsyncTask extends AsyncTask<String, Void, JSONObject> {
                 br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
             }
             while ((line = br.readLine()) != null) {
-                response += line;
+                response.append(line);
             }
             br.close();
             JSONObject context = null;
             JSONObject flashcard = null;
             try {
-                JSONObject question = new JSONObject(response);
+                JSONObject question = new JSONObject(response.toString());
                 context = question.getJSONObject("data").getJSONArray("flashcards").getJSONObject(0);
                 flashcard = test.getService().get(Constants.SERVER_NAME + "flashcards/context/" + context.getString("context_id"));
                 test.getQuestions().add(new JSONParser().getQuestion(context, flashcard));

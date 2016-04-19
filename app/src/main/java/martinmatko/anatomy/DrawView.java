@@ -30,7 +30,6 @@ public class DrawView extends View {
     private Mode mode = Mode.INITIAL;
     private float pointOfZoomX = 0;
     private float pointOfZoomY = 0;
-    private Canvas canvas = new Canvas();
     private float scaleFactor = 1.f;
     private float zoomScaleFactor = 1.f;
     private ScaleGestureDetector detector;
@@ -97,15 +96,13 @@ public class DrawView extends View {
     }
 
     private void init(Context context) {
+        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         setFocusable(true);
         setFocusableInTouchMode(true);
     }
 
     @Override
     public void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        this.canvas = canvas;
-
         if (isHighlighted) {
             isZoomed = true;
             RectF bordersOfSelectedArea = new RectF(Float.MAX_VALUE, Float.MAX_VALUE, 0, 0);
@@ -126,13 +123,14 @@ public class DrawView extends View {
                 h.postDelayed(r, FRAME_RATE);
             }
         }
-        drawBodyParts();
+        drawBodyParts(canvas);
         if (mode.equals(Mode.CONFIRM)) {
-            drawButtons();
+            drawButtons(canvas);
         }
+        canvas.restore();
     }
 
-    public void drawBodyParts() {
+    public void drawBodyParts(Canvas canvas) {
         try {
             matrix = new Matrix();
             float x1 = (question.getBorders().right + question.getBorders().left) / 2;
@@ -422,7 +420,6 @@ public class DrawView extends View {
         mode = Mode.INITIAL;
         pointOfZoomX = 0;
         pointOfZoomY = 0;
-        canvas = new Canvas();
         scaleFactor = 1.f;
         zoomScaleFactor = 1.f;
         startX = 0f;
@@ -434,7 +431,7 @@ public class DrawView extends View {
         isZoomed = false;
     }
 
-    public void drawButtons() {
+    public void drawButtons(Canvas canvas) {
 
         float angle = 0f;
         for (int i = 0; i < selectedParts.size(); i++) {

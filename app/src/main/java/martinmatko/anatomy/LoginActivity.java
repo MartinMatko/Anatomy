@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AutoCompleteTextView;
@@ -91,10 +92,12 @@ public class LoginActivity extends AppCompatActivity {
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
             WebView myWebView = new WebView(this);
+            WebSettings webSettings = myWebView.getSettings();
+            webSettings.setJavaScriptEnabled(true);
             WebViewClient webViewClient = new WebViewClient() {
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                    if (url.equals(Constants.SERVER_NAME + "overview/#_=_") || url.equals("https://anatom.cz/overview/#_=_")) {
+                    if (url.startsWith(Constants.SERVER_NAME + "overview/")) {
                         CookieManager cookieManager = CookieManager.getInstance();
                         String cookiesString = cookieManager.getCookie(url);
                         String[] cookies = cookiesString.split("; ");
@@ -125,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
             if (!preferences.getString("preferredLogin", "").equals("facebook")) {
                 setContentView(myWebView);
             } else {
-                setContentView(R.layout.splash);
+                setContentView(myWebView);//setContentView(R.layout.splash);
             }
             myWebView.loadUrl(Constants.SERVER_NAME + "login/facebook/");
         } catch (Exception e) {
@@ -141,10 +144,12 @@ public class LoginActivity extends AppCompatActivity {
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
             WebView myWebView = new WebView(this);
+            WebSettings webSettings = myWebView.getSettings();
+            webSettings.setJavaScriptEnabled(true);
             WebViewClient webViewClient = new WebViewClient() {
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                    if (url.equals("https://anatom.cz/overview/#")) {
+                    if (url.startsWith("https://anatom.cz/overview/")) {
                         CookieManager cookieManager = CookieManager.getInstance();
                         String cookiesString = cookieManager.getCookie(url);
                         LoginActivity host = (LoginActivity) view.getContext();
@@ -162,11 +167,12 @@ public class LoginActivity extends AppCompatActivity {
                 }
             };
             myWebView.setWebViewClient(webViewClient);
+
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
             if (!preferences.getString("preferredLogin", "").equals("google")) {
                 setContentView(myWebView);
             } else {
-                setContentView(R.layout.splash);
+                setContentView(myWebView);//setContentView(R.layout.splash);
             }
             myWebView.loadUrl(Constants.SERVER_NAME + "login/google-oauth2/");
         } catch (Exception e) {

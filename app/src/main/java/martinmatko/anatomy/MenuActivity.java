@@ -83,7 +83,7 @@ public class MenuActivity extends AppCompatActivity {
 
             context = getApplicationContext();
             super.onCreate(savedInstanceState);
-            setContentView(R.layout.splash);
+            //setContentView(R.layout.splash);
 
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
@@ -123,6 +123,7 @@ public class MenuActivity extends AppCompatActivity {
         try {
             setContentView(R.layout.activity_menu);
         } catch (Exception e) {
+            //System.out.println(e.getCause().toString());
             e.printStackTrace();
         }
 
