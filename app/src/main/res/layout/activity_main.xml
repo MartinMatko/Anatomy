@@ -43,9 +43,9 @@
         android:textColor="#ff000000"
         android:textSize="25sp" />
 
-    <martinmatko.anatomy.DrawView
+    <martinmatko.Anatom.DrawView
         android:id="@+id/drawView"
-        class="martinmatko.anatomy.DrawView"
+        class="martinmatko.Anatom.DrawView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/optionsScrollView"
@@ -54,7 +54,7 @@
         android:layout_below="@+id/textOfQuestionView"
         android:background="#ffffffff" />
 
-    <martinmatko.anatomy.MaxHeightScrollView
+    <martinmatko.Anatom.MaxHeightScrollView
         android:id="@+id/optionsScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
             android:layout_below="@+id/drawView"
             android:background="@color/optionsBackround"
             android:button="@null" />
-    </martinmatko.anatomy.MaxHeightScrollView>
+    </martinmatko.Anatom.MaxHeightScrollView>
 
     <LinearLayout
         android:id="@+id/buttons"

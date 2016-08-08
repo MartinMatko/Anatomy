@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="martinmatko.anatomy">
+    package="martinmatko.Anatom">
 
     <uses-permission android:name="android.permission.NETWORK" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MenuActivity"
+            android:name="martinmatko.Anatom.MenuActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -26,36 +26,36 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name="martinmatko.Anatom.MainActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="martinmatko.anatomy.MenuActivity" />
+                android:value="martinmatko.Anatom.MenuActivity" />
         </activity>
         <activity
-            android:name=".AboutActivity"
+            android:name="martinmatko.Anatom.AboutActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".LanguageActivity"
+            android:name="martinmatko.Anatom.LanguageActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".LoginActivity"
+            android:name="martinmatko.Anatom.LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="martinmatko.anatomy.MenuActivity" />
+                android:value="martinmatko.Anatom.MenuActivity" />
         </activity>
-        <activity android:name=".RegisterActivity" />
+        <activity android:name="martinmatko.Anatom.RegisterActivity" />
         <activity
-            android:name=".ProfileActivity"
+            android:name="martinmatko.Anatom.ProfileActivity"
             android:label="@string/profile"
-            android:parentActivityName=".MenuActivity">
+            android:parentActivityName="martinmatko.Anatom.MenuActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="martinmatko.anatomy.MenuActivity" />
+                android:value="martinmatko.Anatom.MenuActivity" />
         </activity>
     </application>
 

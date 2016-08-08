@@ -15,6 +15,7 @@
     <string name="doNotKnow">I don\'t know</string>
     <string name="exercise">Practice medical anatomy with personalized questions.</string>
     <string name="exit">Exit</string>
+    <string name="updateAvailable">Please install update to continue</string>
     <string name="internetAvailable">Internet is available</string>
     <string name="internetNotAvailable">Internet is not available</string>
     <string name="continuePracticing">Continue to practice</string>
