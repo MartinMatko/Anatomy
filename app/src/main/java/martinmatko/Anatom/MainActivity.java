@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                 while (numberOfQuestion + 1 != test.getQuestions().size()) {
                     try {
                         timeout += 100;
-                        if (timeout < 7000) {
+                        if (timeout < 10000) {
                             Thread.currentThread().sleep(100);
                         } else throw new InterruptedException();
                     } catch (InterruptedException e) {

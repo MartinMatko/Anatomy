@@ -70,41 +70,25 @@ public class Test {
     public boolean getFirstQuestion(String categories) {
         JSONObject context;
         if (categories.isEmpty()) {
-            context = service.get(Constants.SERVER_NAME + "models/practice/?avoid=[]&categories=[]&contexts=[]&limit=2&types=[]&without_contexts=1");
-            try {
-                if (context.has("error")) {
-                    return false;
-                }
-                context = context.getJSONObject("data");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            context = service.get(Constants.SERVER_NAME + "models/practice/?avoid=[]&filter=[[\"category/images\"]]&contexts=[]&limit=2&types=[]&without_contexts=1");
+
         } else {
 
-            String url = Constants.SERVER_NAME + "models/practice/?avoid=[]&categories=[" + categories + "]&contexts=[]&limit=2&types=[]&without_contexts=1";
+            String url = Constants.SERVER_NAME + "models/practice/?avoid=[]&filter=[" + categories + ",[\"category/images\"]]&contexts=[]&limit=2&types=[]&without_contexts=1";
             context = service.get(url);
-            try {
-                if (context.has("error")) {
-                    return false;
-                }
-                context = context.getJSONObject("data");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
         }
-
         JSONObject flashcard;
         try {
-            JSONObject context1 = context.getJSONArray("payload").getJSONObject(0);
-            flashcard = service.get(Constants.SERVER_NAME + "flashcards/context/" + context1.getString("context_id"));
+            JSONObject context1 = context.getJSONArray("data").getJSONObject(0);
+            flashcard = service.get(Constants.SERVER_NAME + "flashcards/context/" + context1.getJSONObject("payload").getString("context_id"));
             Question firstQuestion = parser.getQuestion(context1, flashcard);
             questions.add(firstQuestion);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         try {
-            context = context.getJSONArray("payload").getJSONObject(1);
-            flashcard = service.get(Constants.SERVER_NAME + "flashcards/context/" + context.getString("context_id"));
+            context = context.getJSONArray("data").getJSONObject(1);
+            flashcard = service.get(Constants.SERVER_NAME + "flashcards/context/" + context.getJSONObject("payload").getString("context_id"));
             Question secondQuestion = parser.getQuestion(context, flashcard);
             questions.add(secondQuestion);
         } catch (JSONException e) {
@@ -163,7 +147,9 @@ public class Test {
                 answer.put("flashcard_answered_id", Integer.parseInt(question.getAnswer().getId()));
                 JSONArray optionIds = new JSONArray();
                 for (Term option : question.getOptions()) {
-                    optionIds.put(Integer.parseInt(option.getId()));
+                    if (!option.getId().equals(question.getCorrectAnswer().getId())){
+                        optionIds.put(Integer.parseInt(option.getId()));
+                    }
                 }
                 if (optionIds.length() != 0) {
                     answer.put("option_ids", optionIds);
@@ -178,7 +164,6 @@ public class Test {
                 metadata.put("test", "random_without_options");
             }
             answer.put("meta", metadata);
-            answer.put("time", System.currentTimeMillis());
             answers.put(answer);
             response.put("answers", answers);
         } catch (JSONException ex) {

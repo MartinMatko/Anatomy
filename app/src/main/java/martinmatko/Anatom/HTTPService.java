@@ -67,6 +67,7 @@ public class HTTPService {
             data = new JSONObject(response.toString());
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println(response.toString());
             return new JSONObject();
         }
         return data;
@@ -109,6 +110,7 @@ public class HTTPService {
             }
             br.close();
         } catch (Exception e) {
+            System.out.println(response.toString());
             e.printStackTrace();
         }
         return status;

@@ -1,6 +1,7 @@
 package martinmatko.Anatom;
 
 import android.os.AsyncTask;
+import android.os.Debug;
 
 import org.json.JSONObject;
 
@@ -40,13 +41,19 @@ public class PostAsyncTask extends AsyncTask<String, Void, JSONObject> {
     protected JSONObject doInBackground(String... params) {
         //Debug.waitForDebugger();
         test.setIsPOSTCompleted(false);
+        int questionNumber = test.getQuestions().size();
         URL url;
         StringBuilder response = new StringBuilder();
         String line;
         JSONObject data = null;
         try {
+            String categories = test.getCategories();
+            if (!categories.isEmpty()){
+                categories = categories + ",";
+            }
+            System.out.println(questionNumber);
             url = new URL(Constants.SERVER_NAME + "models/practice/?avoid=[" + URLEncoder.encode(params[1], "UTF-8") +
-                    "]&categories=[" + test.getCategories() + "]&contexts=[]&limit=1&types=[]&without_contexts=1");
+                    "]&filter=[" + categories + "[\"category/images\"]]&contexts=[]&limit=1&types=[]&without_contexts=1");
             HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
             conn.setDoInput(true);
             conn.setDoOutput(true);
@@ -75,18 +82,16 @@ public class PostAsyncTask extends AsyncTask<String, Void, JSONObject> {
             br.close();
             JSONObject context = null;
             JSONObject flashcard = null;
-            try {
-                JSONObject question = new JSONObject(response.toString());
-                context = question.getJSONObject("data").getJSONArray("payload").getJSONObject(0);
-                flashcard = test.getService().get(Constants.SERVER_NAME + "flashcards/context/" + context.getString("context_id"));
-                test.getQuestions().add(new JSONParser().getQuestion(context, flashcard));
-                test.setIsPOSTCompleted(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            JSONObject question = new JSONObject(response.toString());
+            context = question.getJSONArray("data").getJSONObject(0);
+            flashcard = test.getService().get(Constants.SERVER_NAME + "flashcards/context/" + context.getJSONObject("payload").getString("context_id"));
+            test.getQuestions().add(new JSONParser().getQuestion(context, flashcard));
+            test.setIsPOSTCompleted(true);
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("response" + response.toString());
         }
+        System.out.println("response" + response.toString());
         return data;
     }
 

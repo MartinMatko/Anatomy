@@ -30,6 +30,7 @@ public class JSONParser {
         String color = "";
         try {
             String directionOfQuestion = context.getString("question_type");
+            context = context.getJSONObject("payload");
             String nameOfCorrectAnswer = context.getJSONObject("term").getString("name").split(";")[0];
             String identifierOfCorrectAnswer = context.getJSONObject("term").getString("identifier");
             String idOfCorrectAnswer = context.getString("id");
@@ -37,13 +38,14 @@ public class JSONParser {
             question.setCorrectAnswer(correctAnswer);
             question.setFlashcardId(context.getString("id"));
             question.setItemId(context.getString("item_id"));
+            JSONArray options = context.getJSONArray("options");
             if (context.has("practice_meta")) {
                 JSONObject meta = context.getJSONObject("practice_meta");
                 if (meta.has("test")) {
                     question.setIsRandomWithoutOptions(meta.getString("test").equals("random_without_options"));
                 }
             }
-            if (context.has("options")) {
+            if (options.length() > 0) {
                 question.setT2D(directionOfQuestion.equals("t2d"));
             } else {
                 question.setT2D(true);
@@ -54,8 +56,7 @@ public class JSONParser {
             caption = data.getString("name");
             question.setCaption(caption);
             paths = JSONContent.getJSONArray("paths");
-            if (context.has("options")) {
-                JSONArray options = context.getJSONArray("options");
+            if (options.length() > 0) {
                 for (int i = 0; i < options.length(); i++) {
                     JSONObject option = options.getJSONObject(i);
                     JSONObject termJSON = option.getJSONObject("term");
@@ -65,7 +66,7 @@ public class JSONParser {
                     optionsTerms.add(term);
                 }
             } else {
-                JSONArray options = data.getJSONArray("payload");
+                options = data.getJSONArray("flashcards");
                 for (int i = 0; i < options.length(); i++) {
                     JSONObject option = options.getJSONObject(i);
                     JSONObject termJSON = option.getJSONObject("term");
