@@ -125,7 +125,6 @@ public class JSONParser {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            //System.out.println(color);
         }
         question.setBodyParts(parts);
         return question;

@@ -83,21 +83,16 @@ public class MenuActivity extends AppCompatActivity {
 
             context = getApplicationContext();
             super.onCreate(savedInstanceState);
-            //setContentView(R.layout.splash);
             if (!isNetworkStatusAvailable(getApplicationContext())) {
                 buildDialogAboutInternetConnection(this).show();
             }
 
             String version = new HTTPService().get(Constants.SERVER_NAME + "common/config").get("version").toString();
-            if (version.startsWith("2")) {
-                buildDialogAboutUpdate(this).show();
-            }
 
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
                 String value = extras.getString("cookies");
                 if (value != null && value.contains("csrftoken")) {
-                    //System.out.println("cookies" + value);
                     cookies = value;
                     test.getService().setUpCookies(value);
                     isUserSigned = true;
@@ -129,7 +124,6 @@ public class MenuActivity extends AppCompatActivity {
         try {
             setContentView(R.layout.activity_menu);
         } catch (Exception e) {
-            //System.out.println(e.getCause().toString());
             e.printStackTrace();
         }
 
@@ -151,7 +145,6 @@ public class MenuActivity extends AppCompatActivity {
         intent.putExtra("cookies", test.getService().getCookieString());
         intent.putExtra("categories", test.convertCategoriesToUrl(systemCategories, bodyCategories));
         startActivity(intent);
-        //MenuActivity.this.finish();
     }
 
     public void onRandomTestClicked(View v) {

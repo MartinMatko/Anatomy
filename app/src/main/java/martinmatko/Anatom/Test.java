@@ -169,7 +169,6 @@ public class Test {
         } catch (JSONException ex) {
             ex.printStackTrace();
         }
-        System.out.println(response.toString());
         return response.toString();
     }
 }

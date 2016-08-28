@@ -138,7 +138,6 @@ public class HTTPService {
                 while ((line = br.readLine()) != null) {
                     response += line;
                 }
-                //System.out.println(response);
             }
             br.close();
             List<String> cookies = conn.getHeaderFields().get("Set-Cookie");

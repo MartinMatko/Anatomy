@@ -312,7 +312,6 @@ public class DrawView extends View {
                         paint.setColor(Color.parseColor(colorString));
                     } catch (Exception ex) {
                         ex.printStackTrace();
-                        //System.out.println(colorString);
                     }
                     partOfBody.setPaint(paint);
                 }

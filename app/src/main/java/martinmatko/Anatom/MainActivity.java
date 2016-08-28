@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         String categories = "";
         if (extras != null) {
             String value = extras.getString("cookies");
-            //System.out.println("cookies" + value);
             test.getService().setUpCookies(value);
             categories = extras.getString("categories");
         }
@@ -117,10 +116,8 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             } else {
                 button.setText(option.getName());
             }
-            //button.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             button.setTag(option.getIdentifier());
             button.setButtonDrawable(new StateListDrawable());
-            //button.setGravity(View.TEXT_ALIGNMENT_CENTER);
             button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
             button.setPadding(30, 0, 0, 0);
             options.addView(button, width, height / Constants.RADIO_BUTTON_HEIGHT);
